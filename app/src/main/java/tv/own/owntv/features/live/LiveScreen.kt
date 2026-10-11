@@ -114,6 +114,7 @@ import tv.own.owntv.ui.theme.Dimens
 import tv.own.owntv.ui.theme.LocalPopupFontFamily
 import tv.own.owntv.core.live.LiveKey
 import tv.own.owntv.core.live.EpgNowNext
+import tv.own.owntv.core.live.ProviderTags
 
 /** Live TV (Stage P4): the channel list, the stage beside it and the categories as a sheet or a column. */
 @OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
