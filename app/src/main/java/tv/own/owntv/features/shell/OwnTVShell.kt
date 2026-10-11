@@ -1958,6 +1958,29 @@ fun OwnTVShell(
         }
     }
 
+    // A Guide auto-match keeps running when the Guide is left, and its review waits there for the
+    // Guide to come back — but finishing off the Guide said nothing at all. Say how it went, here
+    // because this layer is on screen everywhere, the player included. Not on the Guide itself:
+    // there the line beside the button, or the review window, already says it.
+    val epgMatchToast = tv.own.owntv.ui.components.rememberInAppToast()
+    val shellLiveView by liveVm.liveView.collectAsStateWithLifecycle()
+    val guideOnScreen = playerMode != PlayerMode.FULLSCREEN && multiview == null &&
+        (selectedSection == MainSection.EPG ||
+            (selectedSection == MainSection.LIVE_TV && shellLiveView == tv.own.owntv.core.settings.SettingsRepository.LiveView.GUIDE))
+    val currentGuideOnScreen by rememberUpdatedState(guideOnScreen)
+    var finishedMatch by remember { mutableStateOf<tv.own.owntv.features.epg.EpgMatchSummary?>(null) }
+    LaunchedEffect(epgVm) {
+        epgVm.matchFinished.collect { if (!currentGuideOnScreen) finishedMatch = it }
+    }
+    finishedMatch?.let { summary ->
+        val text = tv.own.owntv.features.epg.epgMatchSummaryText(summary)
+        LaunchedEffect(summary) {
+            epgMatchToast.show(text, durationMs = EPG_MATCH_TOAST_MS)
+            finishedMatch = null
+        }
+    }
+    tv.own.owntv.ui.components.InAppToast(epgMatchToast)
+
     // Automatic update check (GitHub Releases) shortly after launch, once per session: a small
         // top-right status card shows "Checking… / up to date" (auto-hides) or stays with
         // Update now / Later when a release is newer. Hidden while in Settings (its manual
@@ -2012,6 +2035,9 @@ fun OwnTVShell(
     }
     }
 }
+
+/** Long enough to read "Auto-matched 12 channels. 40 channels need review." from the sofa. */
+private const val EPG_MATCH_TOAST_MS = 6_000L
 
 /** A thin bar shown above the browse UI when the device loses internet. */
 @Composable

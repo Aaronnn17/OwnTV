@@ -289,7 +289,8 @@ playlist offers.
 **Where:** Guide → **Auto-match EPG**, or long-press a channel → **Match EPG**
 Auto-match does the bulk — only for the playlist(s) the guide is showing, so it takes seconds; the manual picker lists the most similar guide channels first. Tick
 **Logos** in the review window and every matched channel also takes the logo of the guide channel it
-is matched to.
+is matched to. Auto-match keeps going if you leave the Guide: a message says how it went when it
+finishes, and the review window is waiting when you come back.
 
 ### 📅 Guide days to keep
 **Where:** Settings → Sources & guide → **Guide days to keep**
