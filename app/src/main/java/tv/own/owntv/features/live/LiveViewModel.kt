@@ -47,9 +47,9 @@ import androidx.paging.map
 import tv.own.owntv.core.customize.CustomizationStore
 import tv.own.owntv.core.customize.CustomizeKeys
 import tv.own.owntv.features.customize.MoveTarget
-import tv.own.owntv.features.customize.CategoryRestorePlan
-import tv.own.owntv.features.customize.planCategoryRestore
-import tv.own.owntv.features.customize.restoreCategoryToDefault
+import tv.own.owntv.core.customize.CategoryRestorePlan
+import tv.own.owntv.core.customize.planCategoryRestore
+import tv.own.owntv.core.customize.restoreCategoryToDefault
 import tv.own.owntv.core.epg.CatchupUrl
 import tv.own.owntv.core.live.StreamGrant
 import tv.own.owntv.core.recording.RecordingSchedule

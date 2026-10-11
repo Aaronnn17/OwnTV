@@ -69,9 +69,9 @@ import tv.own.owntv.core.repository.SeriesRepository
 import tv.own.owntv.core.storage.StorageAccess
 import tv.own.owntv.core.storage.MediaFolders
 import tv.own.owntv.features.customize.MoveTarget
-import tv.own.owntv.features.customize.CategoryRestorePlan
-import tv.own.owntv.features.customize.planCategoryRestore
-import tv.own.owntv.features.customize.restoreCategoryToDefault
+import tv.own.owntv.core.customize.CategoryRestorePlan
+import tv.own.owntv.core.customize.planCategoryRestore
+import tv.own.owntv.core.customize.restoreCategoryToDefault
 import tv.own.owntv.features.live.LiveRailItem
 import tv.own.owntv.core.repository.activeProfileSources
 import tv.own.owntv.core.settings.SettingsRepository

@@ -70,8 +70,8 @@ import androidx.tv.material3.Text
 import tv.own.owntv.R
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.Key
-import tv.own.owntv.features.customize.categoryRestoreSummary
-import tv.own.owntv.features.customize.CategoryRestorePlan
+import tv.own.owntv.core.customize.categoryRestoreSummary
+import tv.own.owntv.core.customize.CategoryRestorePlan
 import tv.own.owntv.core.customize.CustomizeKeys
 import tv.own.owntv.core.database.entity.ChannelEntity
 import tv.own.owntv.core.database.entity.ContentOrderEntity
@@ -1180,7 +1180,7 @@ fun LiveScreen(
             onMove = { vm.enterCategoryMoveMode(item.key); contextCategory = null },
             // Always offered: the plan is read in the background and only fills in the confirmation.
             resetLabel = stringResource(if (item.key is LiveKey.Custom) R.string.content_category_restore_custom else R.string.content_category_restore_playlist),
-            resetLines = restorePlan?.let { categoryRestoreSummary(it) },
+            resetLines = restorePlan?.let { categoryRestoreSummary(it, androidx.compose.ui.platform.LocalContext.current.resources) },
             onReset = { vm.restoreCategory(item.key); contextCategory = null },
             onDismiss = { contextCategory = null }
         )
