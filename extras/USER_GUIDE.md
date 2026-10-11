@@ -144,6 +144,8 @@ and media keys to 26 actions — **Previous channel** among them. D-pad, Back, O
 First choose **Remote** (below) or **Type it here**, then fill the form — every field is a row; OK
 types into it, and **▶** on the side panel starts the import: **Xtream** (server + user +
 password), **M3U** (URL or a local file), or **Stalker/Ministra** (portal URL + MAC).
+An M3U link of the form `…/get.php?username=…&password=…` is really an Xtream account: when the
+provider's server confirms it, it is added as **Xtream**, with movies and series in their own tabs.
 Under **User-Agent** there is an optional **Referer** — leave it empty unless your provider asks
 for one; it is then sent with every stream of that playlist.
 
@@ -406,7 +408,8 @@ runtime, plot and progress; hold OK on one for its own menu.
 
 ### ▶️ Resume
 Partly-watched titles offer **Resume**. **Settings → Watching & recording → Resume playback** chooses **Ask**, **Auto** or **Never**.
-A series **opens on your last-watched episode**.
+A series **opens on your last-watched episode**; a show you have not started plays from Season 1
+Episode 1, with **Specials** after the last season.
 
 ### ⏭️ Auto-play next episode
 **Where:** Settings → Watching & recording → **Auto-play next episode**
@@ -825,7 +828,8 @@ http://your-provider/movie/user/pass/555.mkv
 ```
 
 The text **before** the marker becomes the show name; the text **after** it becomes the episode
-title. Markers: `S01E05` (also `s1e5`, `S01 E05`, `S01.E05`, `S01-E05`) and `1x05`.
+title. Markers: `S01E05` (also `s1e5`, `S01 E05`, `S01.E05`, `S01-E05`, `S2019E05`),
+`Season 1 Episode 5` (also `Season 1 - Ep. 5`) and `1x05`. Season `0` (`S00E01`) is **Specials**.
 
 > **Keep the show name identical across its episodes** — that is what groups them into one show.
 > A line with no marker is still added, as a plain sequential episode.

@@ -54,6 +54,13 @@
 - **💥 Error log and Backup & Restore no longer close the app on a 24-hour clock**
 - **⏯️ The remote's Play/Pause key pauses and resumes again**
 - **🔎 Search finds "Spider-Man" from "Spider-M" and lists every match, not the first 40**
+- **🔗 A provider's get.php M3U link is added as Xtream, so movies and series land in their own sections (#238)**
+- **📺 Shows with a Season 0 load all their episodes on Xtream**
+- **🔢 Xtream episodes with no number are numbered in order instead of all showing E0**
+- **🔁 A show's episode list retries once when the provider drops the connection**
+- **▶️ Play on a new show starts at Season 1 Episode 1; Specials come after the last season**
+- **⏭️ Auto-play continues past a missing season number instead of stopping**
+- **🔤 M3U episodes named "Season 1 Episode 5" or "S2019E05" are recognised**
 
 ## v5.1.0 — 2026-10-04
 
