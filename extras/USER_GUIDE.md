@@ -513,13 +513,14 @@ switch channel rows between **Cards** and **On now** (an inline mini-guide).
 
 ### 🔎 Search
 **Where:** the rail → Search
-Searches Live, Movies and Series together, with tabs **All / Live TV / Movies / Series** and their
-counts — every match, up to 500 of each kind. Words match from their start, and a dash or other mark
+Searches Live, Movies and Series together. Four filter buttons — **Live TV / TV Shows / Movies /
+Series**, each with its count — narrow the results: **OK** turns one on, **OK** again turns it off,
+several can be on, and none on shows everything. Every match is listed, up to 500 of each kind. Words match from their start, and a dash or other mark
 counts as a gap: "Spider-M" finds every Spider-Man. A channel shows Live TV's preview beside the
 results; a film or show shows its poster panel.
 **OK takes you to the item** — the channel in its own category, the film in its grid, the series page
 — where play, download and every option live; **Back** returns to Search with your query kept.
-**On TV** lists programmes from the stored guide whose title matches, on now or within the next 12
+**TV Shows** lists programmes from the stored guide whose title matches, on now or within the next 12
 hours, with the channel and time; **OK** goes to that channel. With
 the box empty: **Jump to**, your recent searches, and Continue watching.
 
@@ -539,6 +540,17 @@ and the folder the tab saves to sits under **Download folder**. Rows are grouped
 **On this TV**, each with picture, details, its file path and "64% · 12.4 MB/s · 3 min left" — or
 Queued, Paused, Failed, Ready to watch. **Pause / Resume / Retry / External / Delete** appear on the
 focused row. Downloads keep running when you leave the app.
+A download starts on one connection and adds more, up to eight, while each one makes it faster —
+never more than your playlist allows. A failed one says why: **Account busy** (another stream is using
+your connection), **Server refused the link**, **Connection lost**, **Not enough space**, **Too large
+for this drive** (a FAT32 USB stick holds no file over 4 GB — format it as exFAT), and more, with the
+server's code. A finished download or recording whose file is gone (stick formatted, swapped or
+unplugged) says **File missing** and offers only Delete.
+> **One-stream playlists:** when you press Play while a download from that playlist runs, the download
+> pauses and OwnTV asks **Pause download and watch** or **Keep downloading** (which closes the player),
+> with **Don't ask again**. Change the answer with **Watching while downloading** next to Download
+> folder. A download started while you watch waits and starts when you stop. The Live TV preview stays
+> off while a download holds the only stream.
 > **USB stick removed?** New downloads and recordings go to OwnTV's own folder until it is back — the
 > screen says so — and then to your chosen folder again. A download cut off mid-way is marked failed;
 > reconnect and retry. **New folder** in the folder picker lets you name and create one.
@@ -632,7 +644,8 @@ receiver on ExoPlayer; off, or while Night mode or leveling is on, OwnTV decodes
 ### 📺 Picture quality and tunneled playback
 **Where:** Settings → Picture
 **Maximum video quality** caps the picture when a stream offers several sizes; the player's
-**Quality** button picks one for what is playing now. **Tunneled playback** (experimental, off) only
+**Quality** button picks one for what is playing now. **Software decoding above 1080p** (off) lets
+4K play when hardware decoding is off or fails — only for a TV with a fast processor; most stutter. **Tunneled playback** (experimental, off) only
 appears on a TV that supports it, and switches itself off for good if a channel fails with it.
 
 ---

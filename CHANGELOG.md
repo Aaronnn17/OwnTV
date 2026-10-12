@@ -24,6 +24,12 @@
 - **⏹️ Stop recording from the channel's menu**
 - **☀️ Light theme across the whole app (Theme: System / Dark / Light)**
 - **🔐 ClearKey channels whose playlist carries the key itself play**
+- **🔎 Search filter buttons: Live TV, TV Shows, Movies, Series**
+- **🎞️ Software decoding above 1080p (Video player switch)**
+- **⚡ Faster downloads over several connections**
+- **💬 A failed download says why**
+- **📺 Watch or keep downloading on a one-stream playlist**
+- **🗂️ Downloads and recordings whose file is gone say "File missing"**
 
 ### 🐛 Fixes
 - **⚡ Opening a channel from its preview goes straight to full screen, no black gap** (community PR #242 by @tvdev-android)
@@ -63,6 +69,7 @@
 - **▶️ Play on a new show starts at Season 1 Episode 1; Specials come after the last season**
 - **⏭️ Auto-play continues past a missing season number instead of stopping**
 - **🔤 M3U episodes named "Season 1 Episode 5" or "S2019E05" are recognised**
+- **💾 Big downloads to a FAT32 USB stick fail with a clear reason**
 
 ## v5.1.0 — 2026-10-04
 

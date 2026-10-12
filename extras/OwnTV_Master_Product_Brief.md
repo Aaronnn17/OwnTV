@@ -213,12 +213,16 @@ YouTube.
 the folder each tab saves to; rows grouped Downloading / On this TV with picture, details, full file
 path and live "64% · 12.4 MB/s · 3 min left"; actions appear on the focused row only. A Recordings card
 shows the next scheduled recording. A channel's menu also schedules a recording by day, start and end
-(no guide needed) and offers **Stop recording** while that channel records.
+(no guide needed) and offers **Stop recording** while that channel records. Downloads add connections
+(up to eight, within the playlist's limit) while each one helps and write the file in order, so a USB
+stick keeps up; a failure states its reason, a missing file says so, and on a one-stream playlist
+playing pauses the download and asks whether to keep watching or keep downloading.
 
-**Search** — tabs All / Live TV / Movies / Series with counts; a channel result shows Live TV's own
+**Search** — filter buttons Live TV / TV Shows / Movies / Series with counts, switched on and off
+with OK (none on = everything); a channel result shows Live TV's own
 preview pane, a film or series its poster panel. It is a show-only page: **OK goes to the item** in
 its own category or page, and Back returns to Search with the query kept. Empty, it offers Jump to,
-recent searches and Continue watching. An **On TV** group lists stored-guide programmes whose title
+recent searches and Continue watching. A **TV Shows** group lists stored-guide programmes whose title
 matches, on now or in the next 12 hours, and OK goes to the channel.
 
 **More** — a glass section list with the profile row: Settings, Favourites, History, Backup &
