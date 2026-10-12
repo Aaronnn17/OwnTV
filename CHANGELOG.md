@@ -23,9 +23,11 @@
 - **⏰ Schedule recording… on a channel: pick the day, start and end (#2)**
 - **⏹️ Stop recording from the channel's menu**
 - **☀️ Light theme across the whole app (Theme: System / Dark / Light)**
+- **🔐 ClearKey channels whose playlist carries the key itself play**
 
 ### 🐛 Fixes
 - **⚡ Opening a channel from its preview goes straight to full screen, no black gap** (community PR #242 by @tvdev-android)
+- **😴 The screensaver no longer starts when a film stops to buffer**
 - **Customize no longer keeps a removed item's actions on screen**
 - **🎞️ Catch-up plays on the hardware decoder and freezes on its first frame less often (#229)**
 - **📡 A catch-up of a programme still on air switches to live instead of freezing**

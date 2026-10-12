@@ -68,7 +68,7 @@ Each engine is chosen automatically by content type, with fallback between them.
 - **VOD fallback is never remembered** — every film starts on the engine you chose.
 - **Reset saved player choices** forgets every per-item pin in one step.
 - **Protected (DRM) playback** — Widevine and ClearKey over DASH and HLS, read from the playlist's
-  `#KODIPROP` licence properties, for live channels, films and episodes. The device's own CDM does
+  `#KODIPROP` licence properties (a licence server, or ClearKey keys written inline), for live channels, films and episodes. The device's own CDM does
   the work, so there is nothing to configure and no licence to buy; the device's security level
   decides whether HD is served. Such an item is pinned to ExoPlayer, outranks every other preference,
   and never leaves for an external player. It also **cannot be recorded** — the CDM decrypts only
