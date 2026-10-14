@@ -34,6 +34,7 @@
 ### 🐛 Fixes
 - **📡 Pause and rewind live TV: a channel comes back by itself after a network outage**
 - **⚡ A single CH+/CH− press opens the channel without the half-second wait** (community PR #255 by @sarmadsoomro)
+- **🗓️ Auto-match EPG finishes in seconds on large playlists** (community PR #252 by @camchis)
 - **⚡ Opening a channel from its preview goes straight to full screen, no black gap** (community PR #242 by @tvdev-android)
 - **😴 The screensaver no longer starts when a film stops to buffer**
 - **Customize no longer keeps a removed item's actions on screen**
