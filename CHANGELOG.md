@@ -23,6 +23,7 @@
 - **⏰ Schedule recording… on a channel: pick the day, start and end (#2)**
 - **⏹️ Stop recording from the channel's menu**
 - **☀️ Light theme across the whole app (Theme: System / Dark / Light)**
+- **🗓️ Auto-match EPG says when it has finished, even away from the Guide** (community PR #251 by @camchis)
 - **🔐 ClearKey channels whose playlist carries the key itself play**
 - **🔎 Search filter buttons: Live TV, TV Shows, Movies, Series**
 - **🎞️ Software decoding above 1080p (Video player switch)**
