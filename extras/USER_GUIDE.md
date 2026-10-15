@@ -7,7 +7,8 @@ required reading — skim the headings and stop where something looks useful.
 
 > **The basics:** **D-pad** moves · **OK** selects · **Back** goes up a level.
 > The menu on the left is the **rail**. **Long-press OK** (or the remote's **Menu** key) on almost
-> anything opens its menu — that is where favourites, rename, hide, record and catch-up live.
+> anything opens its menu — that is where favourites, rename, hide, record and catch-up live. Home's
+> cards have no menu: they play or open, and the menu is on the same title in Live TV, Movies or Series.
 
 ---
 
@@ -112,7 +113,7 @@ and shows its page beside the list; **Right** enters that page; **Back** returns
 
 | Key | Where | What it does |
 |---|---|---|
-| **Long-press OK** / **Menu** key | any channel, film or show | The options menu — favourite, rename, hide, record, catch-up, move, download |
+| **Long-press OK** / **Menu** key | any channel, film or show (not on Home) | The options menu — favourite, rename, hide, record, catch-up, move, download |
 | **Left** | Live TV, Movies, Series lists | Opens the categories (a sheet, or the column in **Separate** layouts) |
 | **Right** | Live TV channel list | Steps into the schedule beside the preview — what's next and later; OK = Remind me / Record / Watch |
 | **Hold Up / Down** | Live TV, Movies, Series lists | Runs through the list to its ends |
