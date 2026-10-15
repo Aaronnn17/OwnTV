@@ -60,7 +60,8 @@ Each engine is chosen automatically by content type, with fallback between them.
 - **Track memory** — the audio and subtitle language picked in the player is remembered per
   channel, film and series (per profile), on both engines.
 - **Per-playlist provider quirks** — catch-up time zone, "give up after" time and an HTTP Referer
-  can be set for one playlist without touching the others.
+  can be set for one playlist without touching the others. The catch-up time zone defaults to
+  **Automatic**: the Xtream panel's own zone, read at every sync.
 - **The fallback ladder** — a failing live channel walks up to four rungs, each tried once:
   `ExoPlayer+HLS → ExoPlayer+TS → mpv+HLS → mpv+TS`, or the same list led by mpv. **Give up on a
   channel after** (15/30/60 s or Never, default 30 s) bounds the whole tune; provider-requested
@@ -284,7 +285,7 @@ Folder rails with Favorites and History per section; full category names, never 
 category search box. **Customize** (per profile) hides, renames and reorders categories and
 individual items, recovers hidden ones, filters to All/Visible/Hidden, and can be **PIN-locked**.
 **Bulk rename** applies ordered prefix/suffix rules with automatic cleanup, a review step and a
-restore-original undo. **Custom combined categories** gather items from anywhere. A category can also
+restore-original undo — over a category's items, or over the category names themselves (⋯ menu). **Custom combined categories** gather items from anywhere. A category can also
 be hidden, moved or restored to the playlist's default (hidden items, items moved out and custom
 order are listed and undone together) straight from the browse screen by holding OK; **Restore
 playlist defaults** in Customize's More menu does the same for the playlists shown in a section. All

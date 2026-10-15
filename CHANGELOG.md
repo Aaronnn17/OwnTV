@@ -33,6 +33,20 @@
 - **🗂️ Downloads and recordings whose file is gone say "File missing"**
 
 ### 🐛 Fixes
+- **📺 Live TV falls back to the other player and gives up on time again**
+- **🔊 Opening a previewed channel keeps its volume; unmute returns to the level before**
+- **🔈 Changing sound settings during a film no longer starts a second copy**
+- **🗣️ Audio language and the episode queue survive a reload**
+- **🚫 A dead film link shows its error in seconds**
+- **🕒 Catch-up time zone "Automatic" uses the playlist's own zone**
+- **⏪ M3U catch-up and Xtream rewind start at the right moment**
+- **▶️ External player starts where you left off**
+- **🏷️ Categories keep their country ("UK|") when a list mixes countries**
+- **✏️ Bulk rename and ✨ Auto cleanup for categories**
+- **🔁 Retry works after a live channel gives up**
+- **👤 "Account already in use" says so, instead of loading forever**
+- **🔍 ◀ from a search opens the categories, with or without results**
+- **🌙 Home and the screensaver bring back the episode queue**
 - **🔤 Hebrew and Arabic subtitles read right to left on every line (#259)**
 - **🎯 ▶ into a page that is still opening no longer does nothing** (community PR #264 by @Kevsosmooth)
 - **⌨️ Settings search from More opens the keyboard on the first OK**

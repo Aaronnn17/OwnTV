@@ -1712,7 +1712,13 @@ class LiveViewModel(
             playingCatchupProgramme = programme // …and the anchor auto-play continues from
             releaseForArchive() // catch-up is a VOD-style archive on mpv, not the live ExoPlayer channel
             // isLive=false → seekable archive; isArchive → mid-GOP tolerant (hardware first, software rescue).
-            player.play(url, title = ch.name, subtitle = programme.title, logoUrl = ch.displayLogoUrl, isLive = false, isArchive = true, userAgent = sourceUa, httpHeaders = headersFor(ch))
+            // Keyed on the channel's archive, not the time-specific URL (L5); a Stalker archive gets a
+            // fresh create_link on Retry (L4).
+            player.play(
+                url, title = ch.name, subtitle = programme.title, logoUrl = ch.displayLogoUrl, isLive = false, isArchive = true,
+                userAgent = sourceUa, httpHeaders = headersFor(ch), contentKey = tv.own.owntv.core.player.catchupPinKey(ch),
+                reconnectProvider = archiveUrls.reconnectFor(ch, programme),
+            )
             // The picture is this programme's own airtime, not the present — drive the "watching" clock
             // from its start, exactly as the rewind path does from the archive's start. The offset stays
             // null: a fixed programme is not the live rewind, so the HUD keeps its VOD chrome.
@@ -1873,11 +1879,11 @@ class LiveViewModel(
      * Turn one point in [ch]'s archive into a playing stream — the "URL out" half of [LiveTimeshift],
      * and the only part of a rewind that needs this view model's collaborators.
      *
-     * Returns false when no archive URL can be built, or when the user reached the live edge while it
-     * was being resolved.
+     * Returns the instant the archive really starts at (on the minute for Xtream), or null when no
+     * archive URL can be built, or when the user reached the live edge while it was being resolved.
      */
-    private suspend fun loadArchiveStream(ch: ChannelEntity, startMs: Long, offsetSec: Int): Boolean {
-        val (url, sourceUa) = withContext(Dispatchers.IO) {
+    private suspend fun loadArchiveStream(ch: ChannelEntity, startMs: Long, offsetSec: Int): Long? {
+        val (archive, sourceUa) = withContext(Dispatchers.IO) {
             val source = sourceDao.getById(ch.sourceId) ?: return@withContext null
             val tz = settings.resolveCatchupTimeZone(source)
             archiveUrls.forTimeshift(ch, source, startMs, offsetSec, tz)?.let { it to source.userAgent }
@@ -1885,23 +1891,25 @@ class LiveViewModel(
             // The rewind hands back to the live edge from here (see LiveTimeshift.scheduleLoad), which
             // on its own looks exactly like the button doing nothing. Say why.
             _catchupUnavailable.tryEmit(Unit)
-            return false
+            return null
         }
-        if (timeshift.offsetSec.value == null) return false // user jumped back to live meanwhile
+        if (timeshift.offsetSec.value == null) return null // user jumped back to live meanwhile
         // Keep the rewind instant semantic. The player HUD formats it with the current
         // localized context, so an in-session locale switch updates an already-visible subtitle.
         _previewChannel.value = ch
         clearLiveOnExo() // archive plays as a VOD-style mpv stream, not the live ExoPlayer channel
         player.play(
-            url = url,
+            url = archive.url,
             title = ch.name,
             logoUrl = ch.displayLogoUrl,
             isArchive = true,
             userAgent = sourceUa,
             httpHeaders = headersFor(ch),
-            rewindStartMs = startMs,
+            rewindStartMs = archive.startMs,
+            contentKey = tv.own.owntv.core.player.catchupPinKey(ch),
+            reconnectProvider = archive.reconnect,
         )
-        return true
+        return archive.startMs
     }
 
     fun toggleFavorite(channel: ChannelEntity) {

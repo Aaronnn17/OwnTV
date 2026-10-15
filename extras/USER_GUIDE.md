@@ -725,7 +725,8 @@ sheet and the **Details height** — lower it for another row of posters, **0%**
 **Where:** long-press a category → **Customize**, or Settings → Content & metadata → **Customize categories & items**
 Hide, rename, reorder, and **unhide**. Highlights:
 - **Bulk rename** — add or strip a prefix/suffix across a whole category, with **Auto cleanup** for
-  country, quality and codec tags, a review step, and **Restore original names** as the undo.
+  country, quality and codec tags, a review step, and **Restore original names** as the undo. For the
+  **category names themselves**: **⋯ → Bulk rename** or **⋯ → ✨ Auto cleanup** on the categories page.
 - **Custom combined categories** — **＋ New category**, then **Move to category…** from any item.
   **Remove from this category** (long-press a channel inside it, or here) takes it out of that category
   only. Hiding a channel's own provider category no longer hides it from your custom categories.
@@ -771,6 +772,7 @@ all settings** lists every setting whose name contains what you type, with its p
 | **Live latency** | Live TV | How close to the live edge to play. Lower = less delay, more stutter risk |
 | **Pre-buffer live streams** | Live TV | Collect a few seconds first on a flaky provider |
 | **Give up on a channel after** | Live TV | 30 s default — bounds how long a dead channel can spin (+ per playlist) |
+| **Catch-up time zone** | Sources & guide | **Automatic** (default) uses the Xtream panel's own zone; Device or a fixed offset otherwise |
 | **Catch-up time zone per playlist** | Sources & guide | One provider's archive on a different clock (quarter-hour zones such as +05:30 included) |
 | **Hardware decoder** | Picture | On for smooth 4K; off only to diagnose |
 | **HDR (mpv only)** | Picture | Use HDR output when the video and TV support it. ExoPlayer always passes HDR through |
@@ -784,7 +786,7 @@ all settings** lists every setting whose name contains what you type, with its p
 | **Reset saved live TV player choices** | Player | Every channel follows the Live TV player setting again |
 | **Forget learned stream fixes** | Player | For a provider that has fixed its streams. Catch-up lessons also expire after 14 days |
 | **Custom DNS** | App → DNS | System, Google, Cloudflare, Quad9, or DNS-over-HTTPS |
-| **External player** | Player | Separate switches for Live TV, Movies and Series |
+| **External player** | Player | Separate switches for Live TV, Movies and Series; VLC and MX Player start where you left off |
 | **Resume a saved channel** | Live TV | Ask, always or never resume a channel saved by Pause and rewind |
 | **Programme reminders** · **Reminder time** | Sources & guide | Ask to switch, switch, or notify; how early |
 | **Measured stream stats** | App | Live fps, bitrate and dropped frames in Stream info |
