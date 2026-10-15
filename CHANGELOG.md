@@ -36,6 +36,7 @@
 - **🔤 Hebrew and Arabic subtitles read right to left on every line (#259)**
 - **🎯 ▶ into a page that is still opening no longer does nothing** (community PR #264 by @Kevsosmooth)
 - **⌨️ Settings search from More opens the keyboard on the first OK**
+- **▶️ External player picker offers Always again, so one player can be the default**
 - **📡 Pause and rewind live TV: a channel comes back by itself after a network outage**
 - **⚡ A single CH+/CH− press opens the channel without the half-second wait** (community PR #255 by @sarmadsoomro)
 - **🗓️ Auto-match EPG finishes in seconds on large playlists** (community PR #252 by @camchis)

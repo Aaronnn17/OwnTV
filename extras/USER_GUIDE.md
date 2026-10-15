@@ -437,8 +437,8 @@ the next one, then offers **Open in YouTube**.
 
 ### 📥 Download or play elsewhere
 **Where:** long-press a title
-**Download** queues it immediately; **Play in external player** opens VLC, MX Player and so on, just
-this once.
+**Download** queues it immediately; **Play in external player** opens VLC, MX Player and so on.
+With several players installed, pick one and choose **Always** to skip the question from then on.
 
 ### 🔧 Which engine plays films
 **Where:** Settings → Player → **Movies & Series player**
