@@ -224,6 +224,15 @@ fun PlayerHud(
     // N6 — Settings → "Left and right rewind live TV": with the controls hidden, Left/Right on a
     // catch-up channel scrub instead of opening the lists. Films always seek.
     liveLeftRightRewinds: Boolean = false,
+    // Sports Hub (T4) — only for a channel started from a match; all null means the plain Live player.
+    // The match's score line under the channel name, drawn only while the controls are up.
+    matchLine: (@Composable () -> Unit)? = null,
+    // The other channels showing the match, and their count for the tool's label.
+    onOtherChannels: (() -> Unit)? = null,
+    otherChannelsCount: Int = 0,
+    // The match page.
+    // A goal toast for another followed match is up: OK switches to it instead of showing the controls.
+    onToastOk: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     // T14 — nothing that ticks is read in this root scope: with the controls hidden it used to recompose
@@ -585,6 +594,8 @@ fun PlayerHud(
                     e.key.horizontalDirection(layoutDirection) == HorizontalDirection.START -> { onOpenChannelList(); true }
                 onOpenHistoryList != null && !controlsVisible &&
                     e.key.horizontalDirection(layoutDirection) == HorizontalDirection.END -> { onOpenHistoryList(); true }
+                onToastOk != null && !controlsVisible &&
+                    (e.key == Key.DirectionCenter || e.key == Key.Enter || e.key == Key.NumPadEnter) -> { onToastOk(); true }
                 controlsVisible -> { wakeTick++; false }
                 else -> false
             }
@@ -667,6 +678,7 @@ fun PlayerHud(
             TopBar(
                 player, isLive, listOfNotNull(engineChip) + streamChips.ifEmpty { listOfNotNull(videoRes) }, duration, onBack,
                 modifier = Modifier.align(Alignment.TopStart),
+                below = matchLine,
                 trailing = if (error == null) liveEpgCard else null,
                 // Hidden behind an error overlay along with the rest of the chrome: a clock ticking
                 // over a failure message just draws the eye to the wrong thing.
@@ -693,6 +705,7 @@ fun PlayerHud(
                     liveGaps = liveGaps,
                     onOpenJumpBack = if (onJumpBack != null) { { dialog = HudDialog.JUMP_BACK } } else null,
                     onPreviousChannel = onPreviousChannel,
+                    onOtherChannels = onOtherChannels, otherChannelsCount = otherChannelsCount,
                     compatMode = compatMode, onToggleCompatMode = toggleCompat,
                     vodOnExo = vodOnExo, onToggleVodEngine = toggleVod,
                     onInfo = { showInfo = !showInfo }, infoOn = showInfo,

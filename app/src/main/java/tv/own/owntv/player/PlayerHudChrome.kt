@@ -73,6 +73,8 @@ internal fun TopBar(
     // The clock. Rendered between two equal-weight halves so it lands on the true centre of the screen
     // whatever the channel name and guide card happen to be doing on either side of it.
     centre: (@Composable () -> Unit)? = null,
+    // Live: one more line under the channel name (a Sports match's score, T4b).
+    below: (@Composable () -> Unit)? = null,
 ) {
     // Reactive meta so the title row updates instantly on a channel zap (the plain vars aren't observed).
     val meta by player.currentMeta.collectAsStateWithLifecycle()
@@ -138,6 +140,7 @@ internal fun TopBar(
                     }
                     Text(displayTitle, style = MaterialTheme.typography.titleMedium, color = hudInk, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
+                below?.invoke()
             } else {
                 vodSubtitle?.let {
                     Text(it, style = MaterialTheme.typography.labelMedium, color = hudInk.copy(alpha = 0.45f), maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -328,6 +331,7 @@ internal fun BottomBar(
     onInfo: (() -> Unit)? = null, infoOn: Boolean = false, onReport: (() -> Unit)? = null,
     favorite: Boolean = false, onToggleFavorite: (() -> Unit)? = null,
     onPreviousChannel: (() -> Unit)? = null,
+    onOtherChannels: (() -> Unit)? = null, otherChannelsCount: Int = 0,
     onOpenDialog: (HudDialog) -> Unit, onPip: (() -> Unit)?, onAudioMode: (() -> Unit)?,
     onMultiview: (() -> Unit)? = null, onRecordThis: (() -> Unit)? = null, recordingThis: Boolean = false,
     /** Given to whichever timeline is drawn, so Left/Right with the controls hidden can land on it (N6). */
@@ -419,6 +423,12 @@ internal fun BottomBar(
                         PlayerControl.PREVIOUS_CHANNEL -> if (onPreviousChannel != null) {
                             CtrlButton(OwnTVIcon.HISTORY, label = stringResource(R.string.player_previous_channel)) { onPreviousChannel() }
                         }
+                        // Sports Hub (T4b): only for a channel started from a match.
+                        PlayerControl.OTHER_CHANNELS -> if (onOtherChannels != null) {
+                            CtrlButton(OwnTVIcon.LIST, label = stringResource(R.string.sports_other_channels_count, otherChannelsCount)) { onOtherChannels() }
+                        }
+                        // Not shown on the TV: Back from the player already returns to the match page (owner).
+                        PlayerControl.MATCH -> Unit
                         // Belongs to the tools cluster; `clusterFor` never hands them to this loop.
                         PlayerControl.BRIGHTNESS, PlayerControl.CHANNEL_LIST, PlayerControl.ENGINE,
                         PlayerControl.ASPECT, PlayerControl.QUALITY, PlayerControl.MINI_PLAYER, PlayerControl.AUDIO_ONLY,
@@ -510,7 +520,7 @@ internal fun BottomBar(
                         PlayerControl.GO_LIVE, PlayerControl.VOLUME, PlayerControl.BRIGHTNESS,
                         PlayerControl.SPEED, PlayerControl.SUBTITLES, PlayerControl.AUDIO,
                         PlayerControl.FAVOURITE, PlayerControl.CATCH_UP, PlayerControl.PREVIOUS_CHANNEL,
-                        PlayerControl.CHANNEL_LIST,
+                        PlayerControl.OTHER_CHANNELS, PlayerControl.MATCH, PlayerControl.CHANNEL_LIST,
                         -> Unit
                     }
                 }

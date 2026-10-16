@@ -10,6 +10,13 @@
 ## Unreleased
 
 ### ✨ New features
+- **🏆 Sports: a new section with live scores, today's and tomorrow's matches, and match pages**
+- **🔎 Find channels: the channels in your guide that show a match, ranked, with a preview**
+- **📺 Broadcasts tab, venue and round on every match page**
+- **🏷️ Pick several sports and leagues at once on the Sports page**
+- **↕️ Hold OK to put your sports and leagues in your own order**
+- **🏠 Sports row on Home with a LIVE mark**
+- **⚙️ Settings → Sports: leagues, auto rebuild, live refresh, playlist and strict channel filters**
 - **↩️ Restore a category, or the playlists shown, to the playlist default** (community PR #235 by @tvdev-android)
 - **🔄 "Stream interrupted. Reconnecting…" while a live channel recovers** (community PR #237 by @tvdev-android)
 - **🖼️ Title art in Home's trending banner**

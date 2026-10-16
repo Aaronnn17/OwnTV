@@ -146,6 +146,9 @@ fun NavDuotoneIcon(
                 drawPath(poly(20f,67f, 58f,67f), fill, style = stroke)
                 dot(72f, 67f, 4f, soft)
             }
+
+            // Sports arrived with Stage: its rail draws the trophy (OwnTVIcon.SPORTS), so no duotone exists.
+            MainSection.SPORTS -> Unit
         }
     }
 }

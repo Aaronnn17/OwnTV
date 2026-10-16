@@ -396,6 +396,52 @@ is inside Info — it stops anything playing and takes a few minutes.
 
 ---
 
+## 🏆 Sports
+
+Live scores, fixtures and match details come from ESPN. OwnTV then looks in **your own TV guide** for
+the channels that show a match — nothing is streamed from ESPN.
+
+### 🏁 First time
+**Where:** rail → **Sports**
+Nothing is followed at first. Open **Settings → Sports → Sports and leagues**, choose a sport on the
+left and switch on its leagues on the right. The more you choose, the longer loading takes.
+**Sport buttons → All sports** fetches every league instead.
+
+### 🗂️ The Sports page
+Two rows of buttons filter the page: sports (and ★ My teams) on top, that sport's leagues below.
+**OK** switches a button on or off, so you can pick Bundesliga and Premier League together; none
+chosen shows everything. The choice stays until you close the app. **⟳** at the end of the top row
+rebuilds the sports data now; the bottom status pill says **Rebuilding sports…** while it runs.
+Rows: **Live now** (red LIVE mark), **Sport on your channels now** (from your guide) and
+**Starting soon**. **OK** on a match opens its page.
+
+### 📋 A match page
+The box at the top shows the score, the time, the round and the venue with its city and country.
+Tabs show the timeline, statistics, line-ups, the table, each side's form and **Broadcasts**.
+**Find channels** searches your guide for that match — from **30 minutes before kick-off until 30
+minutes after the end**; earlier, the page says when it opens. The found channels appear on the
+right, best first, with a preview. **OK** plays one full screen; **Back** returns to the match page.
+**Filter channels** narrows the list by language, country, picture and playlist. **Strict filtering**
+on hides the others; off lists them below. **Remember** keeps the filter for every match.
+
+### 📺 Broadcasts
+**In your guide** lists the channels Find channels found, by country. **From ESPN** is ESPN's own
+list, which covers the United States only.
+
+### ↕️ Your own order
+**Where:** Settings → Sports → Sports and leagues → **hold OK** on a sport, or on a league you
+switched on. In the Move window, **▲ ▼** choose a row, **OK** picks it up and puts it down, and
+**Save** keeps the new order. The Sports page and the Home row follow it.
+
+### ⚙️ Settings → Sports
+**Auto rebuild** every 1, 2, 4 or 8 hours, on every app start, or by hand. **Live refresh** updates
+live scores every 30–120 seconds while something sports is on screen. **Refresh sports data now**
+shows when it last updated. Also here: My teams, goal alerts, playlist and channel filters.
+
+### 🏠 Sports on Home
+**Settings → Home** can show a **Sports** row: live and upcoming matches of your leagues and teams,
+in your order. **OK** opens the match page.
+
 ## 🎬 Movies & Series
 
 ### 🖼️ Grid or list
