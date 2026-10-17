@@ -30,7 +30,7 @@ import tv.own.owntv.ui.theme.subtitleFontResource
 class OwnTVApp : Application(), SingletonImageLoader.Factory, androidx.work.Configuration.Provider {
 
     companion object {
-        /** Upper bound for the image disk cache — the value it was fixed at before ST6. */
+        /** Upper bound for the image disk cache — the value it was once fixed at. */
         private const val MAX_IMAGE_CACHE_BYTES = 250L * 1024 * 1024
 
         /** Lower bound: below this the cache thrashes and stops saving any downloads. */
@@ -127,7 +127,7 @@ class OwnTVApp : Application(), SingletonImageLoader.Factory, androidx.work.Conf
             settings = GlobalContext.get().get(),
             archiveStore = GlobalContext.get().get(),
         )
-        // The Stage UI's own defaults, once per install (owner, 2026-10-02): Docked · Compact rail, glass
+        // The Stage UI's own defaults, once per install: Docked · Compact rail, glass
         // on at 50%, the Stage background; Movies & Series keep an update's layout.
         appScope.launch {
             runCatching {
@@ -195,7 +195,7 @@ class OwnTVApp : Application(), SingletonImageLoader.Factory, androidx.work.Conf
     }
 
     /**
-     * ST6 — size the poster/logo disk cache against the storage the box actually has: 5% of free
+     * Size the poster/logo disk cache against the storage the box actually has: 5% of free
      * space, capped at the previous fixed 250 MB and floored at 32 MB (below that the cache stops
      * being worth having). A 220k-item catalog *will* reach whatever cap it is given, so on a nearly
      * full 8 GB box the fixed number was competing with downloads and app updates for the last

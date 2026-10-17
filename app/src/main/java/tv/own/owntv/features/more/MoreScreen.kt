@@ -107,7 +107,7 @@ fun MoreScreen(
     val enterPage: () -> Boolean = { pageEntry?.invoke() ?: runCatching { pageTarget.requestFocus() }.getOrDefault(false) }
     val backToSheet: () -> Unit = { runCatching { itemFocus.getValue(selected).requestFocus() } }
     // Like the rail: ▲ ▼ move focus, OK selects the item (its page shows, focus stays on the item),
-    // ▶ goes into the page that is shown (owner).
+    // ▶ goes into the page that is shown.
     val choose: (MoreItem) -> Unit = { item -> if (item != selected) { selected = item; pageEntry = null } }
 
     // The rail's ▶ lands on the item the sheet was last on.
@@ -136,7 +136,7 @@ fun MoreScreen(
     val logCount by produceState(0, logVersion) { value = withContext(Dispatchers.IO) { PlaybackErrorLog.read(context).size } }
 
     Box(modifier.fillMaxSize().onFocusChanged { if (it.hasFocus) onChildFocused() }) {
-        // --- The sheet (`.gsheet`, 440 wide at 24 / 24 / 24): the full height (owner tried level with the page, kept this).
+        // --- The sheet (`.gsheet`, 440 wide at 24 / 24 / 24): the full height.
         Column(
             Modifier
                 .padding(start = 24.mpx, top = 24.mpx, bottom = 24.mpx)

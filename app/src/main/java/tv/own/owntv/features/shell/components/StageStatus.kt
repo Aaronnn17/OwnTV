@@ -78,10 +78,10 @@ fun StageStatusCluster(
     Row(
         modifier.padding(end = 64.mpx, top = 34.mpx),
         horizontalArrangement = Arrangement.spacedBy(22.mpx),
-        // The pills' top lines up with the top of the clock's digits (owner), not with the block's middle.
+        // The pills' top lines up with the top of the clock's digits, not with the block's middle.
         verticalAlignment = Alignment.Top,
     ) {
-        // Top, not centred: a taller audio bar (focused / open) must not push the playlist pill down (owner).
+        // Top, not centred: a taller audio bar (focused / open) must not push the playlist pill down.
         Row(Modifier.padding(top = 6.mpx), horizontalArrangement = Arrangement.spacedBy(12.mpx), verticalAlignment = Alignment.Top) {
             when {
                 audioBar != null -> audioBar()

@@ -245,7 +245,7 @@ private class MoveList(val title: String, val keys: List<String>, val names: Lis
  * chosen; the focused sport's leagues on the right, each a switch, the chosen ones first in the user's
  * order. OK or ▶ on a sport moves into its leagues. Hold OK on a sport or a chosen league opens the
  * Move window ([MovePopup]).
- * That order is the hub's and Home's (owner).
+ * That order is the hub's and Home's.
  */
 @Composable
 private fun LeaguePicker(vm: SportsSettingsViewModel, c: SportsConfig, rowsFocus: androidx.compose.ui.focus.FocusRequester, modifier: Modifier) {
@@ -253,13 +253,13 @@ private fun LeaguePicker(vm: SportsSettingsViewModel, c: SportsConfig, rowsFocus
     var selected by rememberSaveable { mutableStateOf(sports.first()) }
     val leaguesFocus = remember { androidx.compose.ui.focus.FocusRequester() }
     // The leagues pane is ordered once per sport (and after a Move), not on every switch: a league that
-    // jumped to the top when switched on took the focus with it (owner).
+    // jumped to the top when switched on took the focus with it.
     var orderVersion by remember { mutableStateOf(0) }
     // A saved Move re-orders the pane once the new order has reached the settings (the save is async).
     var reorderPending by remember { mutableStateOf(false) }
     androidx.compose.runtime.LaunchedEffect(c.leagues) { if (reorderPending) { reorderPending = false; orderVersion++ } }
     val sportFocus = remember { SportsCatalog.sports.associateWith { androidx.compose.ui.focus.FocusRequester() } }
-    // Hold OK opens the Move overlay below straight away (owner: no menu in between).
+    // Hold OK opens the Move overlay below straight away (no menu in between).
     var moving by remember { mutableStateOf<MoveList?>(null) }
     val warning = stringResource(R.string.sports_load_time_warning)
     val holdOk = stringResource(R.string.content_key_hold_ok)
@@ -325,7 +325,7 @@ private fun LeaguePicker(vm: SportsSettingsViewModel, c: SportsConfig, rowsFocus
                         icon = OwnTVIcon.SPORTS, title = name, desc = l.country, value = value,
                         onClick = { vm.toggleLeague(l.key) },
                         // Only a chosen league has a place in the order, and only with another one to swap with.
-                        // Never null: switching between a plain and a long-click handler drops the focus (owner).
+                        // Never null: switching between a plain and a long-click handler drops the focus.
                         onLongClick = {
                             if (on && chosenHere.size > 1) {
                                 startMove(MoveList(name, chosenHere.map { it.key }, chosenHere.map { leagueName(it) }, chosenHere.indexOf(l)) { keys ->
@@ -345,7 +345,7 @@ private fun LeaguePicker(vm: SportsSettingsViewModel, c: SportsConfig, rowsFocus
 
 /**
  * The Move window of Sports and leagues, in Stage form and above the help panel: ▲ ▼ choose a row, OK
- * picks it up and puts it down, so several can move in one go; only Save or Cancel closes it (owner).
+ * picks it up and puts it down, so several can move in one go; only Save or Cancel closes it.
  */
 @Composable
 private fun MovePopup(list: MoveList, title: String, onDone: () -> Unit, onCancel: () -> Unit) {

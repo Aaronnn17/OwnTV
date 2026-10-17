@@ -20,7 +20,7 @@ import tv.own.owntv.ui.theme.mpx
  * A simple TV dialog with one text field (e.g. renaming a channel/category). [onConfirm] receives the
  * trimmed text — possibly empty, which callers treat as "reset to original". [onDelete] is optional
  * and renders a destructive button (tinted with the app's favorite/error color) at the left end of
- * the button row — used by the custom-category rename dialog (issue #87) to delete the category.
+ * the button row — used by the custom-category rename dialog to delete the category.
  */
 @Composable
 fun TextInputDialog(

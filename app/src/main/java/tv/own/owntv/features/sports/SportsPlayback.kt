@@ -50,7 +50,7 @@ class SportsPlayback(
     /** The match page the player's *Match* button asked for, and the channel Back from it returns to. */
     val pendingMatch = MutableStateFlow<Pair<Match, ChannelEntity?>?>(null)
 
-    /** The hub's chosen sport and league chips: kept while the app runs, back to All on a fresh start (owner). */
+    /** The hub's chosen sport and league chips: kept while the app runs, back to All on a fresh start. */
     var hubChip: Any? = null
     var hubLeague: Any? = null
 

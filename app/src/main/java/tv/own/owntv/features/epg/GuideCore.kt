@@ -214,12 +214,12 @@ internal fun ProgrammeDetailDialog(
     canRecord: Boolean = false,
     /** The recording already covering this programme, which decides what the button says. */
     recording: RecordingEntity? = null,
-    /** The title of a recording this one would contend with, shown as a warning before committing (D10). */
+    /** The title of a recording this one would contend with, shown as a warning before committing. */
     clashWith: String? = null,
     onRecord: () -> Unit = {},
     onStopRecording: () -> Unit = {},
     onCancelRecording: () -> Unit = {},
-    /** Non-null when a standing "record every showing" rule already covers this title (D7). */
+    /** Non-null when a standing "record every showing" rule already covers this title. */
     seriesRuleActive: Boolean = false,
     onRecordSeries: () -> Unit = {},
     onStopSeries: () -> Unit = {},
@@ -256,7 +256,7 @@ internal fun ProgrammeDetailDialog(
                 }
                 // The clash, said before the user commits to anything. A live programme cannot wait
                 // its turn — "start when the other finishes" would mean "start half-way through"
-                // (D10) — so this is a warning at the moment of choosing, not a failure afterwards.
+                // so this is a warning at the moment of choosing, not a failure afterwards.
                 if (canRecord && clashWith != null && recording == null) {
                     Spacer(Modifier.height(14.mpx))
                     Text(

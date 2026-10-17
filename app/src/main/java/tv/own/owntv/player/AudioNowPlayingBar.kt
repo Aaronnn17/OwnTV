@@ -85,7 +85,7 @@ import tv.own.owntv.ui.theme.animationsOn
  * The wide "now-playing" bar shown in the top bar (left of the weather chip) while [PlayerMode.AUDIO]
  * is active. Video is stopped; only audio plays.
  *
- * **Two-stage focus (owner spec):**
+ * **Two-stage focus:**
  *  1. **Collapsed** — no D-pad focus: equaliser cover + title + a static play/pause glyph.
  *  2. **Stage 1 — pill focused:** focus lands on the WHOLE bar as one target (highlighted, expanded to
  *     show the full row). The inner buttons are NOT individually navigable yet.

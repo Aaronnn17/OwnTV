@@ -175,7 +175,7 @@ fun MoviesScreen(
     var contextCategoryKey by remember { mutableStateOf<LiveKey?>(null) }
     var railFocusRow by remember { mutableStateOf<Int?>(null) }
     val railFocus = remember { FocusRequester() }
-    // The movie the "Move to category…" flow is moving (issue #87), with the origin captured at
+    // The movie the "Move to category…" flow is moving, with the origin captured at
     // menu-open time (the rail can't change under the modal, but capturing is still safer).
     var moveItem by remember { mutableStateOf<MovieEntity?>(null) }
     var moveOriginKey by remember { mutableStateOf<String?>(null) }
@@ -440,7 +440,7 @@ fun MoviesScreen(
         // However the sheet closed (Back, a pick, ◀ to the rail), the next one starts fresh.
         else sheetHadFocus = false
     }
-    // CH± in the categories moves the highlight only; OK picks (owner, 2026-10-01).
+    // CH± in the categories moves the highlight only; OK picks.
     var catFocusIndex by remember { mutableStateOf<Int?>(null) }
     val categoriesModifier = Modifier
         .onFocusChanged {
@@ -596,7 +596,7 @@ fun MoviesScreen(
                         Text(emptyText, style = stageText(20, 500), color = StageColors.Muted, modifier = Modifier.padding(start = fx(84), top = 60.mpx))
                     } else {
                         // The 196 × 294 posters, 26 apart, as many across as fit; the grid grows downwards
-                        // (owner, 2026-10-01: a grid, not a single row). Glow room on every side.
+                        // (a grid, not a single row). Glow room on every side.
                         val glowRoom = 24.mpx
                         val rowW = screenW - fx(84) - fx(64)
                         val columns = ((rowW + 26.mpx) / 222.mpx).toInt().coerceAtLeast(1)
@@ -911,7 +911,7 @@ fun MoviesScreen(
                 add(MenuAction("move", stringResource(R.string.content_move), OwnTVIcon.MOVE, group = VodGroupOrganise) {
                     contextMovie = null; vm.enterMoveMode(m, selectedKey)
                 })
-                // "Move to category…" (issue #87): send this movie into a user's combined category.
+                // "Move to category…": send this movie into a user's combined category.
                 add(MenuAction("move_to_category", stringResource(R.string.content_move_to_category), OwnTVIcon.FOLDER, group = VodGroupOrganise) {
                     moveOriginKey = when (val k = selectedKey) {
                         is LiveKey.Folder -> vm.folderKey(k.id)
@@ -963,7 +963,7 @@ fun MoviesScreen(
         )
     }
 
-    // Move to… a combined category (issue #87), incl. the "＋ New category…" name prompt.
+    // Move to… a combined category, incl. the "＋ New category…" name prompt.
     val moveTargets by vm.moveTargets.collectAsStateWithLifecycle()
     if (creatingCategory) {
         TextInputDialog(

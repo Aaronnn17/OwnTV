@@ -57,7 +57,7 @@ class DownloadsViewModel(
         viewModelScope.launch { settings.setDownloadWatchChoice(choice) }
     }
 
-    /** The one transfer running now, with its speed (G3), for the focused row's "12.4 MB/s · 3 min left". */
+    /** The one transfer running now, with its speed, for the focused row's "12.4 MB/s · 3 min left". */
     val active: StateFlow<tv.own.owntv.core.download.DownloadActivityTracker.ActiveDownload?> = tracker.active
 
     /**

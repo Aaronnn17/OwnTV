@@ -314,7 +314,7 @@ private fun Swatch(color: Color, label: String, chosen: Boolean, onClick: () -> 
 }
 
 /**
- * The saturation/brightness square and the hue bar, each its own focus stop (owner, 2026-10-02): focus
+ * The saturation/brightness square and the hue bar, each its own focus stop: focus
  * rings it, OK goes in, then the square moves its point freely (◀ ▶ saturation, ▲ ▼ brightness) and the
  * bar its hue (◀ ▶); OK or Back comes out. Outside, the D-pad only moves focus, so nothing changes by
  * passing over them.

@@ -204,7 +204,7 @@ internal val VIDEO_QUICK_ROWS: List<VideoQuickRef> = listOf(
     VideoQuickRef("vp_autoplay", SECTION_RESUME, OwnTVIcon.AUTOPLAY_NEXT, R.string.settings_autoplay_next, R.string.settings_autoplay_next_description),
     VideoQuickRef("vp_measured_stats", SECTION_DIAGNOSTICS, OwnTVIcon.VIDEO, R.string.settings_measured_stats, R.string.settings_measured_stats_description),
     VideoQuickRef("vp_logging", SECTION_DIAGNOSTICS, OwnTVIcon.INFO, R.string.settings_detailed_playback_logging, R.string.settings_detailed_playback_logging_description),
-    // N19 — no row, so nothing to find or pin, on a TV whose decoders cannot tunnel.
+    // No row, so nothing to find or pin, on a TV whose decoders cannot tunnel.
 ).filter { it.key != "vp_tunneled" || tv.own.owntv.player.Tunneling.supported }
 
 /**
@@ -858,7 +858,7 @@ internal fun VideoPlayerGroupRows(
             value = SettingValue.Switch(hdr),
             onClick = { vm.setHdrEnabled(!hdr) },
         )
-        // N11 — the Settings limit; the player's Quality button picks within a stream.
+        // The Settings limit; the player's Quality button picks within a stream.
         KeyedSettingRow(
             quickKey = "vp_max_quality",
             choices = vm.maxVideoHeightChoices.map { videoQualityLabel(it) },
@@ -870,7 +870,7 @@ internal fun VideoPlayerGroupRows(
             modifier = Modifier.focusRequester(dialogRowFocus.getValue(Dialog.MAX_QUALITY)),
             onClick = { savedScroll = scrollState.value; dialog = Dialog.MAX_QUALITY },
         )
-        // N19 — only where a decoder can tunnel; after a failure it says why it is off.
+        // Only where a decoder can tunnel; after a failure it says why it is off.
         if (vm.tunnelingSupported) {
             KeyedSettingRow(
                 quickKey = "vp_tunneled",
@@ -916,7 +916,7 @@ internal fun VideoPlayerGroupRows(
             modifier = Modifier.focusRequester(dialogRowFocus.getValue(Dialog.AFR_WARNING)),
             onClick = toggleAutoFrameRate,
         )
-        // N7 — both only act for a film with Auto frame rate on; shown always, like every row here.
+        // Both only act for a film with Auto frame rate on; shown always, like every row here.
         KeyedSettingRow(
             quickKey = "vp_afr_pause",
             icon = OwnTVIcon.PAUSE,
@@ -936,7 +936,7 @@ internal fun VideoPlayerGroupRows(
         )
                     }
                     SECTION_STREAMING -> {
-        // N18 — films, episodes and catch-up only; live keeps its own latency and give-up settings.
+        // Films, episodes and catch-up only; live keeps its own latency and give-up settings.
         KeyedSettingRow(
             quickKey = "vp_vod_buffer",
             choices = vm.vodBufferChoicesSecs.map { vodAutoOrSeconds(it) },
@@ -1826,7 +1826,7 @@ internal fun VideoPlayerGroupRows(
             MultiviewTilesDialog(
                 current = multiviewTiles,
                 onPick = { tiles ->
-                    // Above two tiles the warning is asked once, here and nowhere else (D12): a tile
+                    // Above two tiles the warning is asked once, here and nowhere else: a tile
                     // that then fails already explains itself, so the user is not asked twice.
                     if (tiles > tv.own.owntv.core.live.DEFAULT_MULTIVIEW_TILES && !multiviewWarningAccepted) {
                         pendingTiles = tiles
@@ -1929,17 +1929,17 @@ private fun dialogForQuickKey(key: String): Dialog? = when (key) {
 
 private enum class Dialog { NONE, LIVE_ENGINE, LIVE_ENGINE_SOURCES, LIVE_ENGINE_SOURCE, LIVE_LATENCY_SOURCES, LIVE_LATENCY_SOURCE, LIVE_LATENCY_CUSTOM_SOURCE, VOD_ENGINE, VOD_ENGINE_SOURCES, VOD_ENGINE_SOURCE, ZOOM, VOLUME, RESET_SAVED_ZOOM, RESET_SAVED_VOLUME, RESET_SAVED_AUDIO_DELAY, SEEK_STEP, LIVE_REWIND_STEP, SUB_STYLE, SUB_LANG, AUDIO_LANG, SURROUND, AUDIO_SYNC, RESUME, LIVE_LATENCY, LIVE_CUSTOM, LIVE_PREROLL, LIVE_TUNE_TIMEOUT, LIVE_TUNE_TIMEOUT_SOURCES, LIVE_TUNE_TIMEOUT_SOURCE, LIVE_PREROLL_SOURCES, LIVE_PREROLL_SOURCE, EXTERNAL_PLAYER, RESET_PINS, RESET_LIVE_PINS, FORGET_FIXES, AFR_WARNING, AFR_PAUSE, VOD_BUFFER, VOD_TIMEOUT, VOD_RECONNECTS, TIMESHIFT_WINDOW, TIMESHIFT_RESUME, MAX_QUALITY, LIVE_PREVIEW_PANEL, MINI_PLAYER, MULTIVIEW_TILES, MULTIVIEW_WARNING }
 
-/** "Auto" for 0, else seconds ("60s") — the film buffer and network timeout choices (N18). */
+/** "Auto" for 0, else seconds ("60s") — the film buffer and network timeout choices. */
 @Composable
 private fun vodAutoOrSeconds(secs: Int): String =
     if (secs <= 0) stringResource(R.string.settings_vod_network_auto) else stringResource(R.string.settings_live_buffer_seconds, secs)
 
-/** "Auto" for 0, else the picture height ("1080p") — Maximum video quality (N11). */
+/** "Auto" for 0, else the picture height ("1080p") — Maximum video quality. */
 @Composable
 internal fun videoQualityLabel(height: Int): String =
     if (height <= 0) stringResource(R.string.settings_auto) else stringResource(R.string.settings_video_quality_lines, height)
 
-/** "Off", or the hold in seconds ("2s"), for the Auto frame rate pause (N7). */
+/** "Off", or the hold in seconds ("2s"), for the Auto frame rate pause. */
 @Composable
 private fun afrPauseLabel(secs: Int): String =
     if (secs <= 0) stringResource(R.string.common_off) else stringResource(R.string.settings_live_buffer_seconds, secs)

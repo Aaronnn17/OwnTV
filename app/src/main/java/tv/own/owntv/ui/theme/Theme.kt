@@ -25,7 +25,7 @@ enum class ThemeMode { SYSTEM, DARK, LIGHT }
 val LocalThemeMode = staticCompositionLocalOf { ThemeMode.DARK }
 
 /**
- * Width of the focus ring the user picks in Settings (#121 — "make the selection prominent").
+ * Width of the focus ring the user picks in Settings, to make the selection prominent.
  * A CompositionLocal rather than a [Dimens] constant because every surface that draws it has to
  * follow the same choice.
  */

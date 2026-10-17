@@ -167,7 +167,7 @@ fun LiveEpgCard(
 }
 
 /**
- * N3 — the guide lines under the channel-change banner: what is on now, how far through it is, and what
+ * The guide lines under the channel-change banner: what is on now, how far through it is, and what
  * comes next. The same labels, time formats and progress bar as [LiveEpgCard], packed to fit the
  * banner's width. Draws nothing for a channel without a guide, so the banner stays name and number.
  */

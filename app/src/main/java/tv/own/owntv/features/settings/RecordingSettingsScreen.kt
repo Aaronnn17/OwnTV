@@ -86,7 +86,7 @@ internal fun RecordingSettingsRows(
         helpKey = "rec_reserve",
         onClick = { vm.setRecordingReserveConnection(!reserve) },
     )
-    // D3 — the player's record button does not exist until this is on, and turning it on is
+    // The player's record button does not exist until this is on, and turning it on is
     // where the one-connection trade-off is explained and accepted. Turning it OFF needs no
     // dialog: nothing is being traded away.
     KeyedSettingRow(
@@ -165,7 +165,7 @@ internal fun RecordingSettingsRows(
 private const val MAX_ROLL_MINUTES = tv.own.owntv.core.recording.RecordingSchedule.MAX_ROLL_MINUTES
 
 /**
- * The trade-off behind "Record what I'm watching", said before it is switched on (D3).
+ * The trade-off behind "Record what I'm watching", said before it is switched on.
  *
  * Shaped exactly like the Multiview and auto-frame-rate warnings before it: a title naming the
  * constraint, a paragraph explaining what is gained and what is given up, and two buttons with the

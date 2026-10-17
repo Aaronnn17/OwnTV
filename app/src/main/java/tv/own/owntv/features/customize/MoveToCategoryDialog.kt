@@ -24,14 +24,14 @@ import tv.own.owntv.R
 import tv.own.owntv.ui.theme.mpx
 
 /**
- * One destination row in the "Move to…" dialog: a user-created custom category (issue #87) plus how
+ * One destination row in the "Move to…" dialog: a user-created custom category plus how
  * many items it currently holds. Exposed here (not in the view models) so Live TV, Movies and Series
  * all share the same dialog and the same target model.
  */
 data class MoveTarget(val id: String, val displayName: String, val count: Int)
 
 /**
- * Shared "Move to…" dialog (issue #87): pick one of the user's custom combined categories (or create
+ * Shared "Move to…" dialog: pick one of the user's custom combined categories (or create
  * a new one via [onNewCategory], which swaps this dialog for a name prompt at the call site), decide
  * whether the item stays in its origin as well, then Move. The Move button is disabled until a target
  * is selected. Scrim/trap/BackHandler match [RangeHideDialog] so D-pad focus and Back behave like the

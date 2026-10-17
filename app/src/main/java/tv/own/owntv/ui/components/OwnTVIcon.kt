@@ -43,7 +43,7 @@ enum class OwnTVIcon {
     // archive box stood for a paired phone, for "let this one be found", and for "send to it" — three
     // meanings on one screen, and all three already meant "backup" everywhere else in the app.
     PHONE, SEND,
-    // The sleep timer (N17): a crescent moon, the phone's mark for the same button.
+    // The sleep timer: a crescent moon, the phone's mark for the same button.
     BEDTIME,
     // Stage marks with no older counterpart (see StageGlyphs.kt). TILES is the More destination.
     PLAY_CIRCLE, BELL, REC, CHEVRON_LEFT, GRID, LIST, CHECK, CLOCK, SUN, TREND, LAYERS, PENCIL,

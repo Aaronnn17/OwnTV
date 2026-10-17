@@ -318,7 +318,7 @@ private fun ColumnScope.RailBrand(open: Boolean) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         BrandMark(icon, 50.mpx)
-        // The #227 wordmark, 130 wide (`.brandrow`, `wordmarkC()`).
+        // The wordmark, 130 wide (`.brandrow`, `wordmarkC()`).
         Wordmark(130.mpx)
     }
 }

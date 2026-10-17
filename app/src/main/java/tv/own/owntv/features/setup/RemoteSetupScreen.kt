@@ -43,8 +43,8 @@ import tv.own.owntv.ui.theme.stageAccent
 import tv.own.owntv.ui.theme.stageText
 
 /**
- * Add a source › From your phone: the small LAN web server starts as the page opens (owner,
- * 1 Oct); the panel shows the QR, the address and the PIN. A submission hands off to the Type it here
+ * Add a source › From your phone: the small LAN web server starts as the page opens;
+ * the panel shows the QR, the address and the PIN. A submission hands off to the Type it here
  * form, pre-filled, where the user presses Start import ([onPayloadReceived]). New PIN restarts the server
  * with a fresh PIN. The listener stops when this page leaves composition.
  */

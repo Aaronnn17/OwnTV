@@ -232,7 +232,7 @@ private fun LanguageStageRow(
     )
 }
 
-/** The panel's HELP TRANSLATE block (owner): QR and link to the project, then the request note. */
+/** The panel's HELP TRANSLATE block: QR and link to the project, then the request note. */
 @Composable
 private fun TranslateBlock() {
     val url = SupportedLocales.CONTRIBUTION_PROJECT_URL

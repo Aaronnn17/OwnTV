@@ -141,7 +141,7 @@ class SettingsViewModel(
     /** Skip (from the prompt) or acknowledge (after Done) — either way, close the EPG flow. */
     fun dismissPendingEpg() { pendingEpgSource = null; _epgSync.value = EpgSyncUi.Hidden }
 
-    /** Clear the active profile's watch history (the "recently watched" / continue rows). #26
+    /** Clear the active profile's watch history (the "recently watched" / continue rows).
      *  [type] null = everything; otherwise just LIVE / MOVIE / SERIES. */
     fun clearWatchHistory(type: tv.own.owntv.core.model.MediaType? = null) {
         viewModelScope.launch {
@@ -276,7 +276,7 @@ class SettingsViewModel(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
     // Multiview. The tile count is never reduced behind the user's back: the
-    // warning above two tiles is asked once and obeyed either way (D5, D12).
+    // warning above two tiles is asked once and obeyed either way.
     val multiviewEnabled: StateFlow<Boolean> = settings.multiviewEnabled
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
@@ -465,15 +465,15 @@ class SettingsViewModel(
      *  those are stored identically to the user's own, so they can only be cleared wholesale. */
     fun clearVodEnginePins() { viewModelScope.launch { vodEngineStore.clearAll() } }
 
-    /** N15 — how many channels are pinned to one engine (either direction), for the live reset row. */
+    /** How many channels are pinned to one engine (either direction), for the live reset row. */
     val livePinCount: StateFlow<Int> =
         combine(forceMpvStore.urls, forceMpvStore.exoUrls) { mpv, exo -> mpv.size + exo.size }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
 
-    /** N15 — every channel follows the Live TV player setting again; films' pins are kept. */
+    /** Every channel follows the Live TV player setting again; films' pins are kept. */
     fun clearLivePins() { viewModelScope.launch { forceMpvStore.clearAll() } }
 
-    /** N15 — forget the stream lessons of this session and the stored catch-up decode list. */
+    /** Forget the stream lessons of this session and the stored catch-up decode list. */
     fun forgetStreamFixes() { viewModelScope.launch { tv.own.owntv.player.LiveStreamQuirks.forgetLearned(archiveDecodeStore) } }
 
     /** Volume every item starts at, before any per-item value the player remembered. */
@@ -521,7 +521,7 @@ class SettingsViewModel(
     val liveLeftRightRewinds: StateFlow<Boolean> = settings.liveLeftRightRewinds.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
     fun setLiveLeftRightRewinds(enabled: Boolean) { viewModelScope.launch { settings.setLiveLeftRightRewinds(enabled) } }
 
-    // N4 — pause and rewind channels without catch-up, from a copy saved while watching.
+    // Pause and rewind channels without catch-up, from a copy saved while watching.
     val timeshiftEnabled: StateFlow<Boolean> = settings.timeshiftEnabled.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
     fun setTimeshiftEnabled(enabled: Boolean) { viewModelScope.launch { settings.setTimeshiftEnabled(enabled) } }
     val timeshiftWindowMinutes: StateFlow<Int> = settings.timeshiftWindowMinutes.stateIn(
@@ -536,7 +536,7 @@ class SettingsViewModel(
         }
     }
 
-    // N18 — films' buffer, network timeout and reconnect attempts.
+    // Films' buffer, network timeout and reconnect attempts.
     val vodBufferChoicesSecs: List<Int> get() = settings.vodBufferChoicesSecs
     val vodNetworkTimeoutChoicesSecs: List<Int> get() = settings.vodNetworkTimeoutChoicesSecs
     val vodReconnectChoices: List<Int> get() = settings.vodReconnectChoices
@@ -547,7 +547,7 @@ class SettingsViewModel(
     val vodReconnects: StateFlow<Int> = settings.vodReconnects.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 1)
     fun setVodReconnects(count: Int) { viewModelScope.launch { settings.setVodReconnects(count) } }
 
-    // N7 — Auto frame rate's film extras.
+    // Auto frame rate's film extras.
     val afrPauseMaxSecs: Int get() = settings.afrPauseMaxSecs
     val afrPauseSecs: StateFlow<Int> = settings.afrPauseSecs.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
     fun setAfrPauseSecs(secs: Int) { viewModelScope.launch { settings.setAfrPauseSecs(secs) } }
@@ -673,7 +673,7 @@ class SettingsViewModel(
     val defaultZoom: StateFlow<String> = settings.defaultZoom.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), "FIT")
     fun setDefaultZoom(name: String) { viewModelScope.launch { settings.setDefaultZoom(name) } }
 
-    // Subtitle appearance (#96) — while subtitleStyleEnabled is false the other four are inert, and
+    // Subtitle appearance — while subtitleStyleEnabled is false the other four are inert, and
     // each of them separately does nothing until moved off its own "Default" value.
     val subtitleStyleEnabled: StateFlow<Boolean> = settings.subtitleStyleEnabled.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
     fun setSubtitleStyleEnabled(enabled: Boolean) { viewModelScope.launch { settings.setSubtitleStyleEnabled(enabled) } }
@@ -803,7 +803,7 @@ class SettingsViewModel(
     val customAccent: StateFlow<String> = settings.customAccent.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), "")
     fun setCustomAccent(hex: String) { viewModelScope.launch { settings.setCustomAccent(hex) } }
 
-    /** Focus highlight (#121): ring color hex (blank = accent) and ring width in dp. */
+    /** Focus highlight: ring color hex (blank = accent) and ring width in dp. */
     val focusHighlight: StateFlow<String> = settings.focusHighlight.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), "")
     val focusHighlightWidth: StateFlow<Int> = settings.focusHighlightWidth.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 2)
     fun setFocusHighlight(hex: String) { viewModelScope.launch { settings.setFocusHighlight(hex) } }
@@ -903,7 +903,7 @@ class SettingsViewModel(
         viewModelScope.launch { settings.setMiniPlayerPosition(position.name) }
     }
 
-    // Live TV latency (#72): preset + custom seconds.
+    // Live TV latency: preset + custom seconds.
     val liveLatencyMode: StateFlow<tv.own.owntv.core.settings.LiveLatency> =
         settings.liveLatencyMode
             .map { tv.own.owntv.core.settings.LiveLatency.fromName(it) }
@@ -918,7 +918,7 @@ class SettingsViewModel(
         viewModelScope.launch { settings.setLiveLatencyCustomSecs(secs) }
     }
 
-    /** "Pre-buffer" (F07): the global choice, in seconds (0 = Off). */
+    /** "Pre-buffer": the global choice, in seconds (0 = Off). */
     val livePrerollSecs: StateFlow<Int> =
         settings.livePrerollSecs.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), tv.own.owntv.core.settings.LiveBuffer.PREROLL_OFF)
     fun setLivePrerollSecs(secs: Int) {
@@ -1599,7 +1599,7 @@ class SettingsViewModel(
 
     private class DnsNoAddressesException(val host: String) : java.io.IOException()
 
-    // --- TMDB metadata enrichment — Phase M1 config + manual "look up title" test ---
+    // --- TMDB metadata enrichment: config + manual "look up title" test ---
 
     val metadataMode: StateFlow<tv.own.owntv.core.metadata.MetadataMode> =
         settings.metadataMode.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), tv.own.owntv.core.metadata.MetadataMode.PROVIDER_PLUS_TMDB)
@@ -1686,7 +1686,7 @@ class SettingsViewModel(
 
     fun resetMetadataTest() { _metadataTest.value = MetadataTestState.Idle }
 
-    /** Manual "look up title" through the configured tier — proves the plumbing end-to-end (M1 deliverable). */
+    /** Manual "look up title" through the configured tier — proves the plumbing end-to-end. */
     fun testMetadataLookup(title: String) {
         if (_metadataTest.value == MetadataTestState.Testing) return
         val q = title.trim()

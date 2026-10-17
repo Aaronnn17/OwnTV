@@ -109,7 +109,7 @@ fun CustomizeItemsScreen(
     var showFilterPicker by remember { mutableStateOf(false) }
     // The item whose Hide button was clicked to close a range — opens the Show/Hide/Cancel prompt.
     var rangeEnd by remember { mutableStateOf<CustomizeItemRow?>(null) }
-    // The item the "Move to…" dialog is moving (issue #87); creatingCategory swaps the dialog for the
+    // The item the "Move to…" dialog is moving; creatingCategory swaps the dialog for the
     // new-category name prompt.
     var movingItem by remember { mutableStateOf<CustomizeItemRow?>(null) }
     var creatingCategory by remember { mutableStateOf(false) }
@@ -168,7 +168,7 @@ fun CustomizeItemsScreen(
         handleBack = false,
         toolbar = {
             // Bulk rename — Movies/Series only: rename the WHOLE category, optionally with the ✨ Auto
-            // cleanup preset applied immediately (issue #86). Live renames go per row or via span.
+            // cleanup preset applied immediately. Live renames go per row or via span.
             if (!isLive) {
                 tv.own.owntv.ui.stage.StageTool(
                     stringResource(R.string.settings_customize_rename_items),
@@ -337,11 +337,11 @@ fun CustomizeItemsScreen(
         )
     }
 
-    // Bulk rename (issue #86): choice popup, rule builder, review, restore-confirm, refusal.
+    // Bulk rename: choice popup, rule builder, review, restore-confirm, refusal.
     // Its popups restore D-pad focus to the row that opened the flow when the whole flow closes.
     BulkRenameFlow(vm.bulk, returnFocus = dialogReturn)
 
-    // Move to… (issue #87): pick a combined category; "＋ New category…" swaps this dialog for the
+    // Move to…: pick a combined category; "＋ New category…" swaps this dialog for the
     // name prompt, then the move dialog re-opens with the fresh category listed.
     val moveTargets by vm.moveTargets.collectAsStateWithLifecycle()
     if (creatingCategory) {
@@ -410,7 +410,7 @@ private fun ItemRow(
     onRename: () -> Unit,
     onRenameLongPress: () -> Unit,
     onPickRenameEnd: () -> Unit,
-    // "Move to…" (issue #87): send this item into a user's combined category.
+    // "Move to…": send this item into a user's combined category.
     onMove: () -> Unit,
     // Only in a custom category: take the item out of it alone.
     onRemoveFromCategory: (() -> Unit)?,

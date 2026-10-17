@@ -96,7 +96,7 @@ fun CustomizeScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val actionsFocus = remember { FocusRequester() }
     // The category whose Hide button was clicked to close a range — opens the Show/Hide/Cancel prompt.
     var rangeEnd by remember { mutableStateOf<CustomizeCatRow?>(null) }
-    // ＋ New category (issue #87): name prompt, then the empty combined category appears in the list.
+    // ＋ New category: name prompt, then the empty combined category appears in the list.
     var creatingCategory by remember { mutableStateOf(false) }
     // Custom category pending deletion — confirmed in a scrim before anything is removed.
     var deletingCategory by remember { mutableStateOf<CustomizeCatRow?>(null) }
@@ -206,7 +206,7 @@ fun CustomizeScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     if (selectedCategory != null) {
         CustomizeItemsScreen(onBack = { vm.closeItems() }, modifier = modifier)
     } else {
-    // The band, the tool row above the list (owner), categories as rows and the panel with
+    // The band, the tool row above the list, categories as rows and the panel with
     // the focused category's actions and the span help.
     StageFullPage(
         parents = listOf(stringResource(R.string.settings_group_content_metadata)),
@@ -242,7 +242,7 @@ fun CustomizeScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                 onClick = { dialogReturn = filterFocus; showFilterPicker = true },
                 icon = OwnTVIcon.EYE_OFF, boxed = true, modifier = Modifier.focusRequester(filterFocus),
             )
-            // ＋ New category (issue #87): an empty combined category; items are moved into it from the
+            // ＋ New category: an empty combined category; items are moved into it from the
             // browse context menus or a category's items.
             tv.own.owntv.ui.stage.StageTool(
                 stringResource(R.string.settings_customize_new_category),
@@ -519,7 +519,7 @@ fun CustomizeScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
         )
     }
 
-    // ＋ New category (issue #87): name the empty combined category, then it appears in the list.
+    // ＋ New category: name the empty combined category, then it appears in the list.
     if (creatingCategory) {
         TextInputDialog(
             title = stringResource(R.string.settings_customize_new_category_title),
@@ -541,7 +541,7 @@ fun CustomizeScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
         )
     }
 
-    // Bulk rename (issue #86): choice popup, rule builder, review, restore-confirm, refusal.
+    // Bulk rename: choice popup, rule builder, review, restore-confirm, refusal.
     // Its popups restore D-pad focus to the row that opened the flow when the whole flow closes.
     BulkRenameFlow(vm.bulk, returnFocus = dialogReturn)
 

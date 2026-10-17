@@ -639,7 +639,7 @@ internal fun AboutPage(vm: MoreCountsViewModel, entry: FocusRequester, onOpenLan
 
     Column(Modifier.fillMaxSize().focusGroup()) {
         Row(horizontalArrangement = Arrangement.spacedBy(40.mpx), verticalAlignment = Alignment.CenterVertically) {
-            // The app's own icon (150) and the #227 wordmark (300).
+            // The app's own icon (150) and the wordmark (300).
             BrandMark(rememberAppliedIcon(), 150.mpx)
             Column {
                 Wordmark(300.mpx)

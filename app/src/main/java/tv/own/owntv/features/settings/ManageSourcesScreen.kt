@@ -433,7 +433,7 @@ private fun SourceRow(
         keepPanel = keepPanel,
         help = SettingHelp(
             title = source.name,
-            // The address on one line, the counts on the next (owner).
+            // The address on one line, the counts on the next.
             text = listOfNotNull(typeName, visibleCounts).joinToString("\n"),
             hints = listOf(
                 "▶" to stringResource(R.string.settings_key_actions),

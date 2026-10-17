@@ -137,7 +137,7 @@ fun ContentMenuSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier)
 }
 
 /**
- * One menu's actions in the Move overlay — the same panel the owner reorders channels with, except
+ * One menu's actions in the Move overlay — the same panel channels are reordered with, except
  * the item being carried is chosen here rather than handed in: hold OK on an action to pick it up,
  * Up/Down to carry it, OK to put it down.
  */

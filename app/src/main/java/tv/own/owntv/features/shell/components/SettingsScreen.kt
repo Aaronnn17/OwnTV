@@ -200,7 +200,7 @@ fun SettingsScreen(
     var showBgPicker by remember { mutableStateOf(false) }
     var showBgRemote by remember { mutableStateOf(false) }
     var showAmbientGlow by remember { mutableStateOf(false) }
-    // U2 — background-image ingest copies a multi-megabyte file; it runs here, off the main thread.
+    // Background-image ingest copies a multi-megabyte file; it runs here, off the main thread.
     val ingestScope = rememberCoroutineScope()
 
     // Batch 4 · Settings search + quick toggles. Empty query = normal grouped list; a non-blank
@@ -274,7 +274,7 @@ fun SettingsScreen(
     var dialogReturn by remember { mutableStateOf<FocusRequester?>(null) }
     LaunchedEffect(showZoom, showPopupSize, showTheme, showAccent, showUpdate, showCatchupTime, showCatchupSources, showCatchupSourceValue, showEpgOffset, showGuideDays, showAnimations, showStartup, showStartupChannelPicker, showAfrWarning, showLivePreviewPanelWarning, showBgImageChooser, showBgPicker, showAmbientGlow, showFocusHighlight, showBgRemote, showVodLayout, showNavigation, showLiveLayout, stageSettings.open) {
         // Only after a popup really closed: on first composition there is no opener, and holding a stale
-        // offset for the settle frames bounced the page (owner's video, 2026-10-03).
+        // offset for the settle frames bounced the page.
         if (!anyDialogOpen && dialogReturn != null) {
             // Focus back on the opener row, with the scroll offset held still the whole way — see
             // [restoreAfterDialogClose] for why doing those two in sequence made the highlight travel.
@@ -1115,7 +1115,7 @@ fun SettingsScreen(
             // The Catch-up popup's second row; its first (the time zone) is the Catch-up entry above.
             rowsOf(stringResource(R.string.settings_breadcrumb, stringResource(R.string.settings_group_sources), stringResource(R.string.settings_catchup)),
                 listOf(R.string.settings_catchup_player), R.string.settings_search_keywords_catchup, OwnTVIcon.CATCHUP) { saveScroll(); dialogReturn = searchFieldFocus; showCatchupTime = true }
-        // A setting is found by its own name only: "play" lists every setting with "play" in its name (owner).
+        // A setting is found by its own name only: "play" lists every setting with "play" in its name.
         val needle = searchQuery.trim().lowercase()
         (entries + videoEntries + screenRowEntries)
             .filter { e -> e.title.lowercase().contains(needle) }
@@ -1751,7 +1751,7 @@ private fun StageSettingsDialogHost(settingsVm: SettingsViewModel, state: StageS
     }
 }
 
-/** Layout › Live TV opens in (G14): List view or Guide view — the same value Live TV's toggle sets. */
+/** Layout › Live TV opens in: List view or Guide view — the same value Live TV's toggle sets. */
 @Composable
 private fun liveOpensInRootRow(settingsVm: SettingsViewModel, focus: FocusRequester, onClick: () -> Unit): RootRow {
     val view by settingsVm.liveView.collectAsStateWithLifecycle()
@@ -1782,7 +1782,7 @@ private fun LiveOpensInDialog(settingsVm: SettingsViewModel, onClose: () -> Unit
     )
 }
 
-/** The guide block's Programme reminders (G2): Ask to switch · Switch · Notify only. */
+/** The guide block's Programme reminders: Ask to switch · Switch · Notify only. */
 @Composable
 private fun remindersRootRow(settingsVm: SettingsViewModel, focus: FocusRequester, onClick: () -> Unit): RootRow {
     val mode by settingsVm.reminderMode.collectAsStateWithLifecycle()
@@ -1911,7 +1911,7 @@ private val AccentPresetChoices: List<tv.own.owntv.core.theme.AccentColor> =
     tv.own.owntv.core.theme.AccentColor.entries.take(6)
 
 /**
- * Focus highlight presets (#121): the six accent presets plus gold and white, which are the two
+ * Focus highlight presets: the six accent presets plus gold and white, which are the two
  * colors people actually ask for when they want the cursor to shout. Hex, so a preset and a
  * hand-typed color are the same stored value — there is no second "preset" concept to keep in sync.
  */
@@ -1939,7 +1939,7 @@ private fun focusWidthLabel(dp: Int): String = stringResource(
 )
 
 /**
- * Focus highlight picker (#121): presets, hex field and the shared HSV palette pick the ring color;
+ * Focus highlight picker: presets, hex field and the shared HSV palette pick the ring color;
  * four buttons pick its width. A live sample sits under the controls because the dialog itself is
  * still drawn with the *saved* values — without it you could not judge a color before committing.
  * "Reset" clears the color back to the accent.
@@ -2079,7 +2079,7 @@ internal const val GITHUB_REPO = "github.com/ahXN00/OwnTV"
 internal const val TELEGRAM_LINK = "t.me/owntvplayer"
 
 /**
- * Read-only viewer for the persisted playback error history (B5): the last ~10 failures with their
+ * Read-only viewer for the persisted playback error history: the last ~10 failures with their
  * plain-English reason, media spec, raw engine text, engine, stream type and device info — so users
  * who can't pull logcat can read/report what happened after dismissing the error screen.
  */
@@ -2201,7 +2201,7 @@ private fun PopupSizeDialog(current: Int, onSet: (Int) -> Unit, onDismiss: () ->
 @Composable
 private fun ZoomDialog(current: Int, onSet: (Int) -> Unit, onDismiss: () -> Unit) {
     // Zoom below LOW_RAM_WARN doubles the on-screen item count, which can OOM-crash 2 GB devices
-    // (#51) — the first step under it asks first (a Stage question, focus on Cancel). Accepting once
+    // the first step under it asks first (a Stage question, focus on Cancel). Accepting once
     // arms the rest of this session; if it was opened already below the line, don't nag.
     var lowZoomAccepted by remember { mutableStateOf(current < UiZoom.LOW_RAM_WARN) }
     var pendingLowZoom by remember { mutableStateOf<Int?>(null) }
@@ -2380,7 +2380,7 @@ private fun CatchupTimeDialog(
     offsetRange: IntRange,
     onSetMode: (SettingsRepository.CatchupTimezone) -> Unit,
     onAdjustOffset: (Int) -> Unit,
-    /** One −/+ press, in minutes (N20: a quarter hour). */
+    /** One −/+ press, in minutes (a quarter hour). */
     offsetStep: Int,
     player: SettingsRepository.CatchupPlayer,
     onSetPlayer: (SettingsRepository.CatchupPlayer) -> Unit,
@@ -2404,7 +2404,7 @@ private fun CatchupTimeDialog(
                 focusRequester = first,
             )
             if (manual) {
-                // ◀ ▶ move the offset by a quarter hour (N20); clamped at the ends.
+                // ◀ ▶ move the offset by a quarter hour; clamped at the ends.
                 tv.own.owntv.ui.stage.StageSurface(
                     onClick = {},
                     radius = 18.mpx,
@@ -2741,7 +2741,7 @@ private fun stageRowExtras(
     }
     val zoomStep: (Int) -> Unit = { step ->
         val next = tv.own.owntv.core.theme.UiZoom.clamp(uiZoomPercent + step * tv.own.owntv.core.theme.UiZoom.STEP)
-        // Below the low-memory line the zoom popup asks first (#51); the row never steps past it alone.
+        // Below the low-memory line the zoom popup asks first; the row never steps past it alone.
         if (next < tv.own.owntv.core.theme.UiZoom.LOW_RAM_WARN && uiZoomPercent >= tv.own.owntv.core.theme.UiZoom.LOW_RAM_WARN) onOpenZoom() else onSetZoom(next)
     }
     val popupStep: (Int) -> Unit = { step ->

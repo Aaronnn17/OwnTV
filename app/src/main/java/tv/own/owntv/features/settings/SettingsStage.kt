@@ -113,7 +113,7 @@ data class SettingHelp(
     val hints: List<Pair<String, String>> = emptyList(),
     /** Drawn under the text: Playlists lists the playlists themselves. */
     val extra: (@Composable () -> Unit)? = null,
-    /** Drawn under the key hints (Customize's span help, owner). */
+    /** Drawn under the key hints (Customize's span help). */
     val footer: (@Composable () -> Unit)? = null,
 )
 
@@ -269,7 +269,7 @@ fun StageSettingsPage(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     if (crumb) {
-                        // Two steps only (owner): the page it came from, then this one.
+                        // Two steps only: the page it came from, then this one.
                         ((if (settingsRoot) listOf(stringResource(R.string.common_nav_settings)) else emptyList()) + parents).takeLast(1).forEach { p ->
                             Text(p, style = stageText(42, 800, (-1f / 46f).em), color = StageColors.Muted, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false))
                             OwnTVIcon(OwnTVIcon.CHEVRON, StageColors.Dim, Modifier.size(30.mpx))
@@ -1073,7 +1073,7 @@ fun StageActionColumn(actions: List<StageAction>, back: FocusRequester?, first: 
     }
 }
 
-/** The panel's SPAN / MULTI-SELECT block (owner): how a span is picked, and the CH keys that reach its end. */
+/** The panel's SPAN / MULTI-SELECT block: how a span is picked, and the CH keys that reach its end. */
 @Composable
 fun SpanHelpBlock() {
     Box(Modifier.padding(top = 18.mpx, bottom = 14.mpx).fillMaxWidth().height(1.mpx).background(StageColors.Ink.copy(alpha = 0.1f)))

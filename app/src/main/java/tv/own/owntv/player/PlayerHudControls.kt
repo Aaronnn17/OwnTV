@@ -462,7 +462,7 @@ internal fun LiveTimelineBar(
     liveEdgeMs: Long,
     onScrub: (Int) -> Unit,
     focusRequester: FocusRequester? = null,
-    /** N4 — wall-clock holes in a saved copy, drawn as dark stretches the rewind jumps over. */
+    /** Wall-clock holes in a saved copy, drawn as dark stretches the rewind jumps over. */
     gaps: () -> List<LongRange> = { emptyList() },
 ) {
     val interaction = remember { MutableInteractionSource() }
@@ -491,7 +491,7 @@ internal fun LiveTimelineBar(
         Box(Modifier.fillMaxWidth().height(if (focused) 6.dp else 4.dp).clip(RoundedCornerShape(50)).background(hudInk.copy(alpha = if (focused) 0.4f else 0.22f))) {
             Box(Modifier.fillMaxWidth(frac).fillMaxHeight().clip(RoundedCornerShape(50)).background(hudAccent))
         }
-        // N4 — where the saved copy has no picture (the connection dropped): dark, so a jump over it is
+        // Where the saved copy has no picture (the connection dropped): dark, so a jump over it is
         // expected rather than a surprise. Read here, where the bar redraws with the ticking offset.
         liveGapSpans(gaps(), liveEdgeMs).forEach { span ->
             Box(Modifier.fillMaxWidth(span.endFrac), contentAlignment = Alignment.CenterEnd) {

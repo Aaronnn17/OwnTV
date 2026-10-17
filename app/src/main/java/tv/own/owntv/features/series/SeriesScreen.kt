@@ -260,7 +260,7 @@ private fun SeriesGrid(
     var railFocusRow by remember { mutableStateOf<Int?>(null) }
     val railFocus = remember { FocusRequester() }
     var contextSeries by remember { mutableStateOf<tv.own.owntv.core.database.entity.SeriesEntity?>(null) }
-    // The series the "Move to category…" flow is moving (issue #87), with the origin captured at
+    // The series the "Move to category…" flow is moving, with the origin captured at
     // menu-open time (the rail can't change under the modal, but capturing is still safer).
     var moveItem by remember { mutableStateOf<tv.own.owntv.core.database.entity.SeriesEntity?>(null) }
     var moveOriginKey by remember { mutableStateOf<String?>(null) }
@@ -501,7 +501,7 @@ private fun SeriesGrid(
         // However the sheet closed (Back, a pick, ◀ to the rail), the next one starts fresh.
         else sheetHadFocus = false
     }
-    // CH± in the categories moves the highlight only; OK picks (owner, 2026-10-01).
+    // CH± in the categories moves the highlight only; OK picks.
     var catFocusIndex by remember { mutableStateOf<Int?>(null) }
     val categoriesModifier = Modifier
         .onFocusChanged {
@@ -657,7 +657,7 @@ private fun SeriesGrid(
                         Text(emptyText, style = stageText(20, 500), color = StageColors.Muted, modifier = Modifier.padding(start = fx(84), top = 60.mpx))
                     } else {
                         // The 196 × 294 posters, 26 apart, as many across as fit; the grid grows downwards
-                        // (owner, 2026-10-01: a grid, not a single row). Glow room on every side.
+                        // (a grid, not a single row). Glow room on every side.
                         val glowRoom = 24.mpx
                         val rowW = screenW - fx(84) - fx(64)
                         val columns = ((rowW + 26.mpx) / 222.mpx).toInt().coerceAtLeast(1)
@@ -937,7 +937,7 @@ private fun SeriesGrid(
                 add(MenuAction("move", stringResource(R.string.content_move), OwnTVIcon.MOVE, group = VodGroupOrganise) {
                     contextSeries = null; vm.enterMoveMode(s, selectedKey)
                 })
-                // "Move to category…" (issue #87): send this series into a user's combined category.
+                // "Move to category…": send this series into a user's combined category.
                 add(MenuAction("move_to_category", stringResource(R.string.content_move_to_category), OwnTVIcon.FOLDER, group = VodGroupOrganise) {
                     moveOriginKey = when (val k = selectedKey) {
                         is LiveKey.Folder -> vm.folderKey(k.id)
@@ -985,7 +985,7 @@ private fun SeriesGrid(
         )
     }
 
-    // Move to… a combined category (issue #87), incl. the "＋ New category…" name prompt.
+    // Move to… a combined category, incl. the "＋ New category…" name prompt.
     val moveTargets by vm.moveTargets.collectAsStateWithLifecycle()
     if (creatingCategory) {
         TextInputDialog(
@@ -1292,7 +1292,7 @@ private fun EpisodeView(
     }
 
     // Seasons and episodes are ordered independently (the Episode order menu); both sort explicitly.
-    // Specials (season 0, #228) always come after the numbered seasons, in either order.
+    // Specials (season 0) always come after the numbered seasons, in either order.
     val seasons = episodes.map { it.seasonNumber }.distinct()
         .let { if (seriesOrder.seasonsDescending) it.sortedDescending() else it.sorted() }
         .sortedBy { it == 0 }
@@ -1308,7 +1308,7 @@ private fun EpisodeView(
         if (hideWatched) seasonEpisodes.filterNot { it.id in completedIds } else seasonEpisodes
     }
 
-    // Opening a show: focus the LAST-WATCHED episode if there is one (#22), else the first. Waits for
+    // Opening a show: focus the LAST-WATCHED episode if there is one, else the first. Waits for
     // !loading so the seeded last-watched id/season from the VM is settled. When entering via
     // player-return, mark done WITHOUT focusing — the restore below owns focus.
     LaunchedEffect(loading, seasonEpisodes.isNotEmpty(), restoreFocus) {

@@ -67,7 +67,7 @@ open class MainActivity : ComponentActivity() {
         private const val DB_PROBE_TIMEOUT_MS = 5_000L
 
         /**
-         * Hard ceiling on the ST3 splash. A stuck DataStore/profile read must never leave the user
+         * Hard ceiling on the splash. A stuck DataStore/profile read must never leave the user
          * staring at a static logo — past this the splash dismisses whatever the state is.
          *
          * Kept short deliberately: the old build drew its (blank) first frame at ~1.1s, so anything
@@ -78,7 +78,7 @@ open class MainActivity : ComponentActivity() {
     }
 
     /**
-     * ST3: false while the app has no destination to draw yet (active profile id unknown, or the
+     * False while the app has no destination to draw yet (active profile id unknown, or the
      * profile query has not returned on a cold start) — exactly the two `when` branches that used to
      * render a blank window. Latched true and never cleared, so a mid-session empty-profile window
      * during backup restore cannot bring the splash back; the foreground gate still refuses to
@@ -138,7 +138,7 @@ open class MainActivity : ComponentActivity() {
     /**
      * Probe the database before anything touches it. Room opens lazily, so a failed migration would
      * otherwise surface as a random crash inside whichever coroutine queried first — and with the
-     * destructive fallback gone (D1) that crash would repeat on every launch. Opening it here, on a
+     * destructive fallback gone that crash would repeat on every launch. Opening it here, on a
      * worker thread with a bounded wait, turns that into a deterministic recovery screen.
      *
      * On a healthy install this is a version check on an already-migrated file: milliseconds, and it
@@ -164,7 +164,7 @@ open class MainActivity : ComponentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // ST3 — must be installed BEFORE super.onCreate() per the library's contract. It also applies
+        // Must be installed BEFORE super.onCreate() per the library's contract. It also applies
         // postSplashScreenTheme (Theme.OwnTV), so the activity ends up in the same theme as before.
         val splash = installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -181,7 +181,7 @@ open class MainActivity : ComponentActivity() {
                     onRetry = { recreate() },
                     onResetData = {
                         // Explicit, twice-confirmed user choice — the only thing that clears a
-                        // database SQLite refuses to open. Never automatic (that was D1's bug).
+                        // database SQLite refuses to open. Never automatic: automatic deletion was a real bug once.
                         runCatching { deleteDatabase(tv.own.owntv.core.database.OwnTVDatabase.NAME) }
                         finishAffinity()
                     },
@@ -300,7 +300,7 @@ open class MainActivity : ComponentActivity() {
             LaunchedEffect(destinationReady) {
                 if (destinationReady && !contentReady) {
                     contentReady = true
-                    Perf.stamp("destination-ready") // splash hand-off — the number ST1/ST2 move
+                    Perf.stamp("destination-ready") // splash hand-off — the number startup work moves
                 }
             }
 

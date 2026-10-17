@@ -163,7 +163,7 @@ internal fun programmeEyebrow(p: EpgProgrammeEntity, channelName: String, now: L
     return listOfNotNull(lead, range, length, channelName).joinToString(" · ")
 }
 
-/** The details line (G1): "Animation · Family · 2023 · FSK 0 · 95 min" — only what the feed provides. */
+/** The details line: "Animation · Family · 2023 · FSK 0 · 95 min" — only what the feed provides. */
 @Composable
 internal fun programmeDetailsLine(p: EpgProgrammeEntity): String? {
     val d = p.details
@@ -270,7 +270,7 @@ internal fun GuideChannelLabel(channel: ChannelEntity, name: String, dot: Color?
         Text(
             channel.number?.toString().orEmpty(),
             style = stageText(17, 700).copy(fontFeatureSettings = Tabular), color = if (selected) a.accent else StageColors.Dim,
-            // Always whole (owner): the column fits the longest number in the list; only the name is cut.
+            // Always whole: the column fits the longest number in the list; only the name is cut.
             maxLines = 1, softWrap = false, overflow = TextOverflow.Ellipsis, modifier = Modifier.width(numberWidth),
         )
         LivePlate(channel.displayLogoUrl, 58.mpx, 40.mpx, radius = 10.mpx)
@@ -531,7 +531,7 @@ internal fun GuideOrderMenu(
                 modifier = if (sort == current || (sort == SettingsRepository.GuideSort.PROVIDER && current == SettingsRepository.GuideSort.LIVE_TV)) Modifier.focusRequester(focus) else Modifier,
             )
         }
-        // SHOW, as the Series page's order menu has it: a filter, not an order (owner, 2026-09-30).
+        // SHOW, as the Series page's order menu has it: a filter, not an order.
         StageGroupLabel(stringResource(R.string.content_menu_group_show).uppercase(androidx.compose.ui.text.intl.Locale.current.platformLocale))
         StageMenuItem(
             text = stringResource(R.string.content_epg_show_empty), icon = OwnTVIcon.EYE_OFF,
@@ -583,7 +583,7 @@ internal fun GuideChannelMenu(
     }
 }
 
-/** Provider, A–Z, Catch-up first, Favourites first. Channel number went (owner): it is the provider's order. */
+/** Provider, A–Z, Catch-up first, Favourites first. No Channel number: it is the provider's order. */
 private val GuideSortOrder = listOf(
     SettingsRepository.GuideSort.PROVIDER to OwnTVIcon.SORT,
     SettingsRepository.GuideSort.ALPHA to OwnTVIcon.SORT,
@@ -823,7 +823,7 @@ internal fun reminderEyebrow(reminder: tv.own.owntv.core.database.entity.Reminde
 )
 
 /**
- * The reminder prompt (G2, Programme reminders = Ask to switch): the programme about to start, with
+ * The reminder prompt (Programme reminders = Ask to switch): the programme about to start, with
  * Watch channel and Dismiss. It opens over whatever is on screen, the player included.
  */
 @Composable

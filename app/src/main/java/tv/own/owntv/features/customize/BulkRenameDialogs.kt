@@ -404,7 +404,7 @@ private fun BulkReviewDialog(session: BulkRenameSession) {
                    }
                    Spacer(Modifier.width(18.mpx))
                    // Right: bulk actions, VERTICALLY CENTRED so D-pad right from any middle row lands
-                   // here without scrolling (owner requirement for this dialog).
+                   // here without scrolling.
                    Column(
                        Modifier.width(240.mpx).height(listHeight),
                        verticalArrangement = Arrangement.Center,

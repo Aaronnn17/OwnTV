@@ -134,7 +134,7 @@ fun SyncStatusPill(modifier: Modifier = Modifier) {
     // Catalog syncs first (they're the slower, more interesting ones), then guides, in a stable
     // order so a row doesn't jump around as progress updates arrive.
     val rows = buildList<SyncLine> {
-        // Recordings first, always (D13). They are time-critical and unrecoverable — a sync that is
+        // Recordings first, always. They are time-critical and unrecoverable — a sync that is
         // collapsed into "+N more" can be watched again in a minute, a programme that is being
         // recorded cannot. Then downloads, which are deliberately started and time-limited. Then the
         // background syncs, which are the ones that can afford to be hidden.

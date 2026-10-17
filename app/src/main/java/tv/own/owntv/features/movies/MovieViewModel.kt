@@ -142,7 +142,7 @@ class MovieViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyMap())
 
-    /** Contexts that actually have manual-order rows (C3): only those folders pay the
+    /** Contexts that actually have manual-order rows: only those folders pay the
      *  unindexable content_order join-sort; everything else stays on the plain indexed query. */
     private val orderedContexts: StateFlow<Set<String>> = ctx
         .flatMapLatest { c ->
@@ -183,7 +183,7 @@ class MovieViewModel(
     /** The stable key of a provider folder ([null] when the folder vanished) — the Move dialog's origin. */
     fun folderKey(id: Long): String? = folderContextKeys.value[id]
 
-    /** Creates a custom category (issue #87) — the Move dialog's "＋ New category…" flow. */
+    /** Creates a custom category — the Move dialog's "＋ New category…" flow. */
     fun createCustomCategory(name: String) {
         viewModelScope.launch {
             val pid = currentProfileId() ?: return@launch
@@ -192,7 +192,7 @@ class MovieViewModel(
     }
 
     /**
-     * Moves (or copies, [keepInOrigin]) one movie into a custom category (issue #87). The item is
+     * Moves (or copies, [keepInOrigin]) one movie into a custom category. The item is
      * appended at the category's tail (maxPosition + 1). Without [keepInOrigin] the item leaves its
      * origin: a favorite row is deleted, a custom-category membership row is deleted, and a provider
      * folder is marked in movedFromOrigin — the pager chain then drops it from that folder while
@@ -392,7 +392,7 @@ class MovieViewModel(
             ) { cats, cust, sort, profile ->
                 // A–Z also sorts the category folders (custom categories included); manually moved
                 // categories stay pinned first. Custom categories ride the SAME customization keys,
-                // so renames/hides/reorders apply to them with no extra code (#87).
+                // so renames/hides/reorders apply to them with no extra code.
                 val folders = cats.railCategories(
                     cust,
                     kids = profile?.isKids == true,
@@ -419,7 +419,7 @@ class MovieViewModel(
         _selected, ctx, _search.map { it.trim() }.debounce(300).distinctUntilChanged(), sortMode, _listRefresh,
     ) { key, c, query, sort, _ -> Args(key, c, query, sort) }
         .combine(custResolved) { args, cs -> args to cs }
-        // Rebuild the pager when a folder gains/loses manual order (C3): the fast-path plain
+        // Rebuild the pager when a folder gains/loses manual order: the fast-path plain
         // PagingSource doesn't observe content_order, so the switch must recreate it.
         .combine(orderedContexts) { p, _ -> p }
         .flatMapLatest { (args, cs) ->
@@ -449,7 +449,7 @@ class MovieViewModel(
     private data class Args(val key: LiveKey, val ctx: Ctx, val query: String, val sort: SettingsRepository.SortMode)
 
     val count: StateFlow<Int> = combine(_selected, ctx, hiddenCategoryIds) { key, c, hidden -> Triple(key, c, hidden) }
-        .flatMapLatest { (key, c, hidden) -> countFlow(key, c, hidden).throttleLatest() } // C2: cap live COUNT re-runs during bulk sync
+        .flatMapLatest { (key, c, hidden) -> countFlow(key, c, hidden).throttleLatest() } // Cap live COUNT re-runs during bulk sync
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
 
     /** The count beside every category (Stage sheet / column): one grouped query for the folders. */
@@ -666,7 +666,7 @@ class MovieViewModel(
             // in-app engine entirely. History is still recorded (recently-watched); resume position
             // and the playing-movie HUD/progress tick are intentionally not — the external app owns
             // playback and OwnTV can't observe it.
-            // #115 — a protected item cannot go to an external player: no standard intent extra
+            // A protected item cannot go to an external player: no standard intent extra
             // carries a licence URL, so the other app would open it and fail on the first segment.
             // Play it here instead, where the licence request can actually be made.
             if (settings.externalPlayerMovies.first() && movie.drmConfig == null) {
@@ -716,7 +716,7 @@ class MovieViewModel(
                 manifestType = movie.manifestType,
                 // Engine pins key on this, not on playUrl (a Stalker playUrl is minted per play).
                 contentKey = pinKey,
-                // F12 — a Stalker create_link URL dies before a long film ends; give the player a way to
+                // A Stalker create_link URL dies before a long film ends; give the player a way to
                 // mint a fresh one instead of retrying the expired link. Null for M3U/Xtream, which also
                 // clears any provider the previous item left on the player.
                 reconnectProvider = if (streamUrlResolver.needsResolve(source)) {
@@ -1028,7 +1028,7 @@ class MovieViewModel(
                 when {
                     rating -> movieDao.pagingByCategoryRating(key.id)
                     dateAdded -> movieDao.pagingByCategoryDateAdded(key.id)
-                    // C3 fast path: no manual order in this folder → the plain indexed query has
+                    // Fast path: no manual order in this folder → the plain indexed query has
                     // the identical (sortOrder, name) order without the join-sort.
                     ctxKey !in orderedContexts.value -> movieDao.pagingByCategory(key.id)
                     else -> movieDao.pagingByCategoryManual(key.id, c.profileId, ctxKey)

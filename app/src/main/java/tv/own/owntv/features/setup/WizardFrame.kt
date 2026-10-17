@@ -155,7 +155,7 @@ private val WizardStep.labelRes: Int get() = when (this) {
     WizardStep.READY -> R.string.setup_step_ready
 }
 
-/** One choice card of a step (`.tile2`, W4 / W7): icon, 23 px title, 16 px line; focused = FX. */
+/** One choice card of a step (`.tile2`): icon, 23 px title, 16 px line; focused = FX. */
 internal class WizardCard(val icon: OwnTVIcon, val title: String, val line: String, val onClick: () -> Unit)
 
 /** The cards side by side, equal widths, 16 apart; the first takes [firstFocus]. */

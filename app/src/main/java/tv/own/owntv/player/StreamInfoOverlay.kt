@@ -36,7 +36,7 @@ import tv.own.owntv.R
 @Composable
 fun StreamInfoOverlay(player: PlaybackEngine, modifier: Modifier = Modifier) {
     // Starts empty and is filled by the effect below: the mpv read now happens on the player's own
-    // executor, so there is nothing to read synchronously during composition (A-F2).
+    // executor, so there is nothing to read synchronously during composition.
     var rows by remember { mutableStateOf(emptyList<StreamInfoRow>()) }
     // Re-read on the player's shared cosmetic beat rather than a timer of its own, so having the overlay
     // up alongside the position readout costs one wake-up rather than two (see [PlayerHeartbeat]).

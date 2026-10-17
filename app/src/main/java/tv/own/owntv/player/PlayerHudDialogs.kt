@@ -221,7 +221,7 @@ internal fun SpeedDialog(current: Double, onSelect: (Double) -> Unit, onDismiss:
 }
 
 /**
- * The sleep timer's choices (N17), the phone's sheet in the television's dialog: Off while one is
+ * The sleep timer's choices, the phone's sheet in the television's dialog: Off while one is
  * running, the shared minute choices, "End of programme" only when the guide says when that is, and
  * "End of movie / episode" only while one plays.
  * The title turns into the countdown while a timer runs, so re-opening it says what is set.
@@ -325,7 +325,7 @@ internal fun ZoomDialog(current: ZoomMode, onSelect: (ZoomMode) -> Unit, onDismi
     }
 }
 
-/** N11 — Auto (Settings → Maximum video quality), then every height this stream offers, highest first. */
+/** Auto (Settings → Maximum video quality), then every height this stream offers, highest first. */
 @Composable
 internal fun QualityDialog(heights: List<Int>, current: Int?, onSelect: (Int?) -> Unit, onDismiss: () -> Unit) {
     val focus = remember { FocusRequester() }

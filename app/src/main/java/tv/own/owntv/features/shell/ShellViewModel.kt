@@ -106,11 +106,11 @@ class ShellViewModel(
     val customAccent: StateFlow<String> = settings.customAccent
         .stateIn(viewModelScope, SharingStarted.Eagerly, "")
 
-    /** Focus ring color hex (#121); blank = follow the accent. */
+    /** Focus ring color hex; blank = follow the accent. */
     val focusHighlight: StateFlow<String> = settings.focusHighlight
         .stateIn(viewModelScope, SharingStarted.Eagerly, "")
 
-    /** Focus ring width in dp (#121). */
+    /** Focus ring width in dp. */
     val focusHighlightWidth: StateFlow<Int> = settings.focusHighlightWidth
         .stateIn(viewModelScope, SharingStarted.Eagerly, 2)
 

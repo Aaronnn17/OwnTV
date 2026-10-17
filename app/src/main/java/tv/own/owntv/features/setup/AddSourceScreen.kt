@@ -165,7 +165,7 @@ fun AddSourceScreen(
     val startImportFocus = remember { FocusRequester() }
     LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
 
-    // Profile-wide "hide new categories on sync" default (issue #87). Written straight to
+    // Profile-wide "hide new categories on sync" default. Written straight to
     // DataStore — no callback signature change — so it lands on the ACTIVE profile at add time. The row
     // is only shown while ADDING (an edit re-syncs nothing new) and only when a profile exists (the
     // setup wizard may still be profile-less; the value defaults to off there).

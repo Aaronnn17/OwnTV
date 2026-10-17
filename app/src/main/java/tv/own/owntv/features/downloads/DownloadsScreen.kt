@@ -297,7 +297,7 @@ fun DownloadsScreen(
             )
         }
 
-        // Where this tab's files go (owner): the folder in use plus core's fixed subfolder, right under
+        // Where this tab's files go: the folder in use plus core's fixed subfolder, right under
         // the Download folder tool that changes it, in the free band above the Recordings card.
         storage?.let { info ->
             val sub = when (tab) {
@@ -542,7 +542,7 @@ internal data class StageAction(val text: String, val icon: OwnTVIcon, val onCli
 /**
  * A `.dl` row, 1110 × 124 (radius 24, padding 22, gap 24): the 190 × 107 picture, title 24/700 over a
  * 17 muted line, and the 380-wide status on the right. Focused = FX, and only then do its [actions]
- * show under the status (G3). The picture-and-title part holds focus; the actions sit to its right,
+ * show under the status. The picture-and-title part holds focus; the actions sit to its right,
  * so ▶ reaches them and ▲ ▼ move between rows.
  */
 @Composable

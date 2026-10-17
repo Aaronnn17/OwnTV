@@ -218,7 +218,7 @@ internal fun progressOf(p: XtEpgEntry): Float {
     return ((System.currentTimeMillis() - p.startMs).toFloat() / span).coerceIn(0f, 1f)
 }
 
-/** "18:45 – 20:30 · Horror · 2026 · FSK 16": the time range, then only the details the feed carries (G1). */
+/** "18:45 – 20:30 · Horror · 2026 · FSK 16": the time range, then only the details the feed carries. */
 @Composable
 private fun detailsLine(now: XtEpgEntry, details: EpgDetails?): String {
     val formatTime = rememberSystemTimeFormatter()
@@ -284,7 +284,7 @@ internal fun LiveStagePane(
                 Box(Modifier.align(Alignment.TopStart).padding(start = 24.mpx, top = 22.mpx)) { StageLiveBadge(stringResource(R.string.player_live)) }
                 if (playing && streamChips.isNotEmpty()) {
                     Row(Modifier.align(Alignment.TopEnd).padding(end = 22.mpx, top = 22.mpx), horizontalArrangement = Arrangement.spacedBy(6.mpx)) {
-                        // Three facts — quality, frame rate, sound (owner, 2026-09-30): the
+                        // Three facts — quality, frame rate, sound: the
                         // engine's aspect ratio ("16:9") and declared bitrate ("4.2 Mbps") are left out.
                         streamChips.filterNot { it.contains(':') || it.endsWith("Mbps") }.forEach { StageSpecChip(it) }
                     }
@@ -384,7 +384,7 @@ private fun LiveScheduleItem(p: XtEpgEntry, accentTime: Boolean, onClick: () -> 
 internal val edgeScrollSpec = object : androidx.compose.foundation.gestures.BringIntoViewSpec {
     override fun calculateScrollDistance(offset: Float, size: Float, containerSize: Float): Float {
         // One row of room kept ahead of the highlight, so the next row is already laid out: a held
-        // ▲/▼ otherwise outran the list at the edge and stopped (owner, 2026-09-30).
+        // ▲/▼ otherwise outran the list at the edge and stopped.
         val room = size.coerceAtMost((containerSize - size).coerceAtLeast(0f) / 2f)
         val lead = offset - room
         val trailing = offset + size + room - containerSize
@@ -654,7 +654,7 @@ private fun LiveColumnItem(
                     color = on ?: if (selected) a.accent else stageTone(Color(0xFFCDD7D3), StageColors.ItemText),
                     maxLines = 2, overflow = TextOverflow.Ellipsis,
                 )
-                // Tags on their own line, so a long name is never cut for them (owner, 2026-09-30).
+                // Tags on their own line, so a long name is never cut for them.
                 val tags = entry.name?.tags.orEmpty()
                 if (tags.isNotEmpty()) Row(horizontalArrangement = Arrangement.spacedBy(6.mpx)) { tags.forEach { StageTag(it, onAccent = on) } }
             }

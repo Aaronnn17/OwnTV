@@ -225,7 +225,7 @@ private fun EpgRow(
     val subtitle = if (tv.own.owntv.core.repository.EpgRepository.stalkerSourceIdOf(source.url) != null) {
         stringResource(R.string.settings_epg_sources_portal_guide)
     } else {
-        // Never the account's user name and password (F2): an XMLTV address often carries both.
+        // Never the account's user name and password: an XMLTV address often carries both.
         tv.own.owntv.core.network.HttpClient.redactUrl(source.url)
     }
     val catchupNote = count?.third?.takeIf { it > 0 }?.let {
@@ -298,7 +298,7 @@ private fun EpgRow(
         keepPanel = keepPanel,
         help = SettingHelp(
             title = source.name,
-            // The address on one line, the counts under it (owner).
+            // The address on one line, the counts under it.
             text = subtitle,
             hints = listOf(
                 "▶" to stringResource(R.string.settings_key_actions),

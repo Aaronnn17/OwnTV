@@ -122,7 +122,7 @@ class LiveViewModel(
     private val customize: CustomizationStore,
     private val launcherIntegrationRepository: LauncherIntegrationRepository,
     private val epgDao: tv.own.owntv.core.database.dao.EpgDao,
-    /** Shared with the Guide (T18): one now/next cache, so an invalidation reaches both screens. */
+    /** Shared with the Guide: one now/next cache, so an invalidation reaches both screens. */
     private val epgReader: LiveEpgReader,
     val player: OwnTVPlayer,
     val previewEngine: tv.own.owntv.player.LivePreviewEngine,
@@ -331,7 +331,7 @@ class LiveViewModel(
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyMap())
 
     /**
-     * The Stage playlist mark per source (decision D4), coloured by the playlist's position in the
+     * The Stage playlist mark per source, coloured by the playlist's position in the
      * profile's list — the order the playlist switcher uses. Empty with one playlist, like [providerNames].
      */
     val playlistMarks: StateFlow<Map<Long, tv.own.owntv.ui.stage.PlaylistMark>> = activeProfileSources(settings, sourceDao)
@@ -350,7 +350,7 @@ class LiveViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyMap())
 
-    /** Contexts that actually have manual-order rows (C3): only those folders pay the
+    /** Contexts that actually have manual-order rows: only those folders pay the
      *  unindexable content_order join-sort; everything else stays on the plain indexed query. */
     private val orderedContexts: StateFlow<Set<String>> = ctx
         .flatMapLatest { c ->
@@ -397,7 +397,7 @@ class LiveViewModel(
         },
         loadArchive = ::loadArchiveStream,
         onLiveEdge = { goToLive() },
-        // N4 — a channel without catch-up rewinds into its own saved copy. Forwarded, because the
+        // A channel without catch-up rewinds into its own saved copy. Forwarded, because the
         // controller is built further down.
         local = object : LiveTimeshift.Local {
             override fun windowSec(ch: ChannelEntity): Int? = live.localRewind.windowSec(ch)
@@ -426,7 +426,7 @@ class LiveViewModel(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     /**
-     * N3 — now/next for the channel-change banner. Null until the answer is for the channel actually on
+     * Now/next for the channel-change banner. Null until the answer is for the channel actually on
      * screen: [nowNext] is debounced, so for a moment after a zap it still holds the previous channel's
      * programme, and the banner would otherwise name the new channel over the old one's show.
      */
@@ -521,7 +521,7 @@ class LiveViewModel(
     /** The stable key of a provider folder ([null] when the folder vanished) — the Move dialog's origin. */
     fun folderKey(id: Long): String? = folderContextKeys.value[id]
 
-    /** Creates a custom category (issue #87) — the Move dialog's "＋ New category…" flow. */
+    /** Creates a custom category — the Move dialog's "＋ New category…" flow. */
     fun createCustomCategory(name: String) {
         viewModelScope.launch {
             val pid = currentProfileId() ?: return@launch
@@ -530,7 +530,7 @@ class LiveViewModel(
     }
 
     /**
-     * Moves (or copies, [keepInOrigin]) one channel into a custom category (issue #87). The item is
+     * Moves (or copies, [keepInOrigin]) one channel into a custom category. The item is
      * appended at the category's tail (maxPosition + 1). Without [keepInOrigin] the item leaves its
      * origin: a favorite row is deleted, a custom-category membership row is deleted, and a provider
      * folder is marked in movedFromOrigin — the pager chain then drops it from that folder while
@@ -592,7 +592,7 @@ class LiveViewModel(
             ) { cats, cust, sort, catchupCount, profile ->
                 // A–Z also sorts the category folders (custom categories included); manually moved
                 // categories stay pinned first. Custom categories ride the SAME customization keys,
-                // so renames/hides/reorders apply to them with no extra code (#87).
+                // so renames/hides/reorders apply to them with no extra code.
                 val folders = cats.railCategories(
                     cust,
                     kids = profile?.isKids == true,
@@ -621,7 +621,7 @@ class LiveViewModel(
         sortMode,
         custResolved,
     ) { key, c, query, sort, cs -> Args(key, c, query, sort, cs) }
-        // Rebuild the pager when a folder gains/loses manual order (C3): the fast-path plain
+        // Rebuild the pager when a folder gains/loses manual order: the fast-path plain
         // PagingSource doesn't observe content_order, so the switch must recreate it.
         .combine(orderedContexts) { args, _ -> args }
         .flatMapLatest { (key, c, query, sort, cs) ->
@@ -785,7 +785,7 @@ class LiveViewModel(
         return guideCandidates.forPicker(channelName, query)
     }
 
-    /** List view or Guide view (G14): what Live TV shows, and so what it opens in next time. */
+    /** List view or Guide view: what Live TV shows, and so what it opens in next time. */
     val liveView: StateFlow<SettingsRepository.LiveView> = settings.liveView
         .stateIn(viewModelScope, SharingStarted.Eagerly, SettingsRepository.LiveView.LIST)
 
@@ -814,7 +814,7 @@ class LiveViewModel(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
 
     val count: StateFlow<Int> = combine(_selected, ctx, hiddenCategoryIds) { key, c, hidden -> Triple(key, c, hidden) }
-        .flatMapLatest { (key, c, hidden) -> countFlow(key, c, hidden).throttleLatest() } // C2: cap live COUNT re-runs during bulk sync
+        .flatMapLatest { (key, c, hidden) -> countFlow(key, c, hidden).throttleLatest() } // Cap live COUNT re-runs during bulk sync
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
 
     val favoriteIds: StateFlow<Set<Long>> = ctx
@@ -979,7 +979,7 @@ class LiveViewModel(
 
     // True while the in-pane preview is suppressed because the provider allows one stream at a time and
     // that stream is already in use (full-screen playback). The pane says so instead of sitting silently
-    // dead — otherwise "no preview" looks like a broken channel (F31).
+    // dead — otherwise "no preview" looks like a broken channel.
     val previewBlockedSingleSession: StateFlow<Boolean> = live.previewBlockedSingleSession
 
     /** In-pane preview playback (no history) — triggered by the UI after the focus settles. */
@@ -1171,7 +1171,7 @@ class LiveViewModel(
         }
         viewModelScope.launch { player.archiveEnded.collect { continueAfterCatchup() } }
         viewModelScope.launch { player.archiveStalled.collect { liveAfterStall() } }
-        // T17 / decision 5: on a 2 GB TV the preview pane decodes at most 720p — a second full-size
+        // On a 2 GB TV the preview pane decodes at most 720p — a second full-size
         // decoder re-tuning on every focus step is the heaviest background cost there. Lifted the moment
         // the channel goes full-screen, so the promoted stream switches up to its full variant.
         if (tv.own.owntv.core.player.PlayerBudget.of(appContext).lowSpec) {
@@ -1250,7 +1250,7 @@ class LiveViewModel(
         ensurePlaying(channel)
     }
 
-    /** Tune a channel picked outside the Live TV list — the Guide (F05). Same as
+    /** Tune a channel picked outside the Live TV list — the Guide. Same as
      *  [ensurePlaying] except history is written straight away: this is a deliberate one-shot pick (you
      *  chose a channel, or "Watch channel" in a programme dialog), not the zap-through-a-category flow
      *  the history debounce exists to filter, and such a channel was not reliably landing in History.
@@ -1535,7 +1535,7 @@ class LiveViewModel(
         if (!tv.own.owntv.core.content.AdultCategoryClassifier.allows(pid, channel.categoryId, profileDao, categoryDao)) return
         // Live TV set to play externally: hand the channel over instead of tuning an in-app engine.
         // History is still recorded, so the channel shows up in History/Recently watched either way.
-        // #115 — a protected channel stays in-app whatever this setting says: no standard intent extra
+        // A protected channel stays in-app whatever this setting says: no standard intent extra
         // carries a licence URL, so the external player would open it and fail immediately.
         if (externalPlayerOn.value && channel.drmConfig == null) { playExternal(channel); return }
         _previewChannel.value = channel
@@ -1553,13 +1553,13 @@ class LiveViewModel(
         // the user is watching with the channel's CURRENT one. The HUD hides the toggle then too.
         if (_catchupActive.value) return
         // Same while rewound into the live archive: swapping engines re-opens the channel at the edge.
-        // Not for a copy saved on this device (N4): the other engine continues it at the same moment.
+        // Not for a copy saved on this device: the other engine continues it at the same moment.
         if (timeshift.isRewound && live.localTimeshift.value == null) return
         live.toggleEngine()
     }
 
     /**
-     * N2 — tune the channel watched before this one (the remote's "last channel" key). Re-read by id, so
+     * Tune the channel watched before this one (the remote's "last channel" key). Re-read by id, so
      * a channel removed by a sync is skipped, and only from a playlist this profile has active;
      * [playChannel] applies the adult filter. It is a deliberate pick, so it opens at once.
      */
@@ -1702,8 +1702,8 @@ class LiveViewModel(
             playingCatchupProgramme = programme // …and the anchor auto-play continues from
             releaseForArchive() // catch-up is a VOD-style archive on mpv, not the live ExoPlayer channel
             // isLive=false → seekable archive; isArchive → mid-GOP tolerant (hardware first, software rescue).
-            // Keyed on the channel's archive, not the time-specific URL (L5); a Stalker archive gets a
-            // fresh create_link on Retry (L4).
+            // Keyed on the channel's archive, not the time-specific URL; a Stalker archive gets a
+            // fresh create_link on Retry.
             player.play(
                 url, title = ch.name, subtitle = programme.title, logoUrl = ch.displayLogoUrl, isLive = false, isArchive = true,
                 userAgent = sourceUa, httpHeaders = headersFor(ch), contentKey = tv.own.owntv.core.player.catchupPinKey(ch),
@@ -1774,13 +1774,13 @@ class LiveViewModel(
     /** How far behind live the picture is. Null at the live edge. */
     val timeshiftOffsetSec: StateFlow<Int?> = timeshift.offsetSec
 
-    /** True when the channel on screen records an archive, or is saved on this device (N4) — the HUD
+    /** True when the channel on screen records an archive, or is saved on this device — the HUD
      *  then offers "Rewind" on live. */
     val canRewindLive: StateFlow<Boolean> =
         combine(_previewChannel, live.localTimeshift) { ch, copy -> ch?.catchup == true || (ch != null && copy != null) }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
-    /** N4 — the user came back to a channel whose copy was kept: where they were, for "Resume from
+    /** The user came back to a channel whose copy was kept: where they were, for "Resume from
      *  buffer / Go live". Null when there is nothing to offer. */
     val timeshiftResumeAt: StateFlow<Long?> = live.localTimeshift.map { it?.resumeAtWallMs }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
@@ -1793,10 +1793,10 @@ class LiveViewModel(
 
     fun dismissTimeshiftResume() = live.dismissResumeOffer()
 
-    /** N4 — the wall-clock holes in the saved copy on screen, for the rewind bar. */
+    /** The wall-clock holes in the saved copy on screen, for the rewind bar. */
     fun timeshiftGaps(): List<LongRange> = live.localGaps()
 
-    /** N4 — the channel on screen plays from its saved copy. */
+    /** The channel on screen plays from its saved copy. */
     val onLocalCopy: StateFlow<Boolean> = live.localTimeshift.map { it != null }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
@@ -2124,7 +2124,7 @@ class LiveViewModel(
 
         /** How long a channel must stay tuned before it counts as watched — see [recordLiveHistory]. */
         const val HISTORY_DEBOUNCE_MS = 5_000L
-        /** The preview pane's video ceiling on a 2 GB TV (T17). */
+        /** The preview pane's video ceiling on a 2 GB TV. */
         const val PREVIEW_MAX_HEIGHT = 720
         const val TAG = "OwnTVHome"
         // In-player channel lists: one category is normally far smaller, but cap the uncategorized

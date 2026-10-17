@@ -148,7 +148,7 @@ class SeriesViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyMap())
 
-    /** Contexts that actually have manual-order rows (C3): only those folders pay the
+    /** Contexts that actually have manual-order rows: only those folders pay the
      *  unindexable content_order join-sort; everything else stays on the plain indexed query. */
     private val orderedContexts: StateFlow<Set<String>> = ctx
         .flatMapLatest { c ->
@@ -189,7 +189,7 @@ class SeriesViewModel(
     /** The stable key of a provider folder ([null] when the folder vanished) — the Move dialog's origin. */
     fun folderKey(id: Long): String? = folderContextKeys.value[id]
 
-    /** Creates a custom category (issue #87) — the Move dialog's "＋ New category…" flow. */
+    /** Creates a custom category — the Move dialog's "＋ New category…" flow. */
     fun createCustomCategory(name: String) {
         viewModelScope.launch {
             val pid = currentProfileId() ?: return@launch
@@ -198,7 +198,7 @@ class SeriesViewModel(
     }
 
     /**
-     * Moves (or copies, [keepInOrigin]) one series into a custom category (issue #87). The item is
+     * Moves (or copies, [keepInOrigin]) one series into a custom category. The item is
      * appended at the category's tail (maxPosition + 1). Without [keepInOrigin] the item leaves its
      * origin: a favorite row is deleted, a custom-category membership row is deleted, and a provider
      * folder is marked in movedFromOrigin — the pager chain then drops it from that folder while
@@ -489,7 +489,7 @@ class SeriesViewModel(
             ) { cats, cust, sort, profile ->
                 // A–Z also sorts the category folders (custom categories included); manually moved
                 // categories stay pinned first. Custom categories ride the SAME customization keys,
-                // so renames/hides/reorders apply to them with no extra code (#87).
+                // so renames/hides/reorders apply to them with no extra code.
                 val folders = cats.railCategories(
                     cust,
                     kids = profile?.isKids == true,
@@ -516,7 +516,7 @@ class SeriesViewModel(
         _selected, ctx, _search.map { it.trim() }.debounce(300).distinctUntilChanged(), sortMode, _listRefresh,
     ) { key, c, query, sort, _ -> Args(key, c, query, sort) }
         .combine(custResolved) { args, cs -> args to cs }
-        // Rebuild the pager when a folder gains/loses manual order (C3): the fast-path plain
+        // Rebuild the pager when a folder gains/loses manual order: the fast-path plain
         // PagingSource doesn't observe content_order, so the switch must recreate it.
         .combine(orderedContexts) { p, _ -> p }
         .flatMapLatest { (args, cs) ->
@@ -546,7 +546,7 @@ class SeriesViewModel(
     private data class Args(val key: LiveKey, val ctx: Ctx, val query: String, val sort: SettingsRepository.SortMode)
 
     val count: StateFlow<Int> = combine(_selected, ctx, hiddenCategoryIds) { key, c, hidden -> Triple(key, c, hidden) }
-        .flatMapLatest { (key, c, hidden) -> countFlow(key, c, hidden).throttleLatest() } // C2: cap live COUNT re-runs during bulk sync
+        .flatMapLatest { (key, c, hidden) -> countFlow(key, c, hidden).throttleLatest() } // Cap live COUNT re-runs during bulk sync
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
 
     /** The count beside every category (Stage sheet / column): one grouped query for the folders. */
@@ -781,7 +781,7 @@ class SeriesViewModel(
 
     fun selectSeason(season: Int) { _selectedSeason.value = season }
 
-    // --- Episode enrichment (U3): the focused episode's TMDB still/plot/rating for the right detail pane ---
+    // --- Episode enrichment: the focused episode's TMDB still/plot/rating for the right detail pane ---
     private val _selectedEpisode = MutableStateFlow<EpisodeEntity?>(null)
     val selectedEpisode: StateFlow<EpisodeEntity?> = _selectedEpisode.asStateFlow()
     fun onEpisodeFocused(ep: EpisodeEntity) { _selectedEpisode.value = ep }
@@ -887,7 +887,7 @@ class SeriesViewModel(
             _episodesFailure.value = null
             _episodesFailure.value = (seriesRepository.loadEpisodes(s) as? EpisodeLoad.Failed)?.reason
             // Jump to where you left off: seed the last-watched episode (and its season) from saved progress
-            // BEFORE clearing loading, so the screen's focus effect lands on it instead of episode 1 (#22).
+            // BEFORE clearing loading, so the screen's focus effect lands on it instead of episode 1.
             val eps = seriesDao.episodesBySeries(s.id).first()
             val lastEp = progressDao.lastWatchedEpisodeId(ctx.value.profileId, s.id)
                 ?.let { id -> eps.firstOrNull { it.id == id } }
@@ -998,7 +998,7 @@ class SeriesViewModel(
             // External player (global toggle): launch only the selected episode (external players are
             // single-item — no prev/next queue). History is still recorded; resume position and the
             // in-app HUD/progress tick are not, since OwnTV can't observe the external app.
-            // #115 — a protected item cannot go to an external player: no standard intent extra
+            // A protected item cannot go to an external player: no standard intent extra
             // carries a licence URL, so the other app would open it and fail on the first segment.
             // Play it here instead, where the licence request can actually be made.
             if (settings.externalPlayerSeries.first() && episode.drmConfig == null) {
@@ -1132,7 +1132,7 @@ class SeriesViewModel(
 
     fun downloadSeries(series: SeriesEntity) = downloadEpisodes(series, null)
 
-    /** "Download season" on the series page (G11): only [season]'s episodes. */
+    /** "Download season" on the series page: only [season]'s episodes. */
     fun downloadSeason(series: SeriesEntity, season: Int) = downloadEpisodes(series, season)
 
     private fun downloadEpisodes(series: SeriesEntity, season: Int?) {
@@ -1342,7 +1342,7 @@ class SeriesViewModel(
                 when {
                     rating -> seriesDao.pagingByCategoryRating(key.id)
                     dateAdded -> seriesDao.pagingByCategoryDateAdded(key.id)
-                    // C3 fast path: no manual order in this folder → the plain indexed query has
+                    // Fast path: no manual order in this folder → the plain indexed query has
                     // the identical (sortOrder, name) order without the join-sort.
                     ctxKey !in orderedContexts.value -> seriesDao.pagingByCategory(key.id)
                     else -> seriesDao.pagingByCategoryManual(key.id, c.profileId, ctxKey)

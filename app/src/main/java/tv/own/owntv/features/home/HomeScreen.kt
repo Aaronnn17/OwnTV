@@ -1010,7 +1010,7 @@ private fun TrendingPager(count: Int, activeIndex: Int, progress: Float, onNavig
 }
 
 /**
- * Keep watching: 16:9 stills (G12), 384 × 216 under the full hero, 336 × 189 once folded. After 3 s on a
+ * Keep watching: 16:9 stills, 384 × 216 under the full hero, 336 × 189 once folded. After 3 s on a
  * card its preview plays inside the still (the card does not widen, nothing is drawn over it).
  */
 @Composable

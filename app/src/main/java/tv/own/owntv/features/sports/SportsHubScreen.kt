@@ -127,7 +127,7 @@ fun SportsHubScreen(
     val config = state.config
     val now = System.currentTimeMillis()
     val playback = org.koin.compose.koinInject<SportsPlayback>()
-    // Both chip rows are multi-select (owner): OK toggles a chip, nothing chosen = All. Kept while the app runs.
+    // Both chip rows are multi-select: OK toggles a chip, nothing chosen = All. Kept while the app runs.
     @Suppress("UNCHECKED_CAST")
     var chips by remember { mutableStateOf(playback.hubChip as? Set<HubChip> ?: emptySet()) }
     @Suppress("UNCHECKED_CAST")
@@ -465,7 +465,7 @@ internal fun MatchCard(
                     m.state == MatchState.POST -> m.statusText
                     else -> timeText(m.startMs)
                 }
-                // Live: the red dot and LIVE (owner), so a live card stands out among ones still to come.
+                // Live: the red dot and LIVE, so a live card stands out among ones still to come.
                 if (m.isLive) LiveMark(stringResource(R.string.player_live) + stringResource(R.string.content_epg_bits_separator) + clockText(m), 17f)
                 else Text(right, style = stageText(17, 800), maxLines = 1, overflow = TextOverflow.Ellipsis, color = StageColors.Muted)
             }

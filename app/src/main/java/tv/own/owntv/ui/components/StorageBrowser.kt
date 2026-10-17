@@ -40,7 +40,7 @@ import java.io.File
 
 enum class BrowseMode { FOLDER, FILE }
 
-/** One directory's contents, already split and sorted off the main thread (audit U2). */
+/** One directory's contents, already split and sorted off the main thread. */
 private data class Listing(val folders: List<File>, val files: List<File>) {
     companion object { val EMPTY = Listing(emptyList(), emptyList()) }
 }
@@ -121,7 +121,7 @@ private fun StorageBrowserContent(
             Text(current?.absolutePath ?: stringResource(R.string.setup_pick_location), style = tv.own.owntv.ui.theme.stageText(16, 500), color = tv.own.owntv.ui.theme.StageColors.Muted, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = 6.mpx, bottom = 18.mpx))
 
             val dir = current
-            // U2 — listFiles() plus the per-child isDirectory/isFile stats are disk work, and a
+            // listFiles() plus the per-child isDirectory/isFile stats are disk work, and a
             // `remember` block still runs it on the main thread during composition: a USB drive with
             // a large folder stalled the frame. Load it on IO instead; the ".." / roots rows render
             // immediately either way, so D-pad focus still lands the moment the dialog opens.

@@ -141,12 +141,12 @@ fun SportsMatchScreen(
     val focusTarget = shown.firstOrNull { it.channel.id == vm.lastPlayedChannelId } ?: shown.firstOrNull()
 
     Box(modifier.fillMaxSize()) {
-        // Up and Down stay on this page: a held ▲ must never run out into the top bar (owner).
+        // Up and Down stay on this page: a held ▲ must never run out of the page.
         Row(Modifier.fillMaxSize().padding(start = contentStart, end = 60.mpx, top = 39.mpx).trapVerticalFocusExit(), horizontalArrangement = Arrangement.spacedBy(39.mpx)) {
             // --- Left: the match ------------------------------------------------------------------
             // The crumb is fixed in a 75-high band, so the score box (21 below it) starts at 96, level
             // with the right column's video box, and stays level while the list scrolls; both lists end
-            // 84 above the bottom, clear of the key hints (owner).
+            // 84 above the bottom, clear of the key hints.
             Column(Modifier.width(915.mpx).fillMaxHeight()) {
                 Box(Modifier.height(75.mpx).fillMaxWidth(), contentAlignment = Alignment.BottomStart) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.mpx)) {
@@ -289,7 +289,7 @@ private val MatchTab.label: Int get() = when (this) {
 }
 
 /**
- * Who shows the match (owner's choice C): the channels Find channels found in the user's own guide —
+ * Who shows the match: the channels Find channels found in the user's own guide —
  * one per row, under their country, countries and names in order, any without a country last — then
  * the broadcasters ESPN lists, United States services only. The page's list scrolls, so this does too.
  */

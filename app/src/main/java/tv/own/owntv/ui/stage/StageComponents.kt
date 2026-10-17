@@ -649,7 +649,7 @@ fun StageSheetItem(
     count: String? = null,
     selected: Boolean = false,
     onLongClick: (() -> Unit)? = null,
-    /** 2 lets a long name wrap instead of being cut; the row then grows past 56 (owner, 2026-09-30). */
+    /** 2 lets a long name wrap instead of being cut; the row then grows past 56. */
     maxLines: Int = 1,
     tags: (@Composable RowScope.(focused: Boolean) -> Unit)? = null,
     trailing: (@Composable RowScope.(focused: Boolean) -> Unit)? = null,

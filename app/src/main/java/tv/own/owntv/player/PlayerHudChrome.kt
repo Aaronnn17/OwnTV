@@ -180,7 +180,7 @@ internal fun ChannelOsdCard(
     subtitle: String?,
     logoUrl: String?,
     modifier: Modifier = Modifier,
-    /** N3 — now/next under the name on a zap; null (or a channel with no guide) keeps it name-only. */
+    /** Now/next under the name on a zap; null (or a channel with no guide) keeps it name-only. */
     guide: (@Composable () -> Unit)? = null,
 ) {
     Row(
@@ -284,7 +284,7 @@ internal fun CenterControls(
 ) {
     val seekStep by player.seekStepMs.collectAsStateWithLifecycle() // Settings -> Seek step
     val rewindMode = onRewindLive != null // this is a catch-up-capable Live channel
-    // Read here, not in the HUD root: it ticks every second while rewound (T14).
+    // Read here, not in the HUD root: it ticks every second while rewound.
     val timeshiftOffsetSec = timeshiftOffset()
     val timeshifting = timeshiftOffsetSec != null
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
@@ -332,14 +332,14 @@ internal fun BottomBar(
     onOtherChannels: (() -> Unit)? = null, otherChannelsCount: Int = 0,
     onOpenDialog: (HudDialog) -> Unit, onPip: (() -> Unit)?, onAudioMode: (() -> Unit)?,
     onMultiview: (() -> Unit)? = null, onRecordThis: (() -> Unit)? = null, recordingThis: Boolean = false,
-    /** Given to whichever timeline is drawn, so Left/Right with the controls hidden can land on it (N6). */
+    /** Given to whichever timeline is drawn, so Left/Right with the controls hidden can land on it. */
     seekFocus: FocusRequester? = null,
     onBack: () -> Unit, modifier: Modifier = Modifier,
 ) {
     // Changes only while rewound into the archive. The film position is read lower still, by
-    // [VodTimeline], so the tool buttons do not redraw every second (T14).
+    // [VodTimeline], so the tool buttons do not redraw every second.
     val timeshiftOffsetSec = timeshiftOffset()
-    // Only whether one runs: the countdown itself ticks every second, and this bar must not (T14).
+    // Only whether one runs: the countdown itself ticks every second, and this bar must not.
     val sleepLeft = org.koin.compose.koinInject<SleepTimer>().remainingMs.collectAsStateWithLifecycle()
     val sleepRunning by androidx.compose.runtime.remember { androidx.compose.runtime.derivedStateOf { sleepLeft.value != null } }
     Dock(modifier = modifier.fillMaxWidth().padding(horizontal = 28.dp, vertical = 20.dp)) {
@@ -382,7 +382,7 @@ internal fun BottomBar(
         // cluster outward-in and nothing you have already passed ever moves.
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().focusGroup()) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                // H2 — the ORDER comes from core's canonical list, not from the order these lines
+                // The ORDER comes from core's canonical list, not from the order these lines
                 // happen to be written in. Each control keeps its own composable and its own
                 // condition; only the sequence is shared, which is what makes this bar and the
                 // phone's read alike. The `when` is exhaustive, so a control added to the shared
@@ -417,7 +417,7 @@ internal fun BottomBar(
                         PlayerControl.CATCH_UP -> if (onOpenJumpBack != null) {
                             CtrlButton(OwnTVIcon.CATCHUP, label = stringResource(R.string.player_tool_catchup)) { onOpenJumpBack() }
                         }
-                        // N2 — back to the channel watched before; present only once there is one.
+                        // Back to the channel watched before; present only once there is one.
                         PlayerControl.PREVIOUS_CHANNEL -> if (onPreviousChannel != null) {
                             CtrlButton(OwnTVIcon.HISTORY, label = stringResource(R.string.player_previous_channel)) { onPreviousChannel() }
                         }
@@ -425,7 +425,7 @@ internal fun BottomBar(
                         PlayerControl.OTHER_CHANNELS -> if (onOtherChannels != null) {
                             CtrlButton(OwnTVIcon.LIST, label = stringResource(R.string.sports_other_channels_count, otherChannelsCount)) { onOtherChannels() }
                         }
-                        // Not shown on the TV: Back from the player already returns to the match page (owner).
+                        // Not shown on the TV: Back from the player already returns to the match page.
                         PlayerControl.MATCH -> Unit
                         // Belongs to the tools cluster; `clusterFor` never hands them to this loop.
                         PlayerControl.BRIGHTNESS, PlayerControl.CHANNEL_LIST, PlayerControl.ENGINE,
@@ -438,7 +438,7 @@ internal fun BottomBar(
             }
             Spacer(Modifier.weight(1f))
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                // H2 — the ORDER is core's, exactly as in the media cluster above. Each control
+                // The ORDER is core's, exactly as in the media cluster above. Each control
                 // keeps its own composable and condition; only the sequence is shared.
                 PlayerControl.clusterFor(tv = true, cluster = ControlCluster.TOOLS).forEach { control ->
                     when (control) {
@@ -460,7 +460,7 @@ internal fun BottomBar(
                         // itself (see MpvVideoSurface), GL mode scales internally.
                         PlayerControl.ASPECT ->
                             CtrlButton(OwnTVIcon.ASPECT, active = zoomMode != ZoomMode.FIT, label = stringResource(R.string.player_tool_aspect)) { onOpenDialog(HudDialog.ZOOM) }
-                        // N11 — only when this stream offers several; tinted while a pick overrides Auto.
+                        // Only when this stream offers several; tinted while a pick overrides Auto.
                         PlayerControl.QUALITY -> {
                             val qualities by player.videoQualities.collectAsStateWithLifecycle()
                             val pick by player.videoQualityPick.collectAsStateWithLifecycle()
@@ -482,7 +482,7 @@ internal fun BottomBar(
                         }
                         // Record what is already on screen. Present only when the setting is on, so
                         // it never needs to explain itself here — the trade-off was accepted when it
-                        // was enabled (D3). Tinted while running, and the label flips, because
+                        // was enabled. Tinted while running, and the label flips, because
                         // "Record" on a button that is already recording is the kind of thing that
                         // loses an hour of somebody's evening.
                         PlayerControl.RECORD -> if (onRecordThis != null) {
@@ -495,7 +495,7 @@ internal fun BottomBar(
                                 ),
                             ) { onRecordThis() }
                         }
-                        // N17 — stop after a while; tinted while a countdown is running.
+                        // Stop after a while; tinted while a countdown is running.
                         PlayerControl.SLEEP_TIMER ->
                             CtrlButton(OwnTVIcon.BEDTIME, active = sleepRunning, label = stringResource(R.string.player_sleep_timer)) { onOpenDialog(HudDialog.SLEEP_TIMER) }
                         // Stream technical info (codec/res/HDR/bitrate/decoder/audio/buffer) —
@@ -509,7 +509,7 @@ internal fun BottomBar(
                         // playback log, so a "this channel judders" complaint carries the
                         // codec/decoder/bitrate that caused it. Only offered while the info overlay
                         // is open — there is nothing to report otherwise, and the bar stays as short
-                        // as it was for everyone who never needs this. H1 made that the rule on both
+                        // as it was for everyone who never needs this. That is the rule on both
                         // apps.
                         PlayerControl.REPORT -> if (infoOn && onReport != null) {
                             CtrlButton(OwnTVIcon.SHARE, label = stringResource(R.string.player_tool_report)) { onReport() }
@@ -534,7 +534,7 @@ private fun volumeIcon(volume: Int): OwnTVIcon = when {
 }
 
 /** A film's seek bar and its two time caps — the only part of the dock that needs the position, so the
- *  only part that recomposes as it ticks (T14). */
+ *  only part that recomposes as it ticks. */
 @Composable
 private fun VodTimeline(player: PlaybackEngine, position: () -> Long, duration: Long, seekFocus: FocusRequester?) {
     val seekStep by player.seekStepMs.collectAsStateWithLifecycle() // Settings -> Seek step

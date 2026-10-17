@@ -34,7 +34,7 @@ import androidx.compose.foundation.layout.Spacer
 
 /**
  * Settings › Layout › Navigation: Floating or Docked as radio rows, then the rail's
- * Size and Length (Docked + Compact adds Widen on focus, owner 2026-10-02), Menu items (Dynamic / Static; Static lists the sections as toggles) and, for Floating
+ * Size and Length (Docked + Compact adds Widen on focus), Menu items (Dynamic / Static; Static lists the sections as toggles) and, for Floating
  * only, the hide delay. OK on a value row steps to its next choice.
  */
 @Composable

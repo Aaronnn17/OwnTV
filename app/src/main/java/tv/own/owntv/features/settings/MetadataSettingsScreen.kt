@@ -94,7 +94,7 @@ private fun tmdbLangName(code: String): String = stringResource(
 )
 
 /**
- * Settings → Metadata (TMDB). Phase M1 of the enrichment plan: the master toggle and the two advanced
+ * Settings → Metadata (TMDB): the master toggle and the two advanced
  * access tiers (own TMDB key / self-host URL), plus a manual "look up title" test that proves the
  * configured tier reaches TMDB end-to-end. Enrichment of actual detail screens arrives in later phases.
  *

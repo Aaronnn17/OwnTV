@@ -242,7 +242,7 @@ fun LiveScreen(
     // back to that exact row. Held as a key, not an index: a Move changes the row's position.
     var contextCategoryKey by remember { mutableStateOf<LiveKey?>(null) }
     var railFocusRow by remember { mutableStateOf<Int?>(null) }
-    // The channel the "Move to category…" flow is moving (issue #87), with the origin captured at
+    // The channel the "Move to category…" flow is moving, with the origin captured at
     // menu-open time (the rail can't change under the modal, but capturing is still safer).
     var moveItem by remember { mutableStateOf<ChannelEntity?>(null) }
     var moveOriginKey by remember { mutableStateOf<String?>(null) }
@@ -522,7 +522,7 @@ fun LiveScreen(
     val (categoryEntries, groupsHeading) = liveCategoryEntries(railItems, railCounts)
     val headerLabel = if (selectedItem?.key is LiveKey.Folder || selectedItem?.key is LiveKey.Custom) ProviderTags.parse(selectedLabel).name else selectedLabel
 
-    // CH± in the categories moves the highlight only; OK picks (owner, 2026-10-01).
+    // CH± in the categories moves the highlight only; OK picks.
     var catFocusIndex by remember { mutableStateOf<Int?>(null) }
     val categoriesModifier = Modifier
         .onFocusChanged {
@@ -816,7 +816,7 @@ fun LiveScreen(
                                     ).focusRequester(rowFocus(index)).onPreviewKeyEvent { e ->
                                         if (e.type != androidx.compose.ui.input.key.KeyEventType.KeyDown) return@onPreviewKeyEvent false
                                         when (e.key) {
-                                            // D3: the remote's Menu key opens the same menu as holding OK.
+                                            // The remote's Menu key opens the same menu as holding OK.
                                             androidx.compose.ui.input.key.Key.Menu -> { contextChannel = channel; contextChannelId = channel.id; true }
                                             // ◀ Categories: the sheet (Stage) or the column (Separate); pinned lists have none.
                                             androidx.compose.ui.input.key.Key.DirectionLeft -> when {
@@ -827,7 +827,7 @@ fun LiveScreen(
                                             // ▶ Schedule: next / later under the stage; nothing else to the right.
                                             androidx.compose.ui.input.key.Key.DirectionRight -> { runCatching { scheduleFocus.requestFocus() }; true }
                                             // ▲/▼ step by row number, not by focus search: a held key outran the
-                                            // lazy list at the edge or a page boundary and stopped (owner).
+                                            // lazy list at the edge or a page boundary and stopped.
                                             androidx.compose.ui.input.key.Key.DirectionDown -> (stepTarget ?: index).let { from -> from + 1 < channels.itemCount && run { stepTo(from + 1); true } }
                                             androidx.compose.ui.input.key.Key.DirectionUp -> (stepTarget ?: index).let { from -> from > 0 && run { stepTo(from - 1); true } }
                                             else -> false
@@ -853,13 +853,13 @@ fun LiveScreen(
                     tv.own.owntv.ui.stage.StageKeyHints(
                         liveHints,
                         // A clear gap under the list, and 40 from the bottom rather than the design's 26:
-                        // TV panels overscan the very edge away (owner, 2026-09-30).
+                        // TV panels overscan the very edge away.
                         modifier = Modifier.padding(start = 16.mpx, top = 22.mpx, bottom = 40.mpx),
                     )
                 }
             }
 
-            // Under the preview, bottom right (owner, 2026-10-01), so the list runs down to the bottom edge.
+            // Under the preview, bottom right, so the list runs down to the bottom edge.
             if (lockedKey == null && previewShown) {
                 tv.own.owntv.ui.stage.StageKeyHints(
                     liveHints,
@@ -1080,7 +1080,7 @@ fun LiveScreen(
 
     tv.own.owntv.ui.components.InAppToast(multiviewToast)
 
-    // Move to… a combined category (issue #87), incl. the "＋ New category…" name prompt.
+    // Move to… a combined category, incl. the "＋ New category…" name prompt.
     val moveTargets by vm.moveTargets.collectAsStateWithLifecycle()
     if (creatingCategory) {
         TextInputDialog(
@@ -1184,7 +1184,7 @@ private fun ChannelContextMenu(
     // Null unless Multiview is switched on: keep this channel for the grid.
     onAddToMultiview: (() -> Unit)?,
     onMove: () -> Unit,
-    // "Move to category…" (issue #87): send this channel into a user's combined category.
+    // "Move to category…": send this channel into a user's combined category.
     onMoveToCategory: () -> Unit,
     onRemoveFromHistory: () -> Unit,
     // Only inside a custom category: take the channel out of that category alone.

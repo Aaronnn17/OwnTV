@@ -61,7 +61,7 @@ import tv.own.owntv.ui.components.OwnTVIcon
  * Tile 1 arrives filled — it is the channel the user pressed the button on — and the rest say
  * "+ Add channel" until they are given one. Nothing here decides whether a tile *may* tune; that is
  * [MultiviewState] asking core's connection budget, and a refused tile draws the sentence it got
- * back rather than a spinner (D5: the grid never comes down because one tile could not start).
+ * back rather than a spinner (the grid never comes down because one tile could not start).
  *
  * | Press | Does |
  * | --- | --- |
@@ -73,7 +73,7 @@ import tv.own.owntv.ui.components.OwnTVIcon
  *
  * Long OK opens the menu because that is what a long press does everywhere else in this app — the
  * channel list, the guide, Customize — and because most TV remotes have no MENU key at all, which
- * left the menu unreachable on the owner's television.
+ * left the menu unreachable on a real television.
  */
 @UnstableApi
 @Composable
@@ -293,7 +293,7 @@ private fun Tile(
  *
  * It deliberately never invents a number of provider connections. An earlier version did, reading a
  * stopped tile as proof of the provider's limit, and it was wrong every time it fired — including
- * telling the owner his provider allowed three streams while three of them played beside the
+ * telling the user their provider allowed three streams while three of them played beside the
  * message. Whether the provider allows this is settled before a tile tunes, by a measurement; it is
  * not something to be re-guessed from a stall.
  */
@@ -350,7 +350,7 @@ private const val LongPressMs = 500L
 /**
  * How long a tile may be stopped before the grid calls it lost.
  *
- * Comfortably longer than the slowest tile open measured on the owner's television (2.9 s), so a
+ * Comfortably longer than the slowest tile open measured on a real television (2.9 s), so a
  * channel that is merely slow to start is never mistaken for one the provider refused — and far
  * shorter than the engine's own eight-attempt ladder, which takes over eighty seconds to conclude
  * anything and would leave a black tile and no explanation for all of it.

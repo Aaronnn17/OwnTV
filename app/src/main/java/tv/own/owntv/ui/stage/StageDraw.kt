@@ -177,7 +177,7 @@ fun Modifier.stageGlass(radius: Dp, overContent: Boolean = false): Modifier {
     val config = LocalGlass.current
     val on = config.enabled
     // Over content (sheets, the rail, menus) the opacity is scaled into 55-100% rather than floored at 80%:
-    // the floor made every setting below 80% look the same (owner, 2026-10-02), the scale keeps text
+    // the floor made every setting below 80% look the same; the scale keeps text
     // readable and still answers each step (50% -> 78%).
     val palette = LocalStagePalette.current
     // Light glass is white 74% at the 56% default, so the flat opacity is lifted (0.3 + 0.8 x).

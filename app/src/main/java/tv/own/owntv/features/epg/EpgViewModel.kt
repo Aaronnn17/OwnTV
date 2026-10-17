@@ -111,7 +111,7 @@ class EpgViewModel(
     private val customCategoryDao: tv.own.owntv.core.database.dao.CustomCategoryDao,
     private val recordings: tv.own.owntv.core.recording.RecordingManager,
     /** The provider-guide half of a row, for channels whose stored guide stops short — the app-wide
-     *  reader Live TV uses too (T18), so both screens share one cache. */
+     *  reader Live TV uses too, so both screens share one cache. */
     private val liveEpgReader: tv.own.owntv.core.live.LiveEpgReader,
     /** Which guide feeds are syncing right now: the grid waits for them instead of reloading per batch. */
     private val epgActivity: tv.own.owntv.core.sync.EpgActivityTracker,
@@ -211,7 +211,7 @@ class EpgViewModel(
     fun cancelRecording(recording: tv.own.owntv.core.database.entity.RecordingEntity) =
         recordings.cancel(recording)
 
-    /** The standing "record every showing" rule covering this programme, or null (D7). */
+    /** The standing "record every showing" rule covering this programme, or null. */
     suspend fun seriesRuleFor(
         channel: ChannelEntity,
         programme: EpgProgrammeEntity,
@@ -272,7 +272,7 @@ class EpgViewModel(
      * The rows the grid has already read, newest-used first and **hard-capped**.
      *
      * This used to be an unbounded [java.util.concurrent.ConcurrentHashMap] pre-filled by one batch
-     * query that read the entire guide window. On the owner's television that batch was 349,077
+     * query that read the entire guide window. On a real television that batch was 349,077
      * programmes in a single list, and the app died of an OutOfMemoryError inside it. Rows are now
      * read one channel at a time as they scroll into view, and the cache is an LRU: the grid keeps
      * what the user is actually looking at and forgets the rest, so memory is a function of the
@@ -339,7 +339,7 @@ class EpgViewModel(
         // The read itself — window, shift and all — is core's; only what to keep is this screen's.
         val list = guideReader.row(channel, custom.value, epgOffset.value, s.windowStart, s.windowEnd)
         // An empty answer is not kept: while many rows load at once the provider fallback can still be
-        // on its way, and a cached empty row stayed blank until something else re-read it (owner, TV).
+        // on its way, and a cached empty row stayed blank until something else re-read it.
         if (list.isNotEmpty()) putRow(key, list)
         prefetchAfter(channel)
         return list
@@ -553,7 +553,7 @@ class EpgViewModel(
         }
     }
 
-    // --- Programme reminders (Stage G2) ----------------------------------------------------------
+    // --- Programme reminders ----------------------------------------------------------
 
     /** This profile's reminders: the bell in a cell, and "Reminder set" on the programme's button. */
     val reminderRows: StateFlow<List<tv.own.owntv.core.database.entity.ReminderEntity>> =
@@ -665,7 +665,7 @@ class EpgViewModel(
         epgSourceStore.getAll().forEach { runCatching { epgRepository.refreshUrl(it.id, it.url, it.userAgent) } }
     }
 
-    // ---- Smart EPG matching (#13): scan channels with no working guide and match them by name ----
+    // ---- Smart EPG matching: scan channels with no working guide and match them by name ----
 
     /** A proposed EPG match for a channel that didn't auto-resolve confidently enough to apply. */
     data class EpgMatchSuggestion(
@@ -735,7 +735,7 @@ class EpgViewModel(
             try {
                 val pid = settings.activeProfileId.first()
                 // The playlist(s) the guide is showing (the top-right choice), not every playlist on the
-                // profile: with a 400-channel playlist picked it scored a 55k lineup too (owner, TV).
+                // profile: with a 400-channel playlist picked it scored a 55k lineup too.
                 val playlistIds = if (pid < 0) emptyList() else activeSourceIds(settings, sourceDao, pid, MediaType.LIVE)
                 if (playlistIds.isEmpty()) { _matchSummary.value = EpgMatchSummary.AddPlaylist; return@launch }
                 val cust = customize.observe(pid, MediaType.LIVE).first()
@@ -846,7 +846,7 @@ class EpgViewModel(
      *
      * **Serialised, and the newest wins.** A guide sync writes in batches and each batch changes the
      * stored programme count, so this is called again and again while one is running. It used to start
-     * a fresh coroutine every time with nothing to stop the previous one; on the owner's television
+     * a fresh coroutine every time with nothing to stop the previous one; on a real television
      * six of them were in flight at once, each holding its own copy of the window, and the app died of
      * an OutOfMemoryError. Cancelling the one in progress makes the answer the latest one rather than
      * a race between six stale ones, and the mutex closes the gap while a cancelled load unwinds.
@@ -1077,7 +1077,7 @@ class EpgViewModel(
     companion object {
         // A sync writes the guide in batches, so every batch is reported. This must be longer than
         // the gap between two batch writes, or it coalesces nothing and the grid reloads per batch —
-        // which is exactly what it used to do. Measured on the owner's television (2026-09-18):
+        // which is exactly what it used to do. Measured on a real television:
         // batches land 2.3-6.1 s apart, and 1,500 ms never once coalesced them. 10 s clears the
         // longest observed gap with room to spare; a background refresh showing up ten seconds after
         // it settles is not something anyone is waiting on.

@@ -148,7 +148,7 @@ private fun cursorStep(progs: List<EpgProgrammeEntity>, cursor: Long, dir: Int, 
  * ▲ ▼ step rows at the same time), so a week of guide stays one node per row. OK watches — the channel,
  * or a programme that has been on from the archive; holding OK or ☰ opens the programme menu.
  *
- * With [liveMode] this is Live TV's Guide view (G14): the category is Live TV's own, the title says
+ * With [liveMode] this is Live TV's Guide view: the category is Live TV's own, the title says
  * Live TV, and List view goes back to the channel list.
  */
 @OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
@@ -230,7 +230,7 @@ fun EpgScreen(
     fun maxScroll(): Int = (pxAt(state.windowEnd) - timelinePx).toInt().coerceAtLeast(0)
     fun timeAt(px: Float): Long = state.windowStart + (px / ppm * 60_000f).toLong()
     // A time is shown 3/8 of the way across, as the guide always had it: the programme on now keeps room
-    // on both sides and its title is never cut (owner, 2026-09-30).
+    // on both sides and its title is never cut.
     fun showTime(t: Long) {
         scrollPx = (pxAt(t) - timelinePx * 3f / 8f).toInt().coerceIn(0, maxScroll())
     }
@@ -450,7 +450,7 @@ fun EpgScreen(
                     modifier = Modifier.padding(start = 46.mpx, top = 76.mpx).widthIn(max = 1080.mpx),
                 )
             }
-            // The key hints at the bottom right of the top area, level with the video's bottom edge (owner, 2026-10-01).
+            // The key hints at the bottom right of the top area, level with the video's bottom edge.
             Box(Modifier.align(Alignment.BottomEnd)) { GuideKeyHints(cellMode = inCellMode && gridHasFocus) }
         }
 
@@ -862,7 +862,7 @@ private fun GuideEmpty(title: String, body: String? = null, action: String? = nu
 }
 
 /**
- * How to move, under the programme beside the video (owner, 2026-10-01: in place of action buttons,
+ * How to move, under the programme beside the video (in place of action buttons,
  * which could not be reached without leaving the channel — they are all in Hold OK's menu). At row level:
  * OK Browse · ▲▼ Channels · ◀ Menu · Hold OK Options; inside a row: OK Watch · ◀ ▶ Programs · Back Channels.
  */

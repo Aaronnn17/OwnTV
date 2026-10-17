@@ -139,9 +139,9 @@ fun PlayerHud(
     // Switch to audio-only mode (stops video decode, surfaces the top-bar now-playing bar). Null hides it.
     onAudioMode: (() -> Unit)? = null,
     // Live only, and only when Multiview is switched on in Settings: turn this channel into tile 1 of
-    // the grid. Null hides the button entirely — the feature is opt-in (D3's shape, applied to D5).
+    // the grid. Null hides the button entirely — the feature is opt-in, like the record button.
     onMultiview: (() -> Unit)? = null,
-    // Live only, and only once "Record what I'm watching" is switched on in Settings (D3): record the
+    // Live only, and only once "Record what I'm watching" is switched on in Settings: record the
     // channel already playing, over the connection already open. Null hides the button entirely —
     // the feature does not exist until the user has accepted the one-connection trade-off.
     onRecordThis: (() -> Unit)? = null,
@@ -167,14 +167,14 @@ fun PlayerHud(
     onScrubLive: ((Int) -> Unit)? = null, // timeline scrub: +sec = back, −sec = toward live
     // The playing channel's guide, for the timeline's programme ticks and the scrub bubble's name.
     liveProgrammes: List<LiveProgramme> = emptyList(),
-    /** N4 — the saved copy's holes, for the rewind bar. */
+    /** The saved copy's holes, for the rewind bar. */
     liveGaps: () -> List<LongRange> = { emptyList() },
     // "Go back to…": aim at a point in the archive instead of nudging toward it with rewind. Null =
     // not a catch-up channel. [jumpBackOptions] is read when the list opens so its clock times are
     // computed against the moment the user asked, not the moment the HUD was composed.
     jumpBackOptions: (() -> List<Int>)? = null,
     onJumpBack: ((Int) -> Unit)? = null,
-    // N2 — back to the channel watched before this one. Null hides the button (no previous channel yet).
+    // Back to the channel watched before this one. Null hides the button (no previous channel yet).
     onPreviousChannel: (() -> Unit)? = null,
     // Archive depth of the current channel, for the exact-time picker's day/HH:MM bounds.
     jumpBackWindowSec: (() -> Int)? = null,
@@ -208,15 +208,15 @@ fun PlayerHud(
     // (the EPG data lives in LiveViewModel, not the player). Rendered on the right edge whenever the
     // controls are visible, like the top-bar channel card; informational only, never focusable.
     liveEpgCard: (@Composable () -> Unit)? = null,
-    // N3 — now/next lines for the channel-change banner (the playing channel's guide). Null = name only.
+    // Now/next lines for the channel-change banner (the playing channel's guide). Null = name only.
     zapGuide: (@Composable () -> Unit)? = null,
     // The archive's own wall-clock instant while catch-up/rewind is playing; null means the picture is
     // the present, and only the real clock shows. Drives the second, framed clock at top centre.
     // Lambda for the same reason as [timeshiftOffsetSec]: this instant advances every second too.
     watchingWallMs: (() -> Long?)? = null,
-    // N17 — when the programme on air ends, read as the sleep timer opens. Null = no "End of programme".
+    // When the programme on air ends, read as the sleep timer opens. Null = no "End of programme".
     sleepProgrammeEndMs: (() -> Long?)? = null,
-    // N6 — Settings → "Left and right rewind live TV": with the controls hidden, Left/Right on a
+    // Settings → "Left and right rewind live TV": with the controls hidden, Left/Right on a
     // catch-up channel scrub instead of opening the lists. Films always seek.
     liveLeftRightRewinds: Boolean = false,
     // Sports Hub — only for a channel started from a match; all null means the plain Live player.
@@ -230,7 +230,7 @@ fun PlayerHud(
     onToastOk: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
-    // T14 — nothing that ticks is read in this root scope: with the controls hidden it used to recompose
+    // Nothing that ticks is read in this root scope: with the controls hidden it used to recompose
     // the whole HUD once a second for a position nobody could see. The offset, the archive clock and the
     // position are handed down as lambdas and read by the piece that draws them.
     val timeshiftOffset: () -> Int? = { timeshiftOffsetSec?.invoke() }
@@ -270,7 +270,7 @@ fun PlayerHud(
     val retryFocus = remember { FocusRequester() }
     val catchFocus = remember { FocusRequester() }
     val nextFocus = remember { FocusRequester() }
-    // The timeline, and whether the next reveal of the controls lands on it rather than Play (N6).
+    // The timeline, and whether the next reveal of the controls lands on it rather than Play.
     val seekFocus = remember { FocusRequester() }
     var focusSeekOnShow by remember { mutableStateOf(false) }
 
@@ -287,7 +287,7 @@ fun PlayerHud(
 
     var controlsVisible by remember { mutableStateOf(true) }
     var showInfo by remember { mutableStateOf(false) } // stream technical-info overlay
-    // Used only by "Report this stream", which writes the current readout into the playback log (F18).
+    // Used only by "Report this stream", which writes the current readout into the playback log.
     val reportContext = androidx.compose.ui.platform.LocalContext.current
     var wakeTick by remember { mutableIntStateOf(0) }
     val forceShow = error != null || dialog != HudDialog.NONE
@@ -563,7 +563,7 @@ fun PlayerHud(
                 canZap && e.key == Key.MediaPrevious -> { zap(-1); true }
                 canZap && isLive && !controlsVisible && e.key == Key.DirectionUp -> { zap(1); true }
                 canZap && isLive && !controlsVisible && e.key == Key.DirectionDown -> { zap(-1); true }
-                // N6 — Left/Right with the controls hidden: reveal them on the timeline and take the first
+                // Left/Right with the controls hidden: reveal them on the timeline and take the first
                 // step, so the jump is seen and holding the key goes on scrubbing the bar itself. Physical
                 // keys, like the bars: left is back in time in every locale. A film always does this; a
                 // live channel only with its archive and the setting on — otherwise the lists below.
@@ -639,7 +639,7 @@ fun PlayerHud(
         // The REC badge, and it is deliberately OUTSIDE `if (controlsVisible)`.
         //
         // The shell hides the status pill during fullscreen playback, so without this a recording
-        // running behind the picture would be completely invisible — which is the one thing D13 says
+        // running behind the picture would be completely invisible — which is the one thing that
         // must not happen. It is drawn whenever anything is recording, HUD up or down, and it is not
         // focusable and not interactive: stopping a recording is the Recordings screen's job, and a
         // stop button one stray D-pad press from the middle of a programme is not a kindness.
@@ -705,7 +705,7 @@ fun PlayerHud(
                     onInfo = { showInfo = !showInfo }, infoOn = showInfo,
                     onReport = {
                         val meta = player.currentMeta.value
-                        // The readout is gathered on the player's own thread now (A-F2), so the report is
+                        // The readout is gathered on the player's own thread now, so the report is
                         // written from a coroutine. The confirmation still flashes immediately — the user
                         // pressed a button and must see it acknowledged.
                         // Read at the press, not per tick.
@@ -791,7 +791,7 @@ fun PlayerHud(
                         Text(stringResource(R.string.player_raw_error, it), style = tv.own.owntv.ui.theme.stageText(22, 400), color = Color.White.copy(alpha = 0.6f), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth(0.8f))
                     }
                 }
-                // D9 — while a recording is what took the picture away, this screen has TWO buttons
+                // While a recording is what took the picture away, this screen has TWO buttons
                 // instead of a lone Retry, because Retry alone cannot work: the provider's only
                 // stream is busy and trying again just fails again.
                 //

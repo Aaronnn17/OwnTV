@@ -18,7 +18,7 @@ import kotlin.math.roundToInt
 private const val SETTLE_MS = 8_000L
 
 /**
- * F13: the one-time "your TV is at 60 Hz and this stream is 25 fps" suggestion.
+ * The one-time "your TV is at 60 Hz and this stream is 25 fps" suggestion.
  *
  * On mpv's direct `vo=mediacodec_embed` path the app does not control scan-out timing — frames go to the
  * decoder's surface and the display presents them on its own cadence. 25 fps on a fixed 60 Hz output
