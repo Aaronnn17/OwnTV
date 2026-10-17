@@ -40,6 +40,7 @@
 - **🗂️ Downloads and recordings whose file is gone say "File missing"**
 
 ### 🐛 Fixes
+- **↕️ Move opens straight from a category's menu and moves as many items as you like before Save**
 - **🌍 Channels named "UK: …" or "IT: …" get their country and language, like "UK| …"**
 - **🧹 Find channels leaves out playlist divider rows and other matches' event channels**
 - **📺 Broadcasts lists one channel per row, by country**

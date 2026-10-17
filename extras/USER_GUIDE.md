@@ -225,6 +225,13 @@ The channel menu is grouped **Watch · Channel · Guide data · Organise** and a
 **Catch-up**, **Record**, **Move**, **Add to Multiview**, **Remove from this category** (inside a
 custom category) and **Play in external player**.
 
+### ↕️ Move
+**Where:** **Move** in a channel's, film's or show's menu, **hold OK** on a category → **Move**, or
+⋯ More → Favourites → hold OK → **Move**
+The Move window opens with that item picked up. **▲ ▼** carry it a row, **CH+ / CH−** a page, and a
+**long press** of them to the first or last place. **OK** puts it down or picks up another, so several
+can move in one go. **Save** keeps the new order; **Cancel** or **Back** leaves it as it was.
+
 ### 🏷️ What the row tells you
 Number, logo, name, the programme on now with its time left and a progress bar, the provider's tags
 (quality, country), a catch-up mark, a heart for favourites and the playlist's mark.
