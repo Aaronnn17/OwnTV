@@ -108,16 +108,16 @@ import tv.own.owntv.ui.theme.stageText
 import java.util.Locale
 
 /*
- * Home, Stage (P2-01 hero, P2-02 rows, P2-03 pager). With Trending drawn full-bleed, the top of the screen
+ * Home, Stage (hero, rows, pager). With Trending drawn full-bleed, the top of the screen
  * is the trending title over its dissolving backdrop, and Keep watching sits under it in large stills.
  * Once focus goes down into the rows, the hero folds into one line (eyebrow + title) and the rows move up.
  * Both states are one list, so the focused card is the same composable before and after the fold.
  */
 
-/** The row gap; the headings' mockup positions below already include it. */
+/** The row gap; the headings' design positions below already include it. */
 private val RowGap = 40.mpx
 
-/** How far the full hero's text sits above the mockup's (`top: 170px`), and the rows with it: the
+/** How far the full hero's text sits above the design's (`top: 170px`), and the rows with it: the
  *  top-left corner is empty, and the rows below are what the screen is short of. */
 private val HeroLift = 60.mpx
 
@@ -154,7 +154,7 @@ fun HomeScreen(
      * (A plain request on the content area drills to the nearest card instead.) Null on leaving.
      */
     onEntryHook: (((() -> Boolean)?) -> Unit)? = null,
-    /** Sports Hub (T7): ▶ on a Live sports card opens its match page. */
+    /** Sports Hub: ▶ on a Live sports card opens its match page. */
     onOpenMatch: (tv.own.owntv.core.sports.model.Match) -> Unit = {},
     modifier: Modifier = Modifier,
     sportsVm: tv.own.owntv.features.sports.SportsViewModel = org.koin.androidx.compose.koinViewModel(),
@@ -187,7 +187,7 @@ fun HomeScreen(
     var detailsTmdbWins by remember { mutableStateOf(false) }
     // Focus is on the hero (its buttons or pager): the list must not scroll, and the hero stays unfolded.
     val heroFocused = remember { mutableStateOf(false) }
-    // Focus has gone down into the rows: the hero folds into its one-line form (P2-02).
+    // Focus has gone down into the rows: the hero folds into its one-line form.
     var inRows by remember { mutableStateOf(false) }
     val rowFirstFocusRequesters = remember { HomeRow.entries.associateWith { FocusRequester() } }
     // A Keep watching card plays its preview only after 3 s of continuous focus (the dwell below).
@@ -203,7 +203,7 @@ fun HomeScreen(
     val showEmptyState = orderedRows.isNotEmpty() && renderRows.isEmpty()
     val fullBleed = renderRows.firstOrNull() == HomeRow.TRENDING &&
         state.config.trendingStyle == HomeTrendingStyle.HERO
-    // Trending layout = Posters only (P2-04): the folded line on top follows the focused poster.
+    // Trending layout = Posters only: the folded line on top follows the focused poster.
     val posterHero = renderRows.firstOrNull() == HomeRow.TRENDING &&
         state.config.trendingStyle == HomeTrendingStyle.POSTERS
     var posterIndex by remember { mutableIntStateOf(0) }
@@ -221,7 +221,7 @@ fun HomeScreen(
         }
     }
     val playFocus = rowFocusRequester(HomeRow.TRENDING) ?: trendingPrimaryFocus
-    // The control that last had focus on Home, so ▶ out of the rail comes back to exactly it (P1
+    // The control that last had focus on Home, so ▶ out of the rail comes back to exactly it (rail
     // carry-over). Compose's own restorer cannot follow a card inside a lazy row inside a lazy column.
     var lastFocus by remember { mutableStateOf<FocusRequester?>(null) }
     val track: (FocusRequester) -> Unit = { lastFocus = it }
@@ -322,7 +322,7 @@ fun HomeScreen(
     }
 
     val hero = state.heroItems.getOrNull(state.activeHeroIndex)
-    // Scroll only as far as the focused row needs to be fully on screen (P2-02: focus on Favourite
+    // Scroll only as far as the focused row needs to be fully on screen (focus on Favourite
     // channels leaves Keep watching and the folded title where they are). The TV default instead pins
     // the focused item a third of the way down, which slid the whole page up on every ▼. The hero
     // itself never scrolls.
@@ -367,7 +367,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .onFocusChanged { if (it.hasFocus) onChildFocused() }
-                    // ▶ out of the rail comes back to the card it left from (P1 carry-over): every level
+                    // ▶ out of the rail comes back to the card it left from (rail carry-over): every level
                     // of the list remembers its focused child.
                     .focusGroup(),
                 state = listState,
@@ -385,7 +385,7 @@ fun HomeScreen(
                             TrendingPosterRow(
                                 // Room for the focused poster's lift under the heading when the line sits above.
                                 headerGap = if (posterItem != null) 16.mpx else 0.dp,
-                                // Compose's one-line poster title is 10 px shorter than Chrome's (P2-04, measured).
+                                // Compose's one-line poster title is 10 px shorter than Chrome's (measured).
                                 bottomGap = if (posterItem != null) 10.mpx else 0.dp,
                                 onItemFocused = { posterIndex = it },
                                 title = row.displayTitle(),
@@ -679,13 +679,13 @@ private fun trendingBackdrop(item: TrendingHomeItem): String? =
             is TrendingHomeItem.Series -> item.series.backdropUrl ?: item.series.posterUrl
         }
 
-/** A rating as the mockup writes it: one decimal, in the user's number format ("8.4", "8,4"). */
+/** A rating as the design writes it: one decimal, in the user's number format ("8.4", "8,4"). */
 private fun ratingText(rating: Double): String = String.format(Locale.getDefault(), "%.1f", rating)
 
 /**
  * `.fadeimg` behind the hero: right-aligned, 1500 of the 1920 width at 16:9, dissolving into the page on
  * its left (34%) and bottom (38%), with the 70% → 0 wash across its left 60% so the title always reads.
- * Folded (P2-02), it is 560 high at 55%, without the wash.
+ * Folded, it is 560 high at 55%, without the wash.
  */
 @Composable
 private fun TrendingBackdrop(item: TrendingHomeItem, folded: Boolean, modifier: Modifier = Modifier) {
@@ -827,8 +827,8 @@ private fun TrendingHero(
                 .wrapContentHeight(Alignment.Top, unbounded = true),
         ) {
             TrendingEyebrow(item, withTag = true)
-            // 18 in the mockup; Compose's trimmed 112 line box starts its glyphs 10 px lower than
-            // Chrome's `line-height: 1` box (measured on the TV against P2-01).
+            // 18 in the design; Compose's trimmed 112 line box starts its glyphs 10 px lower than
+            // Chrome's `line-height: 1` box (measured on the TV).
             Spacer(Modifier.height(8.mpx))
             // The title art when TMDB has it, as the films and series hero do; the text title otherwise,
             // and if the art fails to load. 170 high, the room the films hero gives it.
@@ -943,14 +943,14 @@ private fun TrendingHero(
     }
 }
 
-/** P2-02 / P2-04: the hero folded to its eyebrow and a 60/800 title, nothing focusable. */
+/** The hero folded to its eyebrow and a 60/800 title, nothing focusable. */
 @Composable
 private fun FoldedHeroLine(item: TrendingHomeItem, start: Dp, height: Dp = CompactHeroHeight) {
     Box(Modifier.fillMaxWidth().height(height).padding(start = start, top = 64.mpx)) {
         Column {
             TrendingEyebrow(item, withTag = false)
-            // 8 in the mockup; Compose's 60 px line box starts its glyphs 13 px higher than
-            // Chrome's (measured on the TV against P2-02).
+            // 8 in the design; Compose's 60 px line box starts its glyphs 13 px higher than
+            // Chrome's (measured on the TV).
             Spacer(Modifier.height(21.mpx))
             Text(
                 item.snapshot.localizedTitle,
@@ -962,7 +962,7 @@ private fun FoldedHeroLine(item: TrendingHomeItem, start: Dp, height: Dp = Compa
 }
 
 /**
- * P2-03: the segmented progress under the hero buttons, one segment per trending title. The current one is
+ * The segmented progress under the hero buttons, one segment per trending title. The current one is
  * 70 wide and fills over the 10 s; the ones before it are full. ▼ from the buttons focuses it (the FX
  * look, current segment in the focus colour) and ◀ ▶ then change the title directly — see
  * [trendingPagerTarget].
@@ -1156,7 +1156,7 @@ internal fun relativeLastWatchedLabel(lastEngagementAt: Long, nowMs: Long): Stri
     return pluralStringResource(R.plurals.home_last_watched_days, elapsedDays.toInt(), elapsedDays.toInt())
 }
 
-/** Continue watching movies / series: 196 × 294 posters (`.pc`), as P2-02 draws the series row. */
+/** Continue watching movies / series: 196 × 294 posters (`.pc`), as the series row draws them. */
 @Composable
 private fun ContinuePosterRow(
     title: String,

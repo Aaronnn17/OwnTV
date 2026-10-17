@@ -33,7 +33,7 @@ import androidx.tv.material3.Text
 import tv.own.owntv.ui.components.OwnTVSpinner
 
 /**
- * OpenSubtitles search overlay, opened from the player HUD's ADD SUBTITLES entry (subtitle plan §6).
+ * OpenSubtitles search overlay, opened from the player HUD's ADD SUBTITLES entry.
  * Shows results for the playing movie/episode; selecting one downloads, attaches, and remembers it.
  */
 @Composable

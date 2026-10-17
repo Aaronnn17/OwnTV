@@ -86,8 +86,8 @@ data class FavouriteMove(val type: MediaType, val ids: List<Long>, val names: Li
  * More's data: the sheet's counts, and the Favourites and History pages.
  *
  * Deliberately its own view model and plain DAO reads, never a browse view model: on the TV
- * `koinViewModel()` scopes to the Activity, so borrowing `MoviesScreen`'s would share its pinned folder
- * (Plan Z defect 6). Writes go through the same [UserDataWriter] and order table the browse screens use.
+ * `koinViewModel()` scopes to the Activity, so borrowing `MoviesScreen`'s would share its pinned folder.
+ * Writes go through the same [UserDataWriter] and order table the browse screens use.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class MoreCountsViewModel(

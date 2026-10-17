@@ -69,7 +69,7 @@ import tv.own.owntv.ui.theme.stageAccent
 import tv.own.owntv.ui.theme.stageText
 
 /**
- * Settings › Appearance › Accent color (P9-05): presets, a hex code and an HSV picker, with a preview of
+ * Settings › Appearance › Accent color: presets, a hex code and an HSV picker, with a preview of
  * what the accent tints. The whole app behind re-tints while the picker moves; Cancel puts the colour
  * that was there back, "Use this color" keeps the new one.
  */
@@ -122,7 +122,7 @@ fun AccentPopup(
 class ColorChoice(val color: Color, val label: String, val pick: () -> Unit)
 
 /**
- * The Stage colour picker (P9-05), shared by Accent color and the clock colours (P10B): presets, the
+ * The Stage colour picker, shared by Accent color and the clock colours: presets, the
  * colour in use ("Yours"), a hex code and the HSV field, with [preview] under them. [onLive] receives the
  * picked hex a beat after the picker moves; Cancel / Back call [onCancel]; "Use this color" calls
  * [onDone] with the picked hex, or null when a preset was the last choice (already stored).

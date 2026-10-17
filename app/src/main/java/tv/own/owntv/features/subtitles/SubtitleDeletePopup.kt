@@ -19,7 +19,7 @@ import tv.own.owntv.core.database.dao.LinkedSubtitle
 import tv.own.owntv.ui.components.OwnTVIcon
 
 /**
- * Per-item "Delete subtitles" popup opened from a movie/episode long-press (subtitle plan §11).
+ * Per-item "Delete subtitles" popup opened from a movie/episode long-press.
  * Lists that item's downloaded subtitles; tapping one deletes it individually. Shares the app's selected
  * popup styling. [items] is re-supplied by the caller after each delete (empty → the caller closes).
  */

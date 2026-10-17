@@ -181,7 +181,7 @@ fun StageKeyHints(hints: List<Pair<String, String>>, modifier: Modifier = Modifi
                     Modifier
                         .defaultMinSize(minWidth = 34.mpx)
                         .height(30.mpx)
-                        // The mockup's 2 px bottom shade is left out: on the TV it read as a stray bar (owner).
+                        // No 2 px bottom shade: on the TV it read as a stray bar (owner).
                         .background(LocalStagePalette.current.keycap, RoundedCornerShape(8.mpx))
                         // `.mine.light .kc`: a white cap needs an ink rim to stand off the white glass.
                         .then(if (LocalStagePalette.current.isLight) Modifier.border(1.mpx, StageColors.Ink.copy(alpha = 0.1f), RoundedCornerShape(8.mpx)) else Modifier)

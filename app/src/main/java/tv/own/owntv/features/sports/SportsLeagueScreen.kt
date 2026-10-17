@@ -42,11 +42,11 @@ import tv.own.owntv.ui.theme.mpx
 import tv.own.owntv.ui.theme.stageAccent
 import tv.own.owntv.ui.theme.stageText
 
-/** The league page's tabs (mockup T5). Top scorers is not offered: the feeds carry none (WORK O9). */
+/** The league page's tabs. Top scorers is not offered: the feeds carry none. */
 private enum class LeagueTab { TABLE, FIXTURES, RESULTS }
 
 /**
- * A league (mockup T5): its name and Following, the tabs, the table on the left and this matchday's
+ * A league: its name and Following, the tabs, the table on the left and this matchday's
  * matches on the right ("Frankfurt 2–1 Köln · 63'"). OK on a match opens its page, where its channels are found.
  */
 @Composable

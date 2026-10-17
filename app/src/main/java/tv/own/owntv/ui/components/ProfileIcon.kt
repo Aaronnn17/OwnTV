@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 
 /**
- * Rank 1 — Profile icon (Phase 7). Person silhouette + star accent on 100-grid.
+ * Rank 1 — Profile icon. Person silhouette + star accent on 100-grid.
  */
 @Composable
 fun ProfileIcon(color: Color, modifier: Modifier = Modifier) {

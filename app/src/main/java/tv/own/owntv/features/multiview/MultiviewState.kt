@@ -85,7 +85,7 @@ class MultiviewState(
     private val claims = HashMap<Int, OpenStreamRegistry.Claim>()
 
     /**
-     * Tiles playing sound with no picture — the owner's background-audio case (§2.4): watch one
+     * Tiles playing sound with no picture — the owner's background-audio case: watch one
      * channel while another's commentary plays behind it.
      *
      * It costs a provider connection exactly as a picture does, because dropping the video track does
@@ -164,7 +164,7 @@ class MultiviewState(
      *
      * **It does not blame the provider, and it used to.** That version was built on the belief that
      * this portal silently cut the oldest stream; measuring the account directly disproved it — four
-     * of its streams run side by side for as long as you like. Every time the old rule fired it was
+     * of its streams run side by side for as long as you like. Every time a stricter rule fired it was
      * wrong, most visibly when it told the owner his provider allowed three streams while three of
      * its streams were playing in front of him.
      *

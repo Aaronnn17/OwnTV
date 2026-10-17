@@ -67,7 +67,7 @@ private const val SECTION_RESUME = 10
 private const val SECTION_DIAGNOSTICS = 11
 
 /**
- * The Settings groups (P10) that hold Video player rows: each part is a sub-heading and the sections
+ * The Settings groups that hold Video player rows: each part is a sub-heading and the sections
  * listed under it. App adds Diagnostics under its own rows; Watching & recording adds Recording after.
  */
 internal enum class VideoGroup(val titleRes: Int, val parts: List<Pair<Int, List<Int>>>) {
@@ -532,9 +532,9 @@ private fun liveLatencyLabelRes(mode: tv.own.owntv.core.settings.LiveLatency): I
 }
 
 /**
- * The Video player rows of one Stage settings group (P10): its parts, each under a sub-heading, drawn
- * inside the Settings page that hosts them. The rows' values, their popups and the Quick pins are the
- * old Video player screen's, unchanged; only the frame around them moved to [StageSettingsPage].
+ * The Video player rows of one Stage settings group: its parts, each under a sub-heading, drawn
+ * inside the Settings page that hosts them. The rows' values, their popups and the Quick pins are
+ * defined here; [StageSettingsPage] draws the frame around them.
  */
 @Composable
 internal fun VideoPlayerGroupRows(
@@ -617,7 +617,7 @@ internal fun VideoPlayerGroupRows(
     // First lambda runs on "I understand", second on "Cancel".
     var lowWarning by remember { mutableStateOf<Pair<() -> Unit, () -> Unit>?>(null) }
 
-    // OpenSubtitles account lives as an in-place sub-screen of this tab (plan §15). These three
+    // OpenSubtitles account lives as an in-place sub-screen of this tab. These three
     // are declared before the early return so they survive while the sub-screen is shown — that's
     // what lets Back land focus on the row that opened it instead of the top of the list.
     var dialog by remember { mutableStateOf(Dialog.NONE) }
@@ -1397,7 +1397,7 @@ internal fun VideoPlayerGroupRows(
             onSelect = { vm.setResumeMode(it); dialog = Dialog.NONE },
             onDismiss = { dialog = Dialog.NONE },
         )
-        // A page of its own now (owner, P12): opened through the Settings screen, which owns the pages.
+        // A page of its own: opened through the Settings screen, which owns the pages.
         Dialog.SUB_STYLE -> LaunchedEffect(Unit) { dialog = Dialog.NONE; openSubtitleStyle?.invoke() }
         Dialog.SUB_LANG -> PickerDialog(
             title = stringResource(R.string.settings_preferred_subtitle_language),
@@ -2060,7 +2060,7 @@ internal fun PickerDialog(
     /** Drawn under an option — the layout chooser's little bar preview. */
     optionPreview: (@Composable (String) -> Unit)? = null,
 ) {
-    // On a Stage settings page the choices open in the page's panel, not in a popup (owner, P12).
+    // On a Stage settings page the choices open in the page's panel, not in a popup.
     val picker = PanelPicker(options, selected, onSelect, descriptions, searchable, optionPreview)
     if (panelEditor(onDismiss) { help -> PanelChoices(picker, help, onDismiss) }) return
     val fr = remember { FocusRequester() }
@@ -2146,7 +2146,7 @@ private fun ExternalPlayerDialog(
     val switches: @Composable () -> Unit = {
         PanelSwitches(sections.map { (section, v) -> Triple(v.first, v.second) { onToggle(section, !v.second) } }, onDone = onDismiss)
     }
-    // Three switches: in the page's panel (owner, P12), a Stage popup elsewhere.
+    // Three switches: in the page's panel, a Stage popup elsewhere.
     if (panelEditor(onDismiss) { switches() }) return
     tv.own.owntv.ui.stage.StagePopup(onDismiss = onDismiss, title = stringResource(R.string.settings_external_player), body = stringResource(R.string.settings_external_player_description)) { switches() }
 }
@@ -2167,7 +2167,7 @@ internal fun StepperDialog(
     val stepper: @Composable () -> Unit = {
         PanelStepper(format(value), onStep = { d -> onSet((value + d * step).coerceIn(min, max)) }, onReset = onReset, onDone = onDismiss)
     }
-    // On a Stage settings page the value is changed in the page's panel (owner, P12); elsewhere a Stage popup.
+    // On a Stage settings page the value is changed in the page's panel; elsewhere a Stage popup.
     if (panelEditor(onDismiss) { stepper() }) return
     tv.own.owntv.ui.stage.StagePopup(onDismiss = onDismiss, title = title) { stepper() }
 }
@@ -2210,7 +2210,7 @@ private fun subtitlePositionName(position: SubtitleStyle.Position): String = str
 )
 
 /**
- * Settings › Sound & subtitles › Subtitle appearance as a Stage page (owner, P12): the custom look's
+ * Settings › Sound & subtitles › Subtitle appearance as a Stage page: the custom look's
  * switch, then — while it is on — each engine's size, font, colour, position and background, with the
  * live preview at the top of the panel. Simple values open in the panel; the colour opens the Stage
  * colour popup. Every change writes through at once, as before.

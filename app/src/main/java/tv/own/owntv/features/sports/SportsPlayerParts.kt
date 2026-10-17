@@ -43,7 +43,7 @@ import tv.own.owntv.ui.theme.mpx
 import tv.own.owntv.ui.theme.stageText
 
 /**
- * The line under the channel name while the info bar is open (T4b): "● LIVE **Frankfurt 2–1 Köln** · 63' · ESPN".
+ * The line under the channel name while the info bar is open: "● LIVE **Frankfurt 2–1 Köln** · 63' · ESPN".
  * It asks for the score only while it is drawn, so a closed bar costs no request. Spoiler-free shows
  * the two teams without the score.
  */
@@ -82,7 +82,7 @@ fun MatchScoreLine(playback: SportsPlayback, match: Match, spoilerFree: Boolean)
 private const val ESPN = "ESPN"
 
 /**
- * T4c: the other channels showing the match, as a side panel over the picture — the backup when a
+ * The other channels showing the match, as a side panel over the picture — the backup when a
  * stream stalls. The playing one is marked and dimmed; OK switches, Back closes.
  */
 @Composable
@@ -141,7 +141,7 @@ fun OtherChannelsPanel(session: SportsSession, playingId: Long?, onSwitch: (Spor
 }
 
 /**
- * T4a: "⚽ Goal for a team you follow — Liverpool 1–0 Brentford · Salah 38'", top right over the picture,
+ * The goal toast: "⚽ Goal for a team you follow — Liverpool 1–0 Brentford · Salah 38'", top right over the picture,
  * for eight seconds. Never for the match being watched. OK switches to that match (the player handles the key).
  */
 @Composable

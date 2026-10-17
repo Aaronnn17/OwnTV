@@ -88,7 +88,7 @@ fun CustomizeScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     var showNewCatPicker by remember { mutableStateOf(false) }
     var showSortPicker by remember { mutableStateOf(false) }
     var showFilterPicker by remember { mutableStateOf(false) }
-    // "…" in the tool row (P10B): New categories and the PIN lock.
+    // "…" in the tool row: New categories and the PIN lock.
     var showMoreMenu by remember { mutableStateOf(false) }
     var restoringDefaults by remember { mutableStateOf(false) }
     val restorePlaylist by vm.restorePlaylistName.collectAsStateWithLifecycle()
@@ -98,7 +98,7 @@ fun CustomizeScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     var rangeEnd by remember { mutableStateOf<CustomizeCatRow?>(null) }
     // ＋ New category (issue #87): name prompt, then the empty combined category appears in the list.
     var creatingCategory by remember { mutableStateOf(false) }
-    // Custom category pending deletion — confirmed in a scrim before anything is removed (plan §3.5).
+    // Custom category pending deletion — confirmed in a scrim before anything is removed.
     var deletingCategory by remember { mutableStateOf<CustomizeCatRow?>(null) }
     // PIN gate: asked on every entry (state is per-composition, so leaving the screen re-locks it).
     var unlocked by remember { mutableStateOf(false) }
@@ -206,7 +206,7 @@ fun CustomizeScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     if (selectedCategory != null) {
         CustomizeItemsScreen(onBack = { vm.closeItems() }, modifier = modifier)
     } else {
-    // P10B-02: the band, the tool row above the list (owner), categories as rows and the panel with
+    // The band, the tool row above the list (owner), categories as rows and the panel with
     // the focused category's actions and the span help.
     StageFullPage(
         parents = listOf(stringResource(R.string.settings_group_content_metadata)),
@@ -469,8 +469,8 @@ fun CustomizeScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
         )
     }
 
-    // Custom category pending deletion (opened from the rename dialog's Delete) — confirmed first,
-    // plan §3.5: "It must never touch content."
+    // Custom category pending deletion (opened from the rename dialog's Delete) — confirmed first.
+    // It must never touch content.
     if (restoringDefaults) {
         PinConfirmDialog(
             title = stringResource(
@@ -513,7 +513,7 @@ fun CustomizeScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             hint = stringResource(R.string.settings_customize_rename_hint, row.originalName),
             onConfirm = { vm.renameCategory(row, it.takeIf { t -> t.isNotBlank() }); renaming = null },
             onDismiss = { renaming = null },
-            // Custom combined categories can be deleted from their own rename dialog (plan §3.5);
+            // Custom combined categories can be deleted from their own rename dialog;
             // the confirm scrim above runs before anything is removed.
             onDelete = if (isCustom) { { deletingCategory = row; renaming = null } } else null,
         )

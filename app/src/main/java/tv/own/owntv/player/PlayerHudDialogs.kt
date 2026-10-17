@@ -70,11 +70,11 @@ internal fun TrackDialog(
     audioDelayRemembered: Boolean = false,
     onToggleRememberAudioDelay: (() -> Unit)? = null,
     // Non-null on the Subtitles dialog for a movie/episode → an "ADD SUBTITLES" row that opens the
-    // OpenSubtitles search (subtitle plan §4). Absent for Live TV and when no item context exists.
+    // OpenSubtitles search. Absent for Live TV and when no item context exists.
     onSearchSubtitles: (() -> Unit)? = null,
-    // Non-null on the Subtitles dialog for a movie/episode → "Select local subtitle file" (plan §7).
+    // Non-null on the Subtitles dialog for a movie/episode → "Select local subtitle file".
     onSelectLocalSubtitle: (() -> Unit)? = null,
-    // Non-null on the Subtitles dialog when timing adjustment applies to the active track (plan §8) →
+    // Non-null on the Subtitles dialog when timing adjustment applies to the active track →
     // an "ADJUST" section with a "Subtitle timing" row: ◀ ▶ nudge it, OK sets it back to zero.
     subDelayMs: Int = 0,
     onAdjustSubDelay: ((Int) -> Unit)? = null,
@@ -128,7 +128,7 @@ internal fun TrackDialog(
                 onClick = { onSelect(track) },
             )
         }
-        // ADD SUBTITLES (subtitles dialog, movie/episode only) — OpenSubtitles search + local file (§4/§7).
+        // ADD SUBTITLES (subtitles dialog, movie/episode only) — OpenSubtitles search + local file.
         if (onSearchSubtitles != null || onSelectLocalSubtitle != null) {
             item { tv.own.owntv.ui.stage.StagePopupLabel(stringResource(R.string.player_add_subtitles), Modifier.padding(top = 12.mpx)) }
             if (onSearchSubtitles != null) {
@@ -138,7 +138,7 @@ internal fun TrackDialog(
                 item { ActionRow(stringResource(R.string.player_select_local_subtitle), OwnTVIcon.FOLDER, onSelectLocalSubtitle) }
             }
         }
-        // ADJUST (subtitles dialog): timing panel for the active subtitle (plan §8).
+        // ADJUST (subtitles dialog): timing panel for the active subtitle.
         if (onAdjustSubDelay != null) {
             item { tv.own.owntv.ui.stage.StagePopupLabel(stringResource(R.string.player_adjust), Modifier.padding(top = 12.mpx)) }
             item {

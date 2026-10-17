@@ -131,7 +131,7 @@ class EpgViewModel(
     /** The match scan itself — core's, so the television, the phone and the single-channel run agree. */
     private val autoMatcher = EpgAutoMatcher(channelDao, guideCandidates)
 
-    // --- Recording, from the guide (Plan D, Feature A) ------------------------------------------
+    // --- Recording, from the guide ---------------------------------------------------------------
 
     /**
      * This profile's recordings, so a programme cell knows whether it is already spoken for.
@@ -513,7 +513,7 @@ class EpgViewModel(
     /** Build the catch-up URL for a [programme] on [channel], or null if the provider can't serve it. */
     private suspend fun catchupUrlFor(channel: ChannelEntity, programme: EpgProgrammeEntity): String? {
         val source = sourceDao.getById(channel.sourceId) ?: return null
-        // Stalker archive URLs are minted per-play via create_link (Phase E §5.6); the others are
+        // Stalker archive URLs are minted per-play via create_link; the others are
         // pure string templates handled by CatchupUrl.
         if (source.type == SourceType.STALKER) {
             return channel.remoteId?.let { rid ->
@@ -939,7 +939,7 @@ class EpgViewModel(
                 }
                 .map { ch -> cust.itemNames[CustomizeKeys.channel(ch)]?.let { ch.copy(name = it) } ?: ch }
             val matched = applyEpgMatches(auto, cust, playlistIds, q)
-            // The Order menu (P4-04): Provider (also the old stored LIVE_TV value), A–Z,
+            // The Order menu: Provider (also the old stored LIVE_TV value), A–Z,
             // Catch-up first, Favourites first. The last two only float those channels to the top.
             val byAlpha = compareBy<ChannelEntity> { it.name.lowercase() }
             val byProvider = compareBy<ChannelEntity>({ it.sourceId }, { it.sortOrder }, { it.name.lowercase() })
@@ -971,7 +971,7 @@ class EpgViewModel(
         // Also re-batch when the stored programme count changed (a sync, or a post-match top-up, added
         // data) even if the window is unchanged — so freshly-matched channels' guides appear.
         val windowChanged = cachedWindow != (windowStart to windowEnd) || loadedSourceIds != ids || stored != lastStored
-        // Which of the three conditions fired is the question Phase 6 has to answer — R5 says a
+        // Logged so a trace shows which of the three conditions fired: a
         // sync can re-trigger the whole-table scan through the count alone.
         val rebuildReason = when {
             !windowChanged -> "cache-reused"
@@ -1089,8 +1089,7 @@ class EpgViewModel(
         // catalogue. ~100 programmes a row, so a few megabytes at the cap.
         private const val MAX_CACHED_ROWS = 240
         // Rows read ahead of the one that came into view. Roughly a screen's worth on a television,
-        // which is what the guide plan asked to start with; the Phase 0 numbers decide whether it
-        // should be two screens, so do not raise it on a hunch.
+        // measure before making it two screens; do not raise it on a hunch.
         private const val PREFETCH_AHEAD = 10
         private const val DAY_MS = 24L * 60 * 60 * 1000
         // How far back the Guide may extend for catch-up (must stay within EpgRepository's retention).

@@ -137,7 +137,7 @@ class LiveViewModel(
     private val downloadWatchGuard: tv.own.owntv.core.download.DownloadWatchGuard,
 ) : ViewModel() {
 
-    // --- "Record what I'm watching" (Plan D, D3 mode b) -----------------------------------------
+    // --- "Record what I'm watching" --------------------------------------------------------------
 
     /**
      * The row opened for the channel currently being recorded off the player's own stream, or null.
@@ -1519,7 +1519,7 @@ class LiveViewModel(
         // Before the full-screen player is first drawn: a channel ExoPlayer is already previewing opens on
         // ExoPlayer's surface straight away, instead of on mpv's until the tune below gets there.
         live.expectPromotion(channel)
-        // T6 — the controller's one tune job: a quicker second pick cancels the first wherever it has
+        // The controller's one tune job: a quicker second pick cancels the first wherever it has
         // got to, so two picks can no longer finish in the wrong order.
         live.launch { playChannel(channel) }
     }

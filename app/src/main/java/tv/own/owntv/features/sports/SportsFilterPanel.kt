@@ -40,7 +40,7 @@ import tv.own.owntv.ui.theme.mpx
 import tv.own.owntv.ui.theme.stageText
 
 /**
- * The channel filter panel (mockup T3), opened with ◀ from the Watch live list. Every choice carries the
+ * The channel filter panel, opened with ◀ from the Watch live list. Every choice carries the
  * number of channels it covers, and the list behind changes as soon as a choice does. OK toggles, Hold OK
  * keeps only that one, Back closes.
  */

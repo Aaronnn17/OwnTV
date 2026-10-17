@@ -33,7 +33,7 @@ internal val RECORDING_SEARCH_ROWS: List<Int> = listOf(
 
 /**
  * The three things recording can be told, and one thing it has to tell the user — the RECORDING part
- * of Settings › Watching & recording (P10), drawn inside that page under its own sub-heading.
+ * of Settings › Watching & recording, drawn inside that page under its own sub-heading.
  *
  * There is deliberately **no** "what to do when space runs low": that behaviour is fixed — a
  * recording stops with 500 MB free, keeps what it captured, and never deletes anything to make room.

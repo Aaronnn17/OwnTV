@@ -57,7 +57,7 @@ import tv.own.owntv.ui.theme.stageAccent
 import tv.own.owntv.ui.theme.stageText
 
 /**
- * Phase 12 — Backup & Restore (Settings → Backup), with selective sections: the user picks what to
+ * Backup & Restore (Settings → Backup), with selective sections: the user picks what to
  * back up (profiles & sources / customizations / favorites / history / resume) and, on restore,
  * which of the file's sections to apply. Uses an in-app file picker (no SAF).
  */
@@ -157,7 +157,7 @@ fun BackupScreen(
         if (!working) { dialogReturn = from; exportToRemote = remote; vm.loadProfiles(); showProfilePicker = true }
     }
 
-    // P8-05: title, the last-backup card (amber "Never backed up" until there is one), Back up now and
+    // Title, the last-backup card (amber "Never backed up" until there is one), Back up now and
     // Restore, and what a backup holds.
     Column(
         modifier = modifier
@@ -245,7 +245,7 @@ fun BackupScreen(
                     BackupTool(stringResource(R.string.settings_backup_remote), OwnTVIcon.NETWORK, Modifier.focusRequester(phoneFocus)) { startExport(true, phoneFocus) }
                 }
             }
-            // Restore: the same two ways as Back up now, as buttons on the card (owner, P12) — no chooser popup.
+            // Restore: the same two ways as Back up now, as buttons on the card — no chooser popup.
             var restoreFocused by remember { mutableStateOf(false) }
             val restoreRemoteFocus = remember { FocusRequester() }
             StageTile(

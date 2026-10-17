@@ -154,14 +154,14 @@ fun SettingsScreen(
     onOpenPlaylist: () -> Unit,
     modifier: Modifier = Modifier,
     /**
-     * Where Back from the **root** of this screen goes. Plan Z put Settings behind More, so leaving
+     * Where Back from the **root** of this screen goes. Settings sits behind More, so leaving
      * it should land on More rather than throw focus all the way out to the rail. Null keeps the old
      * behaviour, which is the shell's own handler.
      */
     onBack: (() -> Unit)? = null,
     openEpgAdd: Boolean = false,
     onEpgAddConsumed: () -> Unit = {},
-    /** More › Settings (until P10 redraws this screen): open at a root group, or with search open. */
+    /** More › Settings: open at a root group, or with search open. */
     start: SettingsStart? = null,
     onStartConsumed: () -> Unit = {},
 ) {
@@ -189,7 +189,7 @@ fun SettingsScreen(
     var showVodLayout by remember { mutableStateOf(false) }
     var showNavigation by remember { mutableStateOf(false) }
     var showLiveLayout by remember { mutableStateOf(false) }
-    // Stage P5's three pickers (Live TV opens in, Programme reminders, Reminder time): their state, rows,
+    // The three Stage pickers (Live TV opens in, Programme reminders, Reminder time): their state, rows,
     // search entries and dialogs live outside this function, which sits at the JVM's 64 KB method limit.
     val stageSettings = remember { StageSettingsState() }
     var showStartup by remember { mutableStateOf(false) }
@@ -207,7 +207,7 @@ fun SettingsScreen(
     // query swaps the list for flat results that carry their group context ("Playback › HDR").
     var searchQuery by remember { mutableStateOf("") }
     // Search opened (from More, or a full page's search): the plain search page, even while the query
-    // is still empty — not the group that happens to be selected behind it (owner, P10B).
+    // is still empty — not the group that happens to be selected behind it.
     var searchMode by remember { mutableStateOf(false) }
     var searchFromMore by remember { mutableStateOf(false) }
     val searchFieldFocus = remember { FocusRequester() }
@@ -397,10 +397,9 @@ fun SettingsScreen(
         if (openEpgAdd) { consumeEpgAdd = true; open(SettingsTab.EPG); onEpgAddConsumed() }
     }
 
-    // Settings now has the Stage canvas (P10). The sub-screens it opens are not redrawn yet, so they keep
-    // the inset they had under the old top bar.
+    // Sub-screens sit below the status cluster (StageContentTop), 6 dp in from the edges.
     val sub = modifier.padding(start = 6.dp, end = 6.dp, bottom = 6.dp, top = StageContentTop)
-    // A full page's search hands over to Settings search, keyboard up (P10B).
+    // A full page's search hands over to Settings search, keyboard up.
     val openSearch: () -> Unit = { lastTab = null; searchQuery = ""; searchMode = true; searchFromMore = false; searchAutoEdit = true; tab = SettingsTab.ROOT }
     if (tab != SettingsTab.ROOT) {
     CompositionLocalProvider(tv.own.owntv.features.settings.LocalSettingsSearch provides openSearch) {
@@ -580,7 +579,7 @@ fun SettingsScreen(
             focus = focusHighlightRowFocus,
             onClick = { saveScroll(); dialogReturn = focusHighlightRowFocus; showFocusHighlight = true },
         ),
-        // Glass Effect has enough controls to be a full settings screen; the root row only summarizes it.
+        // Glass & background has enough controls to be a page of its own; the root row only summarizes it.
         RootRow(
             tabRowKey(SettingsTab.GLASS_EFFECT), TileTone.PRIMARY, OwnTVIcon.SPARKLE,
             title = stringResource(R.string.settings_glass_bg_title), desc = stringResource(R.string.settings_line_glass_bg),
@@ -722,11 +721,11 @@ fun SettingsScreen(
         RootGroup("group_sound", stringResource(R.string.settings_group_sound_subtitles), OwnTVIcon.HEADPHONES, ""),
         RootGroup("group_live", stringResource(R.string.settings_live_tv), OwnTVIcon.LIVE_TV, ""),
         RootGroup("group_watching", stringResource(R.string.settings_group_watching_recording), OwnTVIcon.REC, ""),
-        // Plan Z — the whole "Data" group is gone. Backup and Local sync are places, not preferences,
+        // No "Data" group: Backup and Local sync are places, not preferences,
         // and are More rows now; Clear history moved onto the History screen it acts on; the download
         // folder moved to the Downloads screen. With all four gone the group had nothing left in it.
         RootGroup("group_app", stringResource(R.string.settings_app_group), OwnTVIcon.INFO, stringResource(R.string.settings_group_summary_app)),
-        // Sports Hub (T6): one row in App, opening the page with every Sports setting. Not a group of its
+        // Sports Hub: one row in App, opening the page with every Sports setting. Not a group of its
         // own: More › Settings opens groups by position (SettingsGroup), and its 12 cards fill the page.
         RootRow(
             tabRowKey(SettingsTab.SPORTS), TileTone.PRIMARY, OwnTVIcon.SPORTS,
@@ -795,7 +794,7 @@ fun SettingsScreen(
             focus = rowFocus.getValue(SettingsTab.DNS),
             onClick = { open(SettingsTab.DNS) },
         ),
-        // Plan Z — About and the error log left with the Data group. A page of facts and a log are
+        // About and the error log live in More. A page of facts and a log are
         // not preferences; both are More rows now, opening the very same dialogs.
     )
 
@@ -823,7 +822,7 @@ fun SettingsScreen(
             tone = TileTone.TERTIARY,
             icon = ref.icon,
             title = stringResource(ref.titleRes),
-            // Where it lives, so a pin never loses its home (P9-01 "Pinned from Player").
+            // Where it lives, so a pin never loses its home ("Pinned from Player").
             desc = stringResource(R.string.settings_pinned_from, stringResource(SettingsGroup.of(tv.own.owntv.features.settings.videoGroupOf(ref.section)).titleRes)),
             chip = binding?.chip,
             chipTone = if (binding?.primaryChip == true) TileTone.PRIMARY else TileTone.SECONDARY,
@@ -975,7 +974,7 @@ fun SettingsScreen(
         SettingsSearchEntry(stringResource(R.string.settings_group_layout), stringResource(R.string.settings_browsing_lists), stringResource(R.string.settings_search_keywords_browsing), OwnTVIcon.LIST_GRID, TileTone.PRIMARY) { open(SettingsTab.BROWSING) },
             SettingsSearchEntry(stringResource(R.string.settings_group_layout), stringResource(R.string.settings_home_root), stringResource(R.string.settings_search_keywords_home), OwnTVIcon.HOME, TileTone.SECONDARY) { open(SettingsTab.HOME) },
             SettingsSearchEntry(stringResource(R.string.settings_group_content_metadata), stringResource(R.string.settings_metadata), stringResource(R.string.settings_search_keywords_metadata), OwnTVIcon.IMAGE, TileTone.PRIMARY) { open(SettingsTab.METADATA) },
-            // Plan Z — no entries for the download folder, Backup, Local sync or Clear history. They
+            // No entries for the download folder, Backup, Local sync or Clear history. They
             // are not in Settings any more, and a result for something that is not here is a lie
             // about where it lives. The no-results state deliberately says nothing else either.
             SettingsSearchEntry(stringResource(R.string.settings_group_appearance), stringResource(R.string.settings_theme), stringResource(R.string.settings_search_keywords_theme), OwnTVIcon.THEME, TileTone.PRIMARY,
@@ -1149,10 +1148,10 @@ fun SettingsScreen(
         onOpenZoom = { saveScroll(); dialogReturn = zoomRowFocus; showZoom = true },
         fontCustomization, onSetFontCustomization, playlistSources,
     )
-    // Shared with the dialogs below, so the simple ones open in the page's panel (owner, P12).
+    // Shared with the dialogs below, so the simple ones open in the page's panel.
     val panel = remember { tv.own.owntv.features.settings.SettingsPanelState() }
     CompositionLocalProvider(
-        // Subtitle appearance is a page of its own, opened from the Sound & subtitles rows (P12).
+        // Subtitle appearance is a page of its own, opened from the Sound & subtitles rows.
         tv.own.owntv.features.settings.LocalOpenSubtitleStyle provides { saveScroll(); open(SettingsTab.SUBTITLE_STYLE) },
         tv.own.owntv.features.settings.LocalSubtitleStyleRowFocus provides rowFocus.getValue(SettingsTab.SUBTITLE_STYLE),
     ) {
@@ -1209,7 +1208,7 @@ fun SettingsScreen(
         }
     }
 
-    // Every dialog below shares the page's panel: the simple ones open there instead of as a popup (owner, P12).
+    // Every dialog below shares the page's panel: the simple ones open there instead of as a popup.
     CompositionLocalProvider(tv.own.owntv.features.settings.LocalSettingsPanel provides panel) {
     menuRow?.let { row ->
         val at = quickPinned.indexOf(row.key)
@@ -1373,7 +1372,7 @@ fun SettingsScreen(
                 showBgPicker = false
             },
             // Back goes back one level, to the local/remote/clear chooser this was opened from —
-            // closing both left the user on the Glass Effect row two steps up.
+            // closing both would leave the user on the Glass & background row two steps up.
             onDismiss = { showBgPicker = false; showBgImageChooser = true },
         )
     }
@@ -1389,7 +1388,7 @@ private fun StartupChannelPickerDialog(
     onSelect: (tv.own.owntv.core.database.entity.ChannelEntity) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    // A long list picked from: in the page's panel on a settings page, a Stage popup elsewhere (owner, P12).
+    // A long list picked from: in the page's panel on a settings page, a Stage popup elsewhere.
     val list: @Composable androidx.compose.foundation.layout.ColumnScope.() -> Unit = {
         StartupChannelList(query, channels, selected, onQueryChange, onSelect)
     }
@@ -1501,7 +1500,7 @@ private fun NavigationPopupHost(settingsVm: SettingsViewModel, onDismiss: () -> 
 
 /**
  * The Movies & Series layout picker. Moved out of [SettingsScreen] unchanged, because that function's
- * body had reached the JVM's 64 KB method-size limit and the Navigation row (Stage P1) did not fit.
+ * body had reached the JVM's 64 KB method-size limit and the Navigation row did not fit.
  */
 @Composable
 private fun VodLayoutDialog(
@@ -1561,7 +1560,7 @@ private fun navigationSearchEntry(settingsVm: SettingsViewModel, onClick: () -> 
     )
 }
 
-/** The Layout group's Live TV layout row (Stage P4): Stage, or Separate panels. */
+/** The Layout group's Live TV layout row: Stage, or Separate panels. */
 @Composable
 private fun liveLayoutRootRow(settingsVm: SettingsViewModel, focus: FocusRequester, onClick: () -> Unit): RootRow {
     val layout by settingsVm.liveLayout.collectAsStateWithLifecycle()
@@ -1716,7 +1715,7 @@ private fun GuideDaysDialog(settingsVm: SettingsViewModel, guideDays: Int, onClo
 
 private enum class StageSettingsDialog { LIVE_OPENS_IN, REMINDERS, REMINDER_LEAD }
 
-/** Which Stage P5 picker is open, and each row's focus to come back to. */
+/** Which Stage picker is open, and each row's focus to come back to. */
 @androidx.compose.runtime.Stable
 private class StageSettingsState {
     var open by mutableStateOf<StageSettingsDialog?>(null)
@@ -1953,8 +1952,8 @@ private fun FocusHighlightDialog(
     onPickWidth: (Int) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    // The Stage colour popup (P9-05), as Accent colour and the clock colours; its preview is the ring
-    // itself and the thickness under it (owner, P12).
+    // The Stage colour popup, as Accent colour and the clock colours; its preview is the ring
+    // itself and the thickness under it.
     val start = remember { highlight }
     val ring = tv.own.owntv.ui.theme.parseAccentHex(highlight) ?: tv.own.owntv.ui.theme.stageAccent.focus
     val defaultRing = tv.own.owntv.ui.theme.stageAccent.focus
@@ -2040,7 +2039,7 @@ private fun CatchupSourcesHost(
     )
 }
 
-/** More's way into this screen until P10: a root group to open at, or the search field. */
+/** More's way into this screen: a root group to open at, or the search field. */
 data class SettingsStart(val group: Int?, val search: Boolean)
 
 /** One playlist's catch-up time zone, moved out of [SettingsScreen] unchanged (its body is at the JVM method limit). */
@@ -2183,8 +2182,8 @@ internal fun fontFamilyLabel(family: AppFontFamily): String = stringResource(
 /** A stepper for shared popup geometry. Changes apply live to this dialog too. */
 @Composable
 private fun PopupSizeDialog(current: Int, onSet: (Int) -> Unit, onDismiss: () -> Unit) {
-    // The value with a real-size sample popup above it: in the page's panel on a settings page
-    // (owner, P12), a Stage popup elsewhere.
+    // The value with a real-size sample popup above it: in the page's panel on a settings page,
+    // a Stage popup elsewhere.
     val stepper: @Composable () -> Unit = {
         tv.own.owntv.features.settings.PanelStepper(
             value = stringResource(R.string.common_percent, current),
@@ -2217,7 +2216,7 @@ private fun ZoomDialog(current: Int, onSet: (Int) -> Unit, onDismiss: () -> Unit
             onDone = onDismiss,
         )
     }
-    // In the page's panel on a settings page (owner, P12), a Stage popup elsewhere.
+    // In the page's panel on a settings page, a Stage popup elsewhere.
     if (!tv.own.owntv.features.settings.panelEditor(onDismiss) { stepper() }) {
         tv.own.owntv.ui.stage.StagePopup(onDismiss = onDismiss, title = stringResource(R.string.settings_ui_zoom), body = stringResource(R.string.settings_ui_zoom_range, UiZoom.MIN, UiZoom.MAX)) { stepper() }
     }
@@ -2242,7 +2241,7 @@ private fun AmbientGlowDialog(
     onTogglePulse: () -> Unit,
     onDismiss: () -> Unit,
 ) {
-    // Two switches: in the page's panel (owner, P12), a Stage popup elsewhere.
+    // Two switches: in the page's panel, a Stage popup elsewhere.
     val rows: @Composable () -> Unit = {
         val first = remember { FocusRequester() }
         LaunchedEffect(Unit) { kotlinx.coroutines.delay(60); runCatching { first.requestFocus() } }
@@ -2264,12 +2263,7 @@ private fun AmbientGlowDialog(
     tv.own.owntv.ui.stage.StagePopup(onDismiss = onDismiss, title = stringResource(R.string.settings_ambient_glow), body = stringResource(R.string.settings_ambient_glow_dialog_description)) { rows() }
 }
 
-/**
- * A stepper for the Glass effect fill strength — how opaque the translucent panels are over the
- * background photo. Higher = more solid (less see-through). Changes apply live. Range 20–95% in 5%
- * steps so panels can never go fully transparent (text would be unreadable) or fully solid (pointless).
- */
-/** Dedicated Glass Effect settings destination. Background selection stays nested here, so Back returns here. */
+/** The Glass & background page. Background selection stays nested here, so Back returns here. */
 @Composable
 private fun GlassEffectSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val settingsVm: SettingsViewModel = koinViewModel()
@@ -2392,7 +2386,7 @@ private fun CatchupTimeDialog(
     onSetPlayer: (SettingsRepository.CatchupPlayer) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    // Three simple values: in the page's panel (owner, P12), a Stage popup elsewhere.
+    // Three simple values: in the page's panel, a Stage popup elsewhere.
     val manual = mode == SettingsRepository.CatchupTimezone.MANUAL
     val form: @Composable () -> Unit = {
         val first = remember { FocusRequester() }
@@ -2474,7 +2468,7 @@ private fun EpgOffsetSettingDialog(
     onReset: () -> Unit,
     onDismiss: () -> Unit,
 ) {
-    // A number: in the page's panel on a settings page (owner, P12), a Stage popup elsewhere.
+    // A number: in the page's panel on a settings page, a Stage popup elsewhere.
     val stepper: @Composable () -> Unit = {
         tv.own.owntv.features.settings.PanelStepper(
             value = epgShiftLabel(offsetMinutes),
@@ -2680,7 +2674,7 @@ private class SettingsSearchEntry(
     val onClick: () -> Unit,
 )
 
-/** What a root row shows and does on its Stage page beyond its chip (P9-03 … P9-13). */
+/** What a root row shows and does on its Stage page beyond its chip. */
 private class RowExtra(
     val value: SettingValue? = null,
     val onStep: ((Int) -> Unit)? = null,
@@ -2734,7 +2728,7 @@ private fun stageRowExtras(
     val themeNames = themes.map { themeLabel(it) }
     val liveLayouts = tv.own.owntv.core.settings.SettingsRepository.LiveLayout.entries
     val liveViews = tv.own.owntv.core.settings.SettingsRepository.LiveView.entries
-    // In the mockup's order: Cinematic first.
+    // Cinematic first.
     val vodLayouts = listOf(tv.own.owntv.core.settings.SettingsRepository.VodLayout.CINEMATIC, tv.own.owntv.core.settings.SettingsRepository.VodLayout.SEPARATE)
     val presets = tv.own.owntv.core.theme.AccentColor.entries
     val presetColors = presets.map { it.primary(true) }
@@ -2785,7 +2779,7 @@ private fun stageRowExtras(
         }),
         "tab_GLASS_EFFECT" to RowExtra(SettingValue.Opens(glassBackgroundSummary(vm.backgroundConfig.collectAsStateWithLifecycle().value, glass))),
         "fonts" to RowExtra(SettingValue.Opens(fontFamilyLabel(font.mainFamily) + sep + stringResource(R.string.common_percent, font.sizePercent))),
-        // The sample popup shows as soon as the row has focus, so ◀ ▶ on the row resize it live (owner, P12).
+        // The sample popup shows as soon as the row has focus, so ◀ ▶ on the row resize it live.
         "popup_size" to RowExtra(
             SettingValue.Stepper(stringResource(R.string.common_percent, font.popupSizePercent)), onStep = popupStep,
             extra = { Box(Modifier.fillMaxWidth().padding(top = 18.mpx), contentAlignment = Alignment.Center) { tv.own.owntv.features.settings.PopupSizeSample(font.popupSizePercent) } },

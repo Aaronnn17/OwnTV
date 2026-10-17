@@ -28,7 +28,7 @@ import tv.own.owntv.ui.theme.mpx
 import tv.own.owntv.ui.theme.stageText
 
 /**
- * Home's "Live sports" row (mockup T7, Redesign R1): the hub's match cards for followed matches that are
+ * Home's "Live sports" row: the hub's match cards for followed matches that are
  * live or kick off within the hour. OK (and the Play key) opens the match page, where its channels are found.
  */
 @Composable

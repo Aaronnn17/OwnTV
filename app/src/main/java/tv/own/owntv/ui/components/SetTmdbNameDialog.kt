@@ -41,7 +41,7 @@ import tv.own.owntv.ui.theme.stageAccent
 import tv.own.owntv.ui.theme.stageText
 
 /**
- * "Set TMDB name" (plan §11.2 U5b) in the Stage design: the user types the exact title (+ optional year)
+ * "Set TMDB name" in the Stage design: the user types the exact title (+ optional year)
  * to search TMDB under, overriding the auto-normalized provider title — the escape hatch when a match is
  * wrong or was negative-cached for 7 days; saving forces a fresh re-resolve.
  *

@@ -100,7 +100,7 @@ fun AddSourceScreen(
     initialAutoRefresh: PlaylistRefresh = PlaylistRefresh.OFF,
     initialIsDefault: Boolean = false,
     showDefaultToggle: Boolean = true,
-    // Stalker portal (plan Phase B). Null = the Stalker option is hidden (e.g. the setup wizard).
+    // Stalker portal. Null = the Stalker option is hidden (e.g. the setup wizard).
     onStartStalker: ((
         name: String,
         portalUrl: String,
@@ -165,7 +165,7 @@ fun AddSourceScreen(
     val startImportFocus = remember { FocusRequester() }
     LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
 
-    // Profile-wide "hide new categories on sync" default (issue #87, Phase 4). Written straight to
+    // Profile-wide "hide new categories on sync" default (issue #87). Written straight to
     // DataStore — no callback signature change — so it lands on the ACTIVE profile at add time. The row
     // is only shown while ADDING (an edit re-syncs nothing new) and only when a profile exists (the
     // setup wizard may still be profile-less; the value defaults to off there).
@@ -393,8 +393,8 @@ fun AddSourceScreen(
         SourceKind.STALKER -> tv.own.owntv.core.stalker.StalkerClient.isValidPortalUrl(portalUrl) && macValid
     }
 
-    // P10B-10: every field is a row (label + value or placeholder, OK = keyboard); Start import sits in the
-    // panel, reached with ▶ from any row. Everything the old form offered stays, below the drawn rows.
+    // Every field is a row (label + value or placeholder, OK = keyboard); Start import sits in the
+    // panel, reached with ▶ from any row.
     val submit = {
         when (kind) {
             SourceKind.XTREAM -> onStartXtream(name, server, username, password, userAgent, referer, epgUrl, autoRefresh, syncLive, syncMovies, syncSeries, isDefault, preferHls)

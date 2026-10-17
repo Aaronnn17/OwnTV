@@ -151,7 +151,7 @@ fun CustomizeItemsScreen(
         }
     }
 
-    // P10B-03: Customize › the category. Its tool row above the list, the items as rows and the panel
+    // Customize › the category. Its tool row above the list, the items as rows and the panel
     // with the focused item's actions and the span help.
     val about = when (section) {
         MediaType.LIVE -> stringResource(R.string.settings_customize_channels_description)

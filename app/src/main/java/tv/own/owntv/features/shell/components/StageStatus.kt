@@ -52,7 +52,7 @@ import java.util.Date
 data class ContinuePill(val icon: OwnTVIcon, val iconFilled: Boolean, val action: String, val title: String, val onClick: () -> Unit)
 
 /**
- * The top-right cluster that replaces the six top-bar pills on every screen (P1): the Continue pill —
+ * The top-right cluster on every screen: the Continue pill —
  * or, in Audio mode, the now-playing bar in its place — the playlist pill, then the clock with the date
  * and weather below it. Placed by the shell at the top right, 64 × 34 from the corner.
  *
@@ -140,7 +140,7 @@ fun StageClock(weatherInfo: WeatherInfo?, fahrenheit: Boolean, colors: ClockColo
     val date = remember(now, locale) {
         android.text.format.DateFormat.format(DateFormat.getBestDateTimePattern(locale, "EEEdMMM"), now).toString()
     }
-    // The mockup lifts the cluster's text off any backdrop with a soft black shadow. The TV cuts a text
+    // The cluster's text is lifted off any backdrop with a soft black shadow. The TV cuts a text
     // shadow's blur off at the line's bounds, so a wide one showed as a dark box behind each line over a
     // bright backdrop: the shadow stays tight, and a soft oval glow behind the whole block does the lifting.
     // Light (`.mine.light .status`): no shadow and no dark glow; the block sits on a small white chip

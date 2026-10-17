@@ -140,7 +140,7 @@ private fun cursorStep(progs: List<EpgProgrammeEntity>, cursor: Long, dir: Int, 
 }
 
 /**
- * The TV Guide in the Stage design (P4-01): the focused channel's preview and the focused programme
+ * The TV Guide in the Stage design: the focused channel's preview and the focused programme
  * with its actions on top; one control line (Today · Now · Category · Order · Search · Auto-match EPG);
  * the ruler with the now-line; 8 slim rows of channel labels and programme cells.
  *
@@ -456,7 +456,7 @@ fun EpgScreen(
 
         }
 
-        // The control line (452): one row, every header button of the old guide kept.
+        // The control line (452): one row with every guide header button.
         val viewTime = timeAt(scrollPx + timelinePx * 3f / 8f)
         val viewDay = localMidnight(viewTime)
         Row(
@@ -530,7 +530,7 @@ fun EpgScreen(
                 state.channels.isEmpty() -> GuideEmpty(title = state.message?.let { epgMessageText(it) } ?: stringResource(R.string.content_epg_no_guide))
                 else -> {
                     val gx = fx(48) + labelW
-                    // The number column fits the longest channel number (38 = the mockup's three digits).
+                    // The number column fits the longest channel number (38 = three digits).
                     val numberWidth = maxOf(38f, (state.channels.maxOfOrNull { it.number?.toString()?.length ?: 0 } ?: 0) * 11f).mpx
                     GuideRuler(
                         windowStart = state.windowStart, windowEnd = state.windowEnd, now = liveNow, scrollPx = scrollPx,
@@ -606,7 +606,7 @@ fun EpgScreen(
 
         }
 
-        // ◀ … Category ▾ (P4-03): Live TV's own list as the sheet, titled for the guide.
+        // ◀ … Category ▾: Live TV's own list as the sheet, titled for the guide.
         if (sheetOpen) {
             val railCounts by liveVm.railCounts.collectAsStateWithLifecycle()
             val (sheetEntries, _) = liveCategoryEntries(railItems, railCounts)
@@ -862,7 +862,7 @@ private fun GuideEmpty(title: String, body: String? = null, action: String? = nu
 }
 
 /**
- * How to move, under the programme beside the video (owner, 2026-10-01: in place of the old action buttons,
+ * How to move, under the programme beside the video (owner, 2026-10-01: in place of action buttons,
  * which could not be reached without leaving the channel — they are all in Hold OK's menu). At row level:
  * OK Browse · ▲▼ Channels · ◀ Menu · Hold OK Options; inside a row: OK Watch · ◀ ▶ Programs · Back Channels.
  */

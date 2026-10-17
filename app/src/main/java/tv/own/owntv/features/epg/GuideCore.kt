@@ -49,18 +49,18 @@ import tv.own.owntv.ui.stage.drawBoxShadow
 import tv.own.owntv.ui.components.drawStageGlyph
 
 internal object GuideGridDefaults {
-    /** The channel column when the guide widths are not customised (P4-01: 48 → 344 of 1920). */
+    /** The channel column when the guide widths are not customised (48 → 344 of 1920). */
     const val ChannelColShare = 296f / 1920f
     /** `.gcell` rows: 56 high, 62 apart. */
     val RowHeight = 56.mpx
     val RowGap = 6.mpx
-    /** 3.5 hours across the mockup's 1512 px timeline. */
+    /** 3.5 hours across the 1512 px timeline. */
     val PxPerMin = 7.2.mpx
     const val SlotMin = 30
 }
 
 /**
- * One channel's programmes as Stage cells (`.gcell`, P4-01): white 4.5%, the one on now 8.5%, past ones
+ * One channel's programmes as Stage cells (`.gcell`): white 4.5%, the one on now 8.5%, past ones
  * at half opacity, radius 14, 3 px apart; title 18/700, then the recording ● / reminder bell / catch-up
  * ↺ icons and the time in 14 dim. The cell at [focusTime] is the focused one: accent fill, 2 px focus
  * ring and glow. One Canvas per row rather than a node per programme, so a week of guide scrolls light.
@@ -208,7 +208,7 @@ internal fun ProgrammeDetailDialog(
     // Denser variant for the Live TV catch-up picker, which opens this on top of an already-small
     // popup chain — full-size chrome dwarfed the picker it came from. Guide keeps the roomy layout.
     compact: Boolean = false,
-    // --- Recording (Plan D, Feature A). All defaulted, so the Live TV catch-up picker — which opens
+    // --- Recording. All defaulted, so the Live TV catch-up picker — which opens
     // this dialog on top of the player and has no business scheduling anything — is unchanged.
     /** Whether Record can be offered at all: still to come, or on a catch-up channel and already aired. */
     canRecord: Boolean = false,

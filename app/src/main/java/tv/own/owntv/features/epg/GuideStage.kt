@@ -93,7 +93,7 @@ import tv.own.owntv.ui.theme.stageAccent
 import tv.own.owntv.ui.theme.stageText
 
 /*
- * The TV Guide in the Stage design (P4-01 … P4-05): the preview and the focused programme on top, the
+ * The TV Guide in the Stage design: the preview and the focused programme on top, the
  * ruler, the channel labels, and every menu the guide opens. EpgScreen owns the state and the focus
  * plumbing; these only draw.
  */
@@ -255,7 +255,7 @@ internal fun GuideRuler(
 }
 
 /**
- * A channel's label column (P4-01): the playlist's 7 px dot, the number (38 wide, 17/700 dim), the
+ * A channel's label column: the playlist's 7 px dot, the number (38 wide, 17/700 dim), the
  * logo on a 58×40 plate, the name 17/700. The row the focus is in has its number and name in accent.
  */
 @Composable
@@ -289,7 +289,7 @@ internal fun Modifier.guideNowLine(accent: Color): Modifier = drawBehind {
 // Menus
 // ---------------------------------------------------------------------------------------------
 
-/** Every guide menu: the Stage menu over the scrim, at the mockup's place ([x] of 1920, [top]), scrolling at large zooms. */
+/** Every guide menu: the Stage menu over the scrim, at its place ([x] of 1920, [top]), scrolling at large zooms. */
 @Composable
 internal fun GuideMenuHost(x: Float, top: Dp, width: Dp, onDismiss: () -> Unit, content: @Composable ColumnScope.() -> Unit) {
     BackHandler { onDismiss() }
@@ -395,7 +395,7 @@ internal fun guideProgrammeActions(
 }
 
 /**
- * ☰ Programme options (P4-02), 560 wide at the right: "Wish" + "20:05 – 21:40 · 259 Sky Cinema Family";
+ * ☰ Programme options, 560 wide at the right: "Wish" + "20:05 – 21:40 · 259 Sky Cinema Family";
  * NEW Remind me (5 min before) · WATCH Watch channel, Watch from start ("after 20:05" until it starts),
  * Play catch-up in… (Ask) · RECORD Record, Record every showing, Record from catch-up · CHANNEL
  * favourite, Pick EPG manually, EPG time offset (Global). Also Live TV's ▶ Schedule → OK menu.
@@ -509,7 +509,7 @@ internal fun GuideRecordMenu(title: String, actions: GuideProgrammeActions, onDi
     }
 }
 
-/** Order ▾ (P4-04): "Order channels by · Opens this way next time" and the five orders, ✓ on the current one. */
+/** Order ▾: "Order channels by · Opens this way next time" and the five orders, ✓ on the current one. */
 @Composable
 internal fun GuideOrderMenu(
     current: SettingsRepository.GuideSort,
@@ -653,7 +653,7 @@ internal fun GuideCatchupChooser(onInternal: () -> Unit, onExternal: () -> Unit,
 }
 
 /**
- * The Auto-match review (P4-05): a glass popup 1080 wide — "Auto-match EPG · 41 channels matched",
+ * The Auto-match review: a glass popup 1080 wide — "Auto-match EPG · 41 channels matched",
  * "Review 3 matches", the explanation, one row per unsure match (plate, channel, →, feed name and its
  * score, Accept, Skip; the row holding focus is FX), then Skip all · Accept all · Done. Guide logos
  * stay a switch at the left of the footer.

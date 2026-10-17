@@ -75,7 +75,7 @@ fun ContentMenuSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier)
     val rowFocus = remember { ContentMenu.entries.associateWith { FocusRequester() } }
     var openMenu by remember { mutableStateOf<ContentMenu?>(null) }
     LaunchedEffect(Unit) { runCatching { rowFocus.getValue(ContentMenu.LIVE).requestFocus() } }
-    // P10B-19: four menu rows and Reset; the panel lists the focused menu's actions in their order.
+    // Four menu rows and Reset; the panel lists the focused menu's actions in their order.
     val about = stringResource(R.string.settings_content_menus_description)
     StageFullPage(
         parents = listOf(stringResource(R.string.settings_group_layout)),
@@ -124,7 +124,7 @@ fun ContentMenuSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier)
             onClick = { ContentMenu.entries.forEach { vm.setMenuOrder(it, emptyList()) } },
             help = SettingHelp(reset, about, hints = settingHints(null, pinnable = false)),
         )
-        // Arranged in the page's panel (owner, P12).
+        // Arranged in the page's panel.
         openMenu?.let { menu ->
             ArrangeMenuOverlay(
                 menu = menu,

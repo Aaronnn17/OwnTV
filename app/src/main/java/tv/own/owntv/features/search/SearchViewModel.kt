@@ -40,7 +40,7 @@ import tv.own.owntv.core.repository.activeProfileSources
 import tv.own.owntv.core.settings.SettingsRepository
 
 /**
- * Phase 11 — cross-section search over a profile's channels, movies and series.
+ * Cross-section search over a profile's channels, movies and series.
  *
  * The searching itself is core's [SearchReader]: the FTS expression, the hidden items and
  * categories, the kids filter and the Customize renames are the same rules on a phone as on a

@@ -104,7 +104,7 @@ private enum class DownloadsTab(val labelRes: Int) {
 }
 
 /**
- * Downloads (Stage P7-01): title + storage crumb, the Movies · Series · Recordings tabs and the
+ * Downloads: title + storage crumb, the Movies · Series · Recordings tabs and the
  * Download folder tool, the list grouped DOWNLOADING / ON THIS TV, and the Recordings card on the right.
  */
 @OptIn(ExperimentalFoundationApi::class)
@@ -230,7 +230,7 @@ fun DownloadsScreen(
     val missing by vm.missingFiles.collectAsStateWithLifecycle()
 
     BoxWithConstraints(modifier.fillMaxSize().onFocusChanged { if (it.hasFocus) onChildFocused() }) {
-        // Horizontal geometry is a fraction of the mockup's 1920 width, so every zoom reflows.
+        // Horizontal geometry is a fraction of the 1920 design width, so every zoom reflows.
         val screenW = maxWidth
         fun fx(px: Int) = screenW * (px / 1920f)
 

@@ -40,7 +40,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-/** The mockup's `--live` red: the LIVE dot, a running minute. */
+/** The live red: the LIVE dot, a running minute. */
 internal val SportsLive = Color(0xFFFF4D4D)
 
 /** `.cr`: a team's crest (ESPN's 96 px logo) in a circle, or its abbreviation when there is none. */
@@ -99,7 +99,7 @@ internal fun sportLabel(sport: Sport): String = stringResource(
     },
 )
 
-/** The mockup's chip emoji per sport (T1). */
+/** The chip emoji per sport. */
 internal fun sportEmoji(sport: Sport): String = when (sport) {
     Sport.SOCCER -> "⚽"
     Sport.BASKETBALL -> "🏀"

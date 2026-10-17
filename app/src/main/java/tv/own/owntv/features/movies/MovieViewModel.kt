@@ -81,7 +81,7 @@ import tv.own.owntv.core.settings.SourceOverrides
 
 class MovieViewModel(
     private val movieDao: MovieDao,
-    /** Lets the browse screen tell core's drain which category to fill first (core's N1c). */
+    /** Lets the browse screen tell core's drain which category to fill first. */
     private val catalogPriority: tv.own.owntv.core.sync.CatalogPriority,
     private val categoryDao: CategoryDao,
     private val favoriteDao: FavoriteDao,
@@ -275,9 +275,9 @@ class MovieViewModel(
     val selectedMovie: StateFlow<MovieEntity?> = _selectedMovie.asStateFlow()
 
     /**
-     * On-demand TMDB enrichment for the focused movie (plan §7.2: detail screens resolve lazily). Debounced
+     * On-demand TMDB enrichment for the focused movie (detail screens resolve lazily). Debounced
      * so scrolling fast doesn't fire a lookup per card; cached in Room so a second focus is instant. Null
-     * when enrichment is off or no confident match — the UI then shows pure provider data (§7.1).
+     * when enrichment is off or no confident match — the UI then shows pure provider data.
      */
     /** Bumped by [refetchMovieMeta] to force the focused movie's TMDB resolve to re-run after clearing its cache. */
     private val _metaRefreshTick = MutableStateFlow(0L)
@@ -324,7 +324,7 @@ class MovieViewModel(
 
     fun onPosterlessVisible(movies: List<MovieEntity>) { _posterProbe.value = movies }
 
-    /** Source mode (plan §4.1) — the detail pane uses it to flip provider/TMDB field precedence. */
+    /** Source mode — the detail pane uses it to flip provider/TMDB field precedence. */
     val metadataMode: StateFlow<tv.own.owntv.core.metadata.MetadataMode> = settings.metadataMode
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), tv.own.owntv.core.metadata.MetadataMode.PROVIDER_PLUS_TMDB)
 
@@ -529,7 +529,7 @@ class MovieViewModel(
         if (lockedKey != null) return
         _selected.value = key
         // Core's lazy-catalogue drain fills categories in the provider's order; tell it the user is
-        // here so this one is served next (core's N1c). A no-op for every playlist that was not
+        // here so this one is served next. A no-op for every playlist that was not
         // lazily added, and for a category that is already complete.
         if (key is LiveKey.Folder) {
             viewModelScope.launch { runCatching { catalogPriority.requestFirst(key.id) } }
@@ -567,7 +567,7 @@ class MovieViewModel(
     fun revealDone() { _reveal.value = null }
 
     /**
-     * Manual "Refetch TMDB details" (plan §11.2 U5a): clear this movie's cached match/details (incl. a 7-day
+     * Manual "Refetch TMDB details": clear this movie's cached match/details (incl. a 7-day
      * negative cache) and re-trigger [resolveMovie] for the focused movie via the meta-refresh tick.
      */
     fun refetchMovieMeta(movie: MovieEntity) {
@@ -580,7 +580,7 @@ class MovieViewModel(
     }
 
     /**
-     * Prefill for the "Set TMDB name" dialog (plan §11.2 U5b): the saved override if any, else the cleaned
+     * Prefill for the "Set TMDB name" dialog: the saved override if any, else the cleaned
      * provider title. [hasOverride] drives the dialog's Clear button.
      */
     data class TmdbNamePrefill(val title: String, val year: Int?, val hasOverride: Boolean)
@@ -591,7 +591,7 @@ class MovieViewModel(
         return TmdbNamePrefill(norm.query, movie.year ?: norm.year, hasOverride = false)
     }
 
-    /** Save the hand-typed override and force a re-resolve under the new query (plan §11.2 U5b). */
+    /** Save the hand-typed override and force a re-resolve under the new query. */
     fun setMovieTmdbName(movie: MovieEntity, title: String, year: Int?) {
         viewModelScope.launch {
             runCatching { metadata.setMovieOverride(movie, title, year) }
@@ -600,7 +600,7 @@ class MovieViewModel(
         }
     }
 
-    /** Remove the override and re-resolve with the cleaned provider title (plan §11.2 U5b). */
+    /** Remove the override and re-resolve with the cleaned provider title. */
     fun clearMovieTmdbName(movie: MovieEntity) {
         viewModelScope.launch {
             runCatching { metadata.clearMovieOverride(movie) }
@@ -635,7 +635,7 @@ class MovieViewModel(
         }
     }
 
-    /** Phase B: long-press "Play with external player" — always external, regardless of the global toggle. */
+    /** Long-press "Play with external player" — always external, regardless of the global toggle. */
     fun playExternal(movie: MovieEntity) {
         viewModelScope.launch {
             val pid = currentProfileId()
@@ -714,7 +714,7 @@ class MovieViewModel(
                 vodEngineOverride = SourceOverrides.vodEngineOf(source),
                 drmConfig = movie.drmConfig,
                 manifestType = movie.manifestType,
-                // P6 — engine pins key on this, not on playUrl (a Stalker playUrl is minted per play).
+                // Engine pins key on this, not on playUrl (a Stalker playUrl is minted per play).
                 contentKey = pinKey,
                 // F12 — a Stalker create_link URL dies before a long film ends; give the player a way to
                 // mint a fresh one instead of retrying the expired link. Null for M3U/Xtream, which also
@@ -729,8 +729,8 @@ class MovieViewModel(
             )
             _playingMovie.value = movie
             playingRef = pid?.let { PlayingRef(movie, it, pinKey) }
-            // Enable the player's OpenSubtitles search for this movie (subtitle plan §4). tmdbId is
-            // resolved from the metadata cache when available (review R7) for a stronger match.
+            // Enable the player's OpenSubtitles search for this movie. tmdbId is
+            // resolved from the metadata cache when available for a stronger match.
             if (pid != null) {
                 val tmdbId = runCatching { metadata.resolveMovie(movie)?.tmdbId?.toLong() }.getOrNull()
                 subtitleController.setMovie(pid, movie, tmdbId)
@@ -774,7 +774,7 @@ class MovieViewModel(
         }
     }
 
-    /** Downloaded OpenSubtitles subtitles for this movie (long-press "Delete subtitles" popup, §11). */
+    /** Downloaded OpenSubtitles subtitles for this movie (long-press "Delete subtitles" popup). */
     suspend fun downloadedSubtitles(movie: MovieEntity): List<tv.own.owntv.core.database.dao.LinkedSubtitle> =
         subtitleController.downloadsForMovie(movie)
 

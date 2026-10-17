@@ -255,8 +255,7 @@ player, TMDB, backup, auto refresh and the playlist switcher.
 
 ### 3.5 Layout
 
-The **Stage** interface (v5.1.0, designed in #227) replaced the old docked sidebar, top bar and card
-screens entirely — there is no "classic" mode. Every screen sits on a full-width Stage page in the
+The **Stage** interface (designed in #227) is the app's one interface. Every screen sits on a full-width Stage page in the
 **Plus Jakarta Sans** font, with one line-icon set, CSS-exact focus glows and a shared Stage popup kit.
 
 - **Navigation rail** — Search, Home, Live TV, Sports, TV Guide, Movies, Series, Downloads and More, the

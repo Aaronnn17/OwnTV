@@ -87,7 +87,7 @@ fun PanelWidthSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) 
         if (dialogReturn != null) restoreAfterDialogClose(dialogReturn, scrollState, savedScroll)
         dialogReturn = null
     }
-    // P10B-17: one row per screen, named with the layout it uses now; the panel draws that layout at its widths.
+    // One row per screen, named with the layout it uses now; the panel draws that layout at its widths.
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
         val rowWidth = maxWidth - BrowseContainerPadding * 2
         val vodLayout by vm.vodLayout.collectAsStateWithLifecycle()

@@ -47,11 +47,11 @@ import tv.own.owntv.ui.theme.stageText
 /** One footer button of a wizard step: its label and what OK on it does. */
 internal class WizardAction(val label: String, val onClick: () -> Unit, val focus: FocusRequester? = null, val enabled: Boolean = true)
 
-/** The five steps the dots show (P10B-W1 … W9): which one a page belongs to. */
+/** The five steps the dots show: which one a page belongs to. */
 internal enum class WizardStep { LANGUAGE, DISPLAY, PROFILE, PLAYLIST, READY }
 
 /**
- * Every setup step's frame (P10B-W1 … W9): the Stage background, the OwnTV lockup top left, the step
+ * Every setup step's frame: the Stage background, the OwnTV lockup top left, the step
  * dots top right, one glass panel (1040 wide, centred, from y 170) with a 42 px title, 19 px text and the
  * step's rows or cards, then [back] bottom-left and [next] bottom-right, and the key hints at the bottom.
  * Back on the remote calls [back] (or [onBack] where the step has no Back button).

@@ -36,7 +36,7 @@ import tv.own.owntv.ui.components.OwnTVAvatar
 import tv.own.owntv.ui.components.OwnTVIcon
 
 /**
- * Phase 6.5 — the "Who's watching?" launch gate. Shown when more than one profile exists. Picking a
+ * The "Who's watching?" launch gate. Shown when more than one profile exists. Picking a
  * profile makes it active (and prompts for a PIN if it's locked); [onEnter] records the selected
  * profile id and proceeds into the shell.
  */

@@ -44,7 +44,7 @@ fun MultiviewTileMenu(
     LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
     BackHandler { onDismiss() }
 
-    // The long-press menu look (P4-05), as the channel and settings-row menus draw it.
+    // The long-press menu look, as the channel and settings-row menus draw it.
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss, stageLayout = true) {
       androidx.compose.foundation.layout.Box(
         Modifier.fillMaxSize().background(tv.own.owntv.ui.theme.StageColors.Scrim).longPressMenuGuard(),

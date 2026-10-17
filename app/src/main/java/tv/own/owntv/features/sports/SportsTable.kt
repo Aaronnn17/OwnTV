@@ -21,7 +21,7 @@ import tv.own.owntv.ui.theme.mpx
 import tv.own.owntv.ui.theme.stageAccent
 import tv.own.owntv.ui.theme.stageText
 
-/** The number columns of a league table (mockup T5): P W D L GD Pts, each 51 wide. */
+/** The number columns of a league table: P W D L GD Pts, each 51 wide. */
 private val NumberColumn = 51.mpx
 
 /** `# Team P W D L GD Pts`, 16.5 px dim. */

@@ -155,7 +155,7 @@ android {
     buildTypes {
         debug {
             // Pseudolocales (en-XA / ar-XB) are generated for the debug BuildType, NOT androidResources.
-            // They are the Phase 3g QA sweep instrument; localeFilters below would otherwise strip them,
+            // They are the pseudolocale QA instrument; localeFilters below would otherwise strip them,
             // so the debug-only qualifiers are added back via the per-variant API in the androidComponents
             // block at the bottom of this file (see docs/internationalization.md 0b, "Pseudolocales must
             // survive the filter").
@@ -403,7 +403,7 @@ dependencies {
     // Networking
     implementation(libs.okhttp)
     implementation(libs.zxing.core) // QR generation for the Remote (companion) add-source flow
-    implementation(libs.juniversalchardet) // local subtitle charset detection (subtitle plan §7.2)
+    implementation(libs.juniversalchardet) // local subtitle charset detection
 
     // Media playback — libmpv (FFmpeg) is NOT declared here. `:player-core` exposes it as `api`, so it
     // arrives with core, on core's version. Two hosts each naming their own copy is exactly the
@@ -419,7 +419,7 @@ dependencies {
     implementation(libs.androidx.media3.ui)
     implementation(libs.androidx.media3.datasource.okhttp)
 
-    // In-app YouTube trailer playback (plan §7.3) — WebView-backed IFrame player; the only ToS-clean
+    // In-app YouTube trailer playback — WebView-backed IFrame player; the only ToS-clean
     // way to play YouTube trailers inside the app. Falls back to an "Open in YouTube" intent.
     implementation(libs.youtube.player)
 

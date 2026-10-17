@@ -148,7 +148,7 @@ open class MainActivity : ComponentActivity() {
     private fun probeDatabase(): String? {
         var error: String? = null
         val worker = Thread {
-            // Core configures a SQLiteDriver (its plan Phase B), and `openHelper` throws outright
+            // Core configures a SQLiteDriver, and `openHelper` throws outright
             // once one is set. Opening a connection is what this probe was always really doing —
             // forcing Room to run the migration chain now rather than inside the first query.
             runCatching {
@@ -222,7 +222,7 @@ open class MainActivity : ComponentActivity() {
             val fontCustomization by viewModel.fontCustomization.collectAsStateWithLifecycle()
             val animationLevel by viewModel.animationLevel.collectAsStateWithLifecycle()
             // Animations Off also stills the launch screen. Android shows it before the app runs, so the
-            // choice can only be handed over for the next launch, and only from Android 13 on (P11).
+            // choice can only be handed over for the next launch, and only from Android 13 on.
             LaunchedEffect(animationLevel) {
                 if (android.os.Build.VERSION.SDK_INT >= 33) {
                     val still = animationLevel == tv.own.owntv.core.theme.AnimationLevel.OFF
@@ -327,9 +327,6 @@ open class MainActivity : ComponentActivity() {
                 // backdrop stands in for. Captured here (top of the tree) so glass panels can map their
                 // own on-screen rect into the blurred bitmap's coordinate space.
                 var rootSizePx by remember { mutableStateOf(Size.Zero) }
-                // Phase 4 — real backdrop blur. Load+blur the background once (cached) when glass is on,
-                // a background image is set, blur strength > 0, and the device supports it (API 31+).
-                // Otherwise this stays null and panels fall back to Tier-1 translucency.
                 // Glass & background: a picture is drawn blurred (its Blur) and glass frosts it, so the
                 // blurred copy is built whenever a picture is shown, glass on or off. The blur itself is
                 // CPU work done once per picture, so every device gets it.
@@ -469,13 +466,13 @@ private fun BackgroundLayer(background: tv.own.owntv.core.theme.BackgroundConfig
 }
 
 /**
- * Phase 4 — build the single shared blurred backdrop for the Glass effect frost. Decodes the
+ * Builds the single shared blurred backdrop that glass frosts. Decodes the
  * background file into a downscaled [Bitmap] (≈480px wide — enough detail to frost, tiny in memory),
  * blurs it with [stackBlur], and wraps it in a [BlurredBackdrop] that also carries the root viewport
  * size in px so glass panels can map their on-screen rect into the bitmap's coordinate space.
  *
  * Runs on a background dispatcher (called from `produceState`); returns null on any decode failure so
- * callers fall back to Tier-1 translucency. The aspect ratio is locked to the screen's so the slice
+ * glass then draws its tint alone. The aspect ratio is locked to the screen's so the slice
  * drawn under each panel lines up with the sharp photo behind it (Coil renders that with Crop/Center).
  */
 private suspend fun produceBlurredBackdrop(

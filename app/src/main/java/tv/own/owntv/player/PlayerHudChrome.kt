@@ -71,7 +71,7 @@ internal fun TopBar(
     // The clock. Rendered between two equal-weight halves so it lands on the true centre of the screen
     // whatever the channel name and guide card happen to be doing on either side of it.
     centre: (@Composable () -> Unit)? = null,
-    // Live: one more line under the channel name (a Sports match's score, T4b).
+    // Live: one more line under the channel name (a Sports match's score).
     below: (@Composable () -> Unit)? = null,
 ) {
     // Reactive meta so the title row updates instantly on a channel zap (the plain vars aren't observed).
@@ -421,7 +421,7 @@ internal fun BottomBar(
                         PlayerControl.PREVIOUS_CHANNEL -> if (onPreviousChannel != null) {
                             CtrlButton(OwnTVIcon.HISTORY, label = stringResource(R.string.player_previous_channel)) { onPreviousChannel() }
                         }
-                        // Sports Hub (T4b): only for a channel started from a match.
+                        // Sports Hub: only for a channel started from a match.
                         PlayerControl.OTHER_CHANNELS -> if (onOtherChannels != null) {
                             CtrlButton(OwnTVIcon.LIST, label = stringResource(R.string.sports_other_channels_count, otherChannelsCount)) { onOtherChannels() }
                         }

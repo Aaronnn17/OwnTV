@@ -72,18 +72,18 @@ import tv.own.owntv.ui.theme.stageText
 import java.util.Locale
 
 /**
- * The match page's tabs (mockup T2). ESPN's summary carries no meetings, so in Head to head's place is
- * Form: each side's last five games (owner, WORK O9).
+ * The match page's tabs. ESPN's summary carries no meetings, so in Head to head's place is
+ * Form: each side's last five games.
  */
 private enum class MatchTab { TIMELINE, STATS, LINEUPS, TABLE, FORM, BROADCASTS }
 
-/** The tier colours of the mockup's reasons: guide green, event blue, your pick gold, likely muted. */
+/** The tier colours of the reasons: guide green, event blue, your pick gold, likely muted. */
 internal val TierGuide = Color(0xFF9FE07E)
 internal val TierEvent = Color(0xFF7FD3FF)
 internal val TierPick = Color(0xFFE7C56A)
 
 /**
- * A match (mockup T2, Redesign R1). Left: the crumb, the score header, the tabs and their content, all
+ * A match. Left: the crumb, the score header, the tabs and their content, all
  * from the stored board. Right: *Watch live* — Find channels first (a search of this one match, only
  * when asked); then the preview (Live TV's own engine), the filter chips, every channel showing it with
  * the reason, and how many the filters hide. ▲ ▼ in the list preview each channel, OK plays it full
@@ -540,7 +540,7 @@ private fun FilterChips(filter: WatchFilter, onOpen: () -> Unit) {
         SportsChip(if (langs.isEmpty()) stringResource(R.string.sports_any) else langs.joinToString(", "), on = langs.isNotEmpty(), icon = OwnTVIcon.LANGUAGE, onClick = onOpen)
         SportsChip(if (filter.countries.isEmpty()) stringResource(R.string.sports_any_country) else filter.countries.joinToString(", "), on = filter.countries.isNotEmpty(), icon = OwnTVIcon.NETWORK, onClick = onOpen)
         if (filter.minQuality != tv.own.owntv.core.sports.MinQuality.ANY) SportsChip(qualityLabel(filter.minQuality), on = true, icon = OwnTVIcon.VIDEO, onClick = onOpen)
-        // The panel itself, labelled as the mockup draws it (its filter icon is the SORT glyph).
+        // The panel itself (its filter icon is the SORT glyph).
         SportsChip(stringResource(R.string.sports_filter_title), on = false, icon = OwnTVIcon.SORT, onClick = onOpen)
     }
 }
@@ -617,7 +617,7 @@ private fun FindChannels(busy: Boolean, searching: Boolean, onFind: () -> Unit) 
     }
 }
 
-/** Find channels outside its window (WORK C21): when it opens, or that the match is over. */
+/** Find channels outside its window: when it opens, or that the match is over. */
 @Composable
 private fun ClosedNote(window: tv.own.owntv.core.sports.WatchWindow) {
     val locale = LocalConfiguration.current.locales[0]
@@ -632,7 +632,7 @@ private fun ClosedNote(window: tv.own.owntv.core.sports.WatchWindow) {
     }
 }
 
-/** No playlist on this profile (P9's note, on the TV's Watch live side): scores work, channels need one. */
+/** No playlist on this profile (shown on the TV's Watch live side): scores work, channels need one. */
 @Composable
 private fun NoPlaylistNote(onAddPlaylist: () -> Unit) {
     Column(

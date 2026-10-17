@@ -62,7 +62,7 @@ import tv.own.owntv.features.setup.AddSourceScreen
 import tv.own.owntv.features.setup.RemoteSetupScreen
 import tv.own.owntv.ui.components.OwnTVSpinner
 
-/** Phase 13 — list / add / re-sync / delete the active profile's IPTV sources. */
+/** List / add / re-sync / delete the active profile's IPTV sources. */
 @Composable
 fun ManageSourcesScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val vm: SettingsViewModel = koinViewModel()
@@ -274,7 +274,7 @@ fun ManageSourcesScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
                 }
             }
         } else {
-            // P10B-07: the playlists as rows; the focused one's Edit / Info / Re-sync / Delete in the panel.
+            // The playlists as rows; the focused one's Edit / Info / Re-sync / Delete in the panel.
             val actionsFocus = remember { FocusRequester() }
             StageFullPage(
                 parents = listOf(stringResource(R.string.settings_group_sources)),
@@ -490,7 +490,7 @@ private fun CatalogSyncState.Syncing.countsLabel(sourceType: SourceType, stored:
             moviesActive = false,
             seriesActive = false,
         )
-        // Stalker: LIVE (Phase C-1) + VOD/series (Phase D-1) all populate.
+        // Stalker: LIVE + VOD/series all populate.
         SourceType.STALKER -> SyncProgressCounts(
             live = live,
             movies = movies,

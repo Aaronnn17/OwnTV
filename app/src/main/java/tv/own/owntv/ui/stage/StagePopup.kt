@@ -44,14 +44,14 @@ import tv.own.owntv.ui.theme.stageText
 
 /**
  * The eyebrow a popup shows when it gives none of its own: a Settings page provides
- * "SETTINGS · PLAYER", so every popup opened from it is labelled as the mockup draws them.
+ * "SETTINGS · PLAYER", so every popup opened from it is labelled with its path.
  */
 val LocalPopupEyebrow = staticCompositionLocalOf<String?> { null }
 
 /**
- * The Stage popup (P1-06, P4-05, P9-05): the wash over the screen, one glass panel (radius 30, padding
+ * The Stage popup: the wash over the screen, one glass panel (radius 30, padding
  * 30) with the eyebrow 15/800, the title 38/800 and a muted 18 px text, then [content], then [buttons]
- * at the bottom right. Drawn in mockup pixels; the host applies Popup size and popup font size. While the TV keyboard is up the panel moves to the top and is capped to the room above the
+ * at the bottom right. Drawn in design pixels; the host applies Popup size and popup font size. While the TV keyboard is up the panel moves to the top and is capped to the room above the
  * keys, so the field being typed in stays visible. Focus never leaves it; Back closes it.
  *
  * [scroll] = false when [content] holds its own LazyColumn (give it `weight(1f, fill = false)`).

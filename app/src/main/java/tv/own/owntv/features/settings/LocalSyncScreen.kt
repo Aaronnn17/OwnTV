@@ -120,7 +120,7 @@ fun LocalSyncScreen(
     BackHandler(enabled = vm.step != null || onBack != null) { if (vm.step != null) vm.cancel() else onBack?.invoke() }
 
     val listening = hosting as? CompanionServerState.Listening
-    // P8-06: title and description, Sync mode and Connect side by side, the paired devices. The PIN and
+    // Title and description, Sync mode and Connect side by side, the paired devices. The PIN and
     // QR card appears beside the devices while Sync mode is on, so nothing below it moves.
     Column(
         modifier = modifier
@@ -274,7 +274,7 @@ fun SetupLocalSyncScreen(onRestored: () -> Unit, onBack: () -> Unit, modifier: M
     val firstFocus = remember { FocusRequester() }
     LaunchedEffect(step is LocalSyncViewModel.Step.FindDevice) { kotlinx.coroutines.delay(80); runCatching { firstFocus.requestFocus() } }
     val finding = step is LocalSyncViewModel.Step.FindDevice
-    // P10B-W5: the wizard frame; the devices found and the address as rows, Cancel and Continue below.
+    // The wizard frame; the devices found and the address as rows, Cancel and Continue below.
     tv.own.owntv.features.setup.WizardFrame(
         step = tv.own.owntv.features.setup.WizardStep.PROFILE,
         title = stringResource(R.string.setup_sync_device),

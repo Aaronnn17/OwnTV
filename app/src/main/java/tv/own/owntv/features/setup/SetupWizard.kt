@@ -70,10 +70,10 @@ import tv.own.owntv.ui.theme.stageText
 private enum class Step { WELCOME, DISPLAY_SIZE, DISCLAIMER, SETUP_CHOICE, SYNC_DEVICE, CREATE_PROFILE, ADD_CONTENT, ADD_SOURCE_REMOTE, ADD_SOURCE, IMPORTING, EXISTING, IMPORT_BACKUP_CHOOSER, IMPORT_BACKUP_REMOTE, IMPORT_BACKUP }
 
 /**
- * Onboarding for one profile (P10B-W1 … W9). [firstRun] shows language/welcome/disclaimer; otherwise it
+ * Onboarding for one profile. [firstRun] shows language/welcome/disclaimer; otherwise it
  * starts at profile creation (used by "Add profile"). [onDone] receives the newly active profile id and
  * enters the app; [onCancel] backs out (to the gate). Every step is a [WizardFrame]; adding a playlist
- * reuses the Settings › Add a source pages (P10B step 4).
+ * reuses the Settings › Add a source pages.
  */
 @Composable
 fun Onboarding(firstRun: Boolean, onDone: (Long?) -> Unit, onCancel: () -> Unit, modifier: Modifier = Modifier) {

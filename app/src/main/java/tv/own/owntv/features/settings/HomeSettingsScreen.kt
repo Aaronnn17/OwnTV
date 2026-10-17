@@ -38,7 +38,7 @@ import tv.own.owntv.ui.theme.stageAccent
 import tv.own.owntv.ui.theme.stageText
 
 /**
- * Settings › Layout › Home screen (P10B-01): Now trending and its layout, the Home rows (shown or hidden,
+ * Settings › Layout › Home screen: Now trending and its layout, the Home rows (shown or hidden,
  * in Home's order; the focused row's Hide / Move / Mode in the panel, Hold OK = Move), then Keep watching
  * and Android TV home.
  */

@@ -62,7 +62,7 @@ private fun defaultSearchLang(): String {
 }
 
 /**
- * Settings → Video Player → Subtitles → OpenSubtitles account (subtitle plan §5.2/§5.3).
+ * Settings → Video Player → Subtitles → OpenSubtitles account.
  * The connection is per OwnTV profile; users sign in with their own free OpenSubtitles account.
  */
 @Composable
@@ -166,7 +166,7 @@ fun OpenSubtitlesAccountScreen(onBack: () -> Unit, modifier: Modifier = Modifier
     val seriesSubs by deleteVm.seriesCount.collectAsStateWithLifecycle()
     val downloaded = movieSubs + seriesSubs
 
-    // P10B-05: ACCOUNT, SEARCH and ON THIS TV as rows; the account's details in the panel.
+    // ACCOUNT, SEARCH and ON THIS TV as rows; the account's details in the panel.
     val ok = stringResource(R.string.common_ok)
     val back = stringResource(R.string.common_back)
     val content = stringResource(R.string.settings_group_content_metadata)
@@ -525,7 +525,7 @@ private fun OpenSubtitlesApiPopup(
 }
 
 /**
- * The whole sign-in on one panel: username, password, "Stay signed in" (review R5), and the two
+ * The whole sign-in on one panel: username, password, "Stay signed in", and the two
  * optional API fields inline. Deliberately the same four inputs, in the same order, as the remote
  * companion page — so filling it in on the TV and filling it in on a browser look like one feature.
  *

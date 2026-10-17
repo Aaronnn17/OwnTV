@@ -185,7 +185,6 @@ OwnTV_Mobile/  (separate repo, the phone and tablet app on the same core)
 - 📖 **[User Guide](extras/USER_GUIDE.md)** — every feature and where to find it.
 - 📄 **[Master Product Brief](extras/OwnTV_Master_Product_Brief.md)** — the full as-built feature and
   architecture reference.
-- 📺 **[Player design reference](extras/player.html)** — an interactive mockup of the player UI.
 
 ## 📥 Installing (Fire TV / Android TV)
 

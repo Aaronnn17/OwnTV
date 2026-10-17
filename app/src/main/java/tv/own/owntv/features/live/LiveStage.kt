@@ -95,7 +95,7 @@ import tv.own.owntv.ui.theme.stageAccent
 import tv.own.owntv.ui.theme.stageText
 
 /*
- * Live TV in the Stage design (P3-01 … P3-06): the header, the channel rows, the stage on the right,
+ * Live TV in the Stage design: the header, the channel rows, the stage on the right,
  * and the category list as a sheet (Stage layout) or a column (Separate panels). LiveScreen owns the
  * state and the focus plumbing; these only draw.
  */
@@ -284,7 +284,7 @@ internal fun LiveStagePane(
                 Box(Modifier.align(Alignment.TopStart).padding(start = 24.mpx, top = 22.mpx)) { StageLiveBadge(stringResource(R.string.player_live)) }
                 if (playing && streamChips.isNotEmpty()) {
                     Row(Modifier.align(Alignment.TopEnd).padding(end = 22.mpx, top = 22.mpx), horizontalArrangement = Arrangement.spacedBy(6.mpx)) {
-                        // The mockup's three facts — quality, frame rate, sound (owner, 2026-09-30): the
+                        // Three facts — quality, frame rate, sound (owner, 2026-09-30): the
                         // engine's aspect ratio ("16:9") and declared bitrate ("4.2 Mbps") are left out.
                         streamChips.filterNot { it.contains(':') || it.endsWith("Mbps") }.forEach { StageSpecChip(it) }
                     }
@@ -357,7 +357,7 @@ internal fun LiveStagePane(
 
 /**
  * One "20:30  Kingdom of the Planet of the Apes" entry under the stage, 18 px. Next has the accent
- * time and full-colour title, later is muted. The mockup draws no focused state; focused = FILLED.
+ * time and full-colour title, later is muted. Focused = FILLED.
  */
 @Composable
 private fun LiveScheduleItem(p: XtEpgEntry, accentTime: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
@@ -409,7 +409,7 @@ internal data class LiveCategoryEntry(
 /**
  * Live TV's category list as the sheet and column draw it — the fixed entries with their icons, the
  * provider groups parsed into name and tags — and the "GROUPS · DE" heading above the groups. The TV
- * Guide's category sheet is this same list (P4-03).
+ * Guide's category sheet is this same list.
  */
 @Composable
 internal fun liveCategoryEntries(railItems: List<LiveRailItem>, railCounts: Map<tv.own.owntv.core.live.LiveKey, Int>): Pair<List<LiveCategoryEntry>, String> {
@@ -441,8 +441,8 @@ internal fun liveCategoryEntries(railItems: List<LiveRailItem>, railCounts: Map<
 }
 
 /**
- * The categories: the glass sheet (P3-02, 450 wide, radius 32, "Categories · Live TV") or the flat
- * column (P3-06, the Movies P5-05 column). Search, the fixed entries with icons and counts, then
+ * The categories: the glass sheet (450 wide, radius 32, "Categories · Live TV") or the flat
+ * column (the Movies column). Search, the fixed entries with icons and counts, then
  * "GROUPS · DE" and the provider groups with their tags, counts and playlist marks. The selected
  * category is accent text plus the dot (sheet) or the 4 px bar (column).
  *

@@ -35,7 +35,7 @@ fun DeveloperScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val firstFocus = remember { FocusRequester() }
     LaunchedEffect(Unit) { kotlinx.coroutines.delay(60); runCatching { firstFocus.requestFocus() } }
     BackHandler { onBack() }
-    // Drawn as the other More pages (P9): the 42 px title, then Stage rows.
+    // Drawn as the other More pages: the 42 px title, then Stage rows.
     androidx.compose.foundation.layout.Column(
         modifier.fillMaxSize().focusGroup(),
         verticalArrangement = Arrangement.spacedBy(6.mpx),

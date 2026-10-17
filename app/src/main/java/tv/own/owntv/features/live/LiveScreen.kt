@@ -89,7 +89,7 @@ import tv.own.owntv.ui.format.rememberSystemTimeFormatter
 import tv.own.owntv.core.live.LiveKey
 import tv.own.owntv.core.live.ProviderTags
 
-/** Live TV (Stage P4): the channel list, the stage beside it and the categories as a sheet or a column. */
+/** Live TV: the channel list, the stage beside it and the categories as a sheet or a column. */
 @OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
 fun LiveScreen(
@@ -104,7 +104,7 @@ fun LiveScreen(
      * More → History show channels without a second copy of this list existing.
      */
     lockedKey: LiveKey? = null,
-    /** Guide view (Live TV tool row): opens the TV Guide until the in-place guide arrives (P5). */
+    /** Guide view (Live TV tool row): opens the TV Guide until an in-place guide exists. */
     onOpenGuide: () -> Unit = {},
 ) {
     val vm: LiveViewModel = koinViewModel()
@@ -570,7 +570,7 @@ fun LiveScreen(
             .fillMaxSize()
             .onFocusChanged { if (it.hasFocus) onChildFocused() },
     ) {
-        // Horizontal geometry is a fraction of the mockup's 1920 width, so every zoom reflows.
+        // Horizontal geometry is a fraction of the 1920 design width, so every zoom reflows.
         val screenW = maxWidth
         fun fx(px: Int) = screenW * (px / 1920f)
         val margin = fx(64)
@@ -599,7 +599,7 @@ fun LiveScreen(
             listW = rest * (stageWidths.list / 100f)
             stageW = rest - listW
         } else {
-            // The mockup's geometry.
+            // The design's geometry.
             colW = fx(350); sheetW = fx(450)
             listW = if (separate) fx(620) else fx(846)
             stageW = if (separate) fx(766) else fx(912)
@@ -637,7 +637,7 @@ fun LiveScreen(
         }
         val targetChannelId by targetChannelIdState
 
-        // The list side, dimmed to 40% while the sheet is over it (P3-02).
+        // The list side, dimmed to 40% while the sheet is over it.
         Box(
             Modifier
                 .fillMaxSize()
@@ -722,7 +722,7 @@ fun LiveScreen(
                         onQueryChange = vm::setSearchQuery,
                         onEditingChange = { searchEditing = it },
                         placeholder = if (separate) stringResource(R.string.common_search) else stringResource(R.string.content_search_in, headerLabel),
-                        // The mockup's share of the list width, but never more than the two tools leave:
+                        // The design's share of the list width, but never more than the two tools leave:
                         // a narrow custom list shrinks the field, not "Guide view".
                         modifier = Modifier
                             .weight(1f, fill = false)
@@ -852,7 +852,7 @@ fun LiveScreen(
                 if (lockedKey == null && !previewShown) {
                     tv.own.owntv.ui.stage.StageKeyHints(
                         liveHints,
-                        // A clear gap under the list, and 40 from the bottom rather than the mockup's 26:
+                        // A clear gap under the list, and 40 from the bottom rather than the design's 26:
                         // TV panels overscan the very edge away (owner, 2026-09-30).
                         modifier = Modifier.padding(start = 16.mpx, top = 22.mpx, bottom = 40.mpx),
                     )
@@ -910,7 +910,7 @@ fun LiveScreen(
     }
 
     // A next / later programme opened from the schedule under the stage (▶ Schedule): the TV Guide's
-    // programme menu (P4-02), acting through the guide's view model so both screens do the same thing.
+    // programme menu, acting through the guide's view model so both screens do the same thing.
     openProgramme?.let { (ch, xt) ->
         val epgVm: tv.own.owntv.features.epg.EpgViewModel = koinViewModel()
         val leadMinutes by epgVm.reminderLeadMinutes.collectAsStateWithLifecycle()
@@ -1154,7 +1154,7 @@ fun LiveScreen(
 }
 
 /**
- * ☰ Channel options (P3-04): the Stage options menu, 540 wide over the stage, above the scrim. Header
+ * ☰ Channel options: the Stage options menu, 540 wide over the stage, above the scrim. Header
  * = the logo plate, "256 · Sky Cinema Premieren" and "category · playlist"; the actions in the groups
  * WATCH · CHANNEL · GUIDE DATA · ORGANISE with their values (Catch-up "7 days", Match EPG "Auto",
  * EPG time offset "Global"). The order and visibility are the user's (Settings › Long-press menus ›
@@ -1181,7 +1181,7 @@ private fun ChannelContextMenu(
     onRecord: () -> Unit,
     onScheduleRecord: () -> Unit,
     onPlayExternal: () -> Unit,
-    // Null unless Multiview is switched on: keep this channel for the grid (Plan D, B5).
+    // Null unless Multiview is switched on: keep this channel for the grid.
     onAddToMultiview: (() -> Unit)?,
     onMove: () -> Unit,
     // "Move to category…" (issue #87): send this channel into a user's combined category.
@@ -1197,7 +1197,7 @@ private fun ChannelContextMenu(
     val catchupValue = channel.catchupDays.takeIf { it > 0 }?.let { pluralStringResource(R.plurals.settings_epg_guide_days_value, it, it) }
     val matchValue = if (epgMatchManual) stringResource(R.string.settings_manual) else stringResource(R.string.settings_auto)
     val offsetValue = epgShiftMinutes?.let { liveEpgShiftLabel(it) } ?: stringResource(R.string.content_epg_offset_global_short)
-    // Group ids = the mockup's four groups, in its order.
+    // Group ids = the four groups, in their order.
     val watch = 0; val chan = 1; val guide = 2; val organise = 3
     val actions = buildList {
         if (channel.catchup) add(MenuAction("catchup", stringResource(R.string.content_catchup), OwnTVIcon.REWIND, group = watch, onClick = onCatchup))
@@ -1289,7 +1289,7 @@ private fun CatchupDialog(
     loadProgrammes: suspend () -> List<tv.own.owntv.core.database.entity.EpgProgrammeEntity>,
     onPick: (tv.own.owntv.core.database.entity.EpgProgrammeEntity) -> Unit,
     // Fallback for a channel with an archive but no guide: there are no programmes to name, but the
-    // archive is still there, so offer times instead of the old dead-end "go match your EPG" message.
+    // archive is still there, so offer times instead of a dead-end "go match your EPG" message.
     jumpOffsetsSec: List<Int>,
     jumpWindowSec: Int,
     onJump: (Int) -> Unit,

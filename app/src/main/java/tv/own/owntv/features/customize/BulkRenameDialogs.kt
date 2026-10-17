@@ -83,7 +83,7 @@ fun BulkRenameFlow(session: BulkRenameSession, returnFocus: FocusRequester? = nu
     }
 }
 
-/** [mockup frame 2] The four-way choice that opens a bulk rename. */
+/** The four-way choice that opens a bulk rename. */
 @Composable
 private fun BulkRenameChoicePopup(session: BulkRenameSession) {
     val count = session.entries.collectAsStateWithLifecycle().value.size
@@ -112,7 +112,7 @@ private fun BulkRenameChoicePopup(session: BulkRenameSession) {
     }
 }
 
-/** [mockup frame 3] Rule builder: rows of type/placement/value/✕, options checkboxes, Apply. */
+/** Rule builder: rows of type/placement/value/✕, options checkboxes, Apply. */
 @Composable
 private fun BulkRuleBuilderDialog(session: BulkRenameSession) {
     val rules = session.rules.collectAsStateWithLifecycle().value
@@ -161,7 +161,7 @@ private fun BulkRuleBuilderDialog(session: BulkRenameSession) {
         for (rule in draft) {
             if (rule.pattern != null) {
                 // Auto-cleanup rules are internal regexes, but remain visible/removable in this
-                // editor so "Edit rules" genuinely tunes the generated preset (plan §2.6).
+                // editor so "Edit rules" genuinely tunes the generated preset.
                 out += rule
             } else if (rule.action == RenameRules.Action.ADD) {
                 if (RenameRules.tokensOf(rule).size != 1) {
@@ -326,7 +326,7 @@ private fun BulkRuleBuilderDialog(session: BulkRenameSession) {
     }
 }
 
-/** [mockup frame 4] Review modeled on EpgMatchReviewDialog: left rows, right centred bulk column. */
+/** Review modeled on EpgMatchReviewDialog: left rows, right centred bulk column. */
 @Composable
 private fun BulkReviewDialog(session: BulkRenameSession) {
     val rows = session.preview.collectAsStateWithLifecycle().value
@@ -482,7 +482,7 @@ private fun BulkRestoreConfirmDialog(session: BulkRenameSession) {
     )
 }
 
-/** The > [BULK_RENAME_MAX_ROWS] refusal (plan §2.7): a clear message, nothing else. */
+/** The > [BULK_RENAME_MAX_ROWS] refusal: a clear message, nothing else. */
 @Composable
 private fun BulkRefusedDialog(session: BulkRenameSession) {
     tv.own.owntv.ui.stage.StageNotice(

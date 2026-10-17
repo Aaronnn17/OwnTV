@@ -114,7 +114,7 @@ class ShellViewModel(
     val focusHighlightWidth: StateFlow<Int> = settings.focusHighlightWidth
         .stateIn(viewModelScope, SharingStarted.Eagerly, 2)
 
-    /** Glass effect background image path (app-private); blank = no background (panels solid). */
+    /** Background picture path (app-private); blank = no background (panels solid). */
     val bgImagePath: StateFlow<String> = settings.bgImagePath
         .stateIn(viewModelScope, SharingStarted.Eagerly, "")
 
@@ -172,7 +172,7 @@ class ShellViewModel(
     }
 
     /**
-     * Phase 7 — weather chip. Refreshes when connectivity returns, cached 30 min by repository.
+     * Weather chip. Refreshes when connectivity returns, cached 30 min by repository.
      * Gated by the "Show weather" setting (OFF hides the chip) and honouring a manual location
      * override so users on a VPN get their real city instead of the VPN server's.
      */

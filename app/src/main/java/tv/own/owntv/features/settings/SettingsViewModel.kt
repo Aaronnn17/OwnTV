@@ -57,7 +57,7 @@ import tv.own.owntv.core.theme.AccentColor
 import tv.own.owntv.core.theme.ThemeMode
 import tv.own.owntv.core.theme.UiZoom
 
-/** Phase 13 — manage IPTV sources (list / add / re-sync / delete) for the active profile. */
+/** Manage IPTV sources (list / add / re-sync / delete) for the active profile. */
 class SettingsViewModel(
     private val profileDao: ProfileDao,
     private val sourceDao: SourceDao,
@@ -128,7 +128,7 @@ class SettingsViewModel(
     fun startRemoteOpenSubtitlesConfigListener(port: Int) = companion.startForOpenSubtitlesConfig(port)
 
     // Semi-auto EPG: after a playlist import, if the playlist has a guide URL we offer to sync the EPG now
-    // (instead of the old slow auto-sync). "Sync now" shows a live programme count, just like the import.
+    // (rather than a slow automatic sync). "Sync now" shows a live programme count, just like the import.
     private var pendingEpgSource: SourceEntity? = null
     private val _epgSync = MutableStateFlow<EpgSyncUi>(EpgSyncUi.Hidden)
     val epgSync: StateFlow<EpgSyncUi> = _epgSync.asStateFlow()
@@ -183,7 +183,7 @@ class SettingsViewModel(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     /**
-     * Subscription expiry per source id — the "Expires …" note in the Manage-sources row (Phase F).
+     * Subscription expiry per source id — the "Expires …" note in the Manage-sources row.
      * Xtream reads `user_info.exp_date` from the panel; Stalker reads `account_info`/`get_profile`
      * (see core's `stalkerExpiryOf`). M3U is a plain playlist file with no account concept — never listed.
      * Fetched once per source per ViewModel lifetime (in-memory cache; only while the screen is
@@ -275,7 +275,7 @@ class SettingsViewModel(
     val autoFrameRate: StateFlow<Boolean> = settings.autoFrameRate
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
-    // Multiview (Plan D, feature B). The tile count is never reduced behind the user's back: the
+    // Multiview. The tile count is never reduced behind the user's back: the
     // warning above two tiles is asked once and obeyed either way (D5, D12).
     val multiviewEnabled: StateFlow<Boolean> = settings.multiviewEnabled
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
@@ -326,7 +326,7 @@ class SettingsViewModel(
         viewModelScope.launch { settings.setSurroundMode(next) }
     }
 
-    // P14 — N8 passthrough, N9 night mode, N10 volume levelling.
+    // Passthrough, night mode, volume levelling.
     val audioPassthrough: StateFlow<Boolean> = settings.audioPassthrough.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), true)
     fun setAudioPassthrough(enabled: Boolean) { viewModelScope.launch { settings.setAudioPassthrough(enabled) } }
     val nightMode: StateFlow<Boolean> = settings.nightMode.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
@@ -334,7 +334,7 @@ class SettingsViewModel(
     val volumeLevelling: StateFlow<Boolean> = settings.volumeLevelling.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
     fun setVolumeLevelling(enabled: Boolean) { viewModelScope.launch { settings.setVolumeLevelling(enabled) } }
 
-    // P15 — N11 maximum video quality, N19 tunneled playback (the row exists only where it can work).
+    // Maximum video quality, tunneled playback (the row exists only where it can work).
     val maxVideoHeightChoices: List<Int> get() = settings.maxVideoHeightChoices
     val maxVideoHeight: StateFlow<Int> = settings.maxVideoHeight.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
     fun setMaxVideoHeight(height: Int) { viewModelScope.launch { settings.setMaxVideoHeight(height) } }
@@ -396,7 +396,7 @@ class SettingsViewModel(
         viewModelScope.launch { settings.setEpgOffsetMinutes(minutes) }
     }
 
-    /** How many days of upcoming guide to store — one value for every EPG source (guide plan R1). */
+    /** How many days of upcoming guide to store — one value for every EPG source. */
     val guideDaysToKeep: StateFlow<Int> = settings.guideDaysToKeep
         .stateIn(viewModelScope, SharingStarted.Eagerly, tv.own.owntv.core.settings.GuideRetention.DEFAULT_DAYS)
 
@@ -702,7 +702,7 @@ class SettingsViewModel(
     fun setAudioDelayMs(ms: Int) { viewModelScope.launch { settings.setAudioDelayMs(ms) } }
 
     // --- CH+- key paging (browse panels): master toggle + per-direction skip counts ---
-    // --- Recording (Plan D, Feature A) ---
+    // --- Recording ---
     val recordWhatImWatching: StateFlow<Boolean> =
         settings.recordWhatImWatching.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
     fun setRecordWhatImWatching(enabled: Boolean) { viewModelScope.launch { settings.setRecordWhatImWatching(enabled) } }
@@ -1285,7 +1285,7 @@ class SettingsViewModel(
         _sourceTest.value = null
     }
 
-    // ---- Stalker portal (plan Phase B) ----
+    // ---- Stalker portal ----
 
     /**
      * Save a Stalker source. Verifies the portal handshake first (same as Test connection) so a
@@ -1599,7 +1599,7 @@ class SettingsViewModel(
 
     private class DnsNoAddressesException(val host: String) : java.io.IOException()
 
-    // --- TMDB metadata enrichment (plan §4) — Phase M1 config + manual "look up title" test ---
+    // --- TMDB metadata enrichment — Phase M1 config + manual "look up title" test ---
 
     val metadataMode: StateFlow<tv.own.owntv.core.metadata.MetadataMode> =
         settings.metadataMode.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), tv.own.owntv.core.metadata.MetadataMode.PROVIDER_PLUS_TMDB)

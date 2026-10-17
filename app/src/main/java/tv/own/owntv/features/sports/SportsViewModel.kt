@@ -51,9 +51,9 @@ import tv.own.owntv.core.sports.model.StandingsTable
 import tv.own.owntv.core.sports.model.Sport
 import java.util.Locale
 
-/** Where a match page's Find channels stands (R1: channels are searched only when asked). */
+/** Where a match page's Find channels stands (channels are searched only when asked). */
 sealed interface ChannelSearch {
-    /** The match is being fetched afresh to judge Find channels' window (WORK C21). */
+    /** The match is being fetched afresh to judge Find channels' window. */
     data object Checking : ChannelSearch
     data class Closed(val window: WatchWindow) : ChannelSearch
     data object NotSearched : ChannelSearch
@@ -61,7 +61,7 @@ sealed interface ChannelSearch {
     data class Found(val options: List<WatchOption>) : ChannelSearch
 }
 
-/** The match page (mockup T2, R1): the match, its summary and table from the board, and "Watch live" once searched. */
+/** The match page: the match, its summary and table from the board, and "Watch live" once searched. */
 data class MatchPageState(
     val match: Match,
     val summary: MatchSummary?,
@@ -76,7 +76,7 @@ data class MatchPageState(
     val hasPlaylist: Boolean get() = playlists.isNotEmpty()
 }
 
-/** The league page (mockup T5). [matches] are the league's on the board (today and tomorrow), kick-off order. */
+/** The league page. [matches] are the league's on the board (today and tomorrow), kick-off order. */
 data class LeaguePageState(
     val leagueKey: String,
     val table: StandingsTable?,
@@ -85,7 +85,7 @@ data class LeaguePageState(
 )
 
 /**
- * Everything the hub draws (mockup T1, Redesign R1). No channels: those are found per match, on the
+ * Everything the hub draws. No channels: those are found per match, on the
  * match page ([SportsViewModel.matchPage]). [rebuilding] is true while the board is being rebuilt.
  */
 data class SportsHubState(
@@ -151,12 +151,12 @@ class SportsViewModel(
     /** The profile's sports settings alone — no scores are asked for by reading it. */
     val sportsConfig: StateFlow<SportsConfig> = config.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SportsConfig())
 
-    // --- The Home row (T7) ---------------------------------------------------------------------------
+    // --- The Home row --------------------------------------------------------------------------------
 
     /**
      * The Home "Live sports" row: followed matches while one is live or kicks off within the hour (core's
      * `SportsHomeRow`) — the leagues the profile chose and its teams, never "All sports"' every league.
-     * No channels (R1: found per match). Asks for scores only while collected, and only after
+     * No channels (found per match). Asks for scores only while collected, and only after
      * [HOME_ROW_DELAY_MS], so opening the app is never slowed by it.
      */
     val homeRow: StateFlow<List<Match>> = flow {
@@ -170,7 +170,7 @@ class SportsViewModel(
         )
     }.flowOn(Dispatchers.Default).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
-    // --- The match page (T2) -------------------------------------------------------------------------
+    // --- The match page ------------------------------------------------------------------------------
 
     private val openMatch = MutableStateFlow<Match?>(null)
 
@@ -194,7 +194,7 @@ class SportsViewModel(
         val boards = if (leagueKey == null) repository.observe(Demand.MatchPage(m))
         else combine(repository.observe(Demand.MatchPage(m)), repository.observe(Demand.LeaguePage(leagueKey))) { a, _ -> a }
         // Find channels' window is judged on the match fetched now, not the stored copy: a match can run
-        // long, and a kick-off can move (WORK C21). Re-judged each minute while the page is open.
+        // long, and a kick-off can move. Re-judged each minute while the page is open.
         val window = flow {
             emit(null)
             val fresh = repository.refetch(m) ?: m
@@ -241,7 +241,7 @@ class SportsViewModel(
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
-    // --- The league page (T5) ------------------------------------------------------------------------
+    // --- The league page -----------------------------------------------------------------------------
 
     private val openLeague = MutableStateFlow<String?>(null)
 
@@ -262,7 +262,7 @@ class SportsViewModel(
         openMatch.value = match
     }
 
-    /** A change in the filter panel (T3). With "Remember these filters" on, it is saved to Settings → Sports as well. */
+    /** A change in the filter panel. With "Remember these filters" on, it is saved to Settings → Sports as well. */
     fun setFilter(filter: WatchFilter) = viewModelScope.launch {
         pageFilter.value = filter
         if (config.first().rememberFilters) saveFilter(filter, remember = true)
@@ -321,7 +321,7 @@ class SportsViewModel(
     }
 
     /**
-     * A channel is played from [match]: the player then offers its other [channels] and its page (T4),
+     * A channel is played from [match]: the player then offers its other [channels] and its page,
      * and the play counts toward "Suggested from what you watch".
      */
     val lastPlayedChannelId: Long? get() = playback.lastPlayedChannelId

@@ -59,7 +59,7 @@ private val StagePaths: Map<OwnTVIcon, Path> by lazy {
     StageGlyphPaths.mapValues { PathParser().parsePathString(it.value).toPath() }
 }
 
-/** The mockup draws only these solid; every other glyph ignores [filled], as the old drawings did. */
+/** Only these are drawn solid; every other glyph ignores [filled]. */
 private val StageFillable = setOf(OwnTVIcon.PLAY, OwnTVIcon.STAR, OwnTVIcon.FAVORITE, OwnTVIcon.REC)
 
 /** A Stage glyph drawn straight into a Canvas (the guide's programme cells), [sizePx] square at [topLeft]. */

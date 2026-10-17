@@ -198,11 +198,11 @@ private fun EmptyNote(title: String, body: String? = null) {
 private fun counted(nameRes: Int, n: Int) = stringResource(nameRes) + " " + n
 
 // ---------------------------------------------------------------------------------------------
-// Settings (P8-01): Search and the twelve group cards
+// Settings: Search and the twelve group cards
 // ---------------------------------------------------------------------------------------------
 
 /**
- * The twelve Settings groups (P10), in the order of `SettingsGroup`: a card's index is the group it opens.
+ * The twelve Settings groups, in the order of `SettingsGroup`: a card's index is the group it opens.
  */
 private data class SettingsGroupCard(val icon: OwnTVIcon, val nameRes: Int, val summaryRes: Int, val count: Int?)
 
@@ -274,7 +274,7 @@ internal fun SettingsPage(entry: FocusRequester, pinned: Int, onOpenGroup: (Int)
 }
 
 // ---------------------------------------------------------------------------------------------
-// Favourites (P8-03)
+// Favourites
 // ---------------------------------------------------------------------------------------------
 
 private enum class FavFilter { ALL, LIVE, MOVIES, SERIES }
@@ -418,7 +418,7 @@ private fun RowHead(title: String, small: String?, top: Dp) {
 }
 
 // ---------------------------------------------------------------------------------------------
-// History (P8-04)
+// History
 // ---------------------------------------------------------------------------------------------
 
 @Composable
@@ -480,7 +480,7 @@ internal fun HistoryPage(
             items(rows, key = { it.type.name + it.id }) { e ->
                 val left = when {
                     e.durationMs > 0 && e.positionMs > 0 -> timeLeftText(((e.durationMs - e.positionMs).coerceAtLeast(0L) + 59_999L) / 60_000L)
-                    // "0:14 watched": hours and minutes, as the mockup writes it.
+                    // "0:14 watched": hours and minutes.
                     e.positionMs > 0 -> (e.positionMs / 60_000L).let { m -> stringResource(R.string.content_watched_duration, String.format(androidx.compose.ui.platform.LocalConfiguration.current.locales[0], "%d:%02d", m / 60, m % 60)) }
                     else -> null
                 }
@@ -532,7 +532,7 @@ internal fun HistoryPage(
 }
 
 // ---------------------------------------------------------------------------------------------
-// Error log (P8-07)
+// Error log
 // ---------------------------------------------------------------------------------------------
 
 @Composable
@@ -621,7 +621,7 @@ internal fun ErrorLogPage(setEntry: (() -> Boolean) -> Unit, onCountChanged: () 
 }
 
 // ---------------------------------------------------------------------------------------------
-// About (P8-08)
+// About
 // ---------------------------------------------------------------------------------------------
 
 @Composable

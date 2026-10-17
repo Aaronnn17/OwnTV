@@ -14,7 +14,7 @@ import tv.own.owntv.core.live.MIN_MULTIVIEW_TILES
 internal fun MultiviewTilesDialog(current: Int, onPick: (Int) -> Unit, onDismiss: () -> Unit) {
     val tiles = (MIN_MULTIVIEW_TILES..MAX_MULTIVIEW_TILES).toList()
     // Each option is a ceiling too, so it reads the same as the row it came from. A simple choice:
-    // on the settings page it opens in the panel (owner, P12).
+    // on the settings page it opens in the panel.
     PickerDialog(
         title = stringResource(R.string.settings_multiview_tiles_max),
         options = tiles.map { it.toString() to stringResource(R.string.settings_multiview_tiles_max_value, it) },

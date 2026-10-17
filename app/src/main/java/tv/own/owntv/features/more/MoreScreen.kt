@@ -70,10 +70,10 @@ import tv.own.owntv.ui.theme.stageText
 private enum class MoreItem { SETTINGS, FAVORITES, HISTORY, BACKUP, LOCAL_SYNC, ERROR_LOG, ABOUT, DEVELOPER }
 
 /**
- * More (Stage P8-01 … P8-08): the glass section sheet, topped by the profile, and one page on the right
+ * More: the glass section sheet, topped by the profile, and one page on the right
  * for the item chosen with OK. Two layers, never three: ▲ ▼ move focus, OK selects the item (focus stays), ▶ enters the page, Back returns to
  * the sheet, Back again leaves More. Nothing opens full screen any more — Settings is the one door out,
- * through its group cards (until P10 redraws Settings itself).
+ * through its group cards.
  */
 @Composable
 fun MoreScreen(

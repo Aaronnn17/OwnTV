@@ -25,7 +25,7 @@ import tv.own.owntv.core.sports.model.Team
 import java.util.Locale
 
 /**
- * Settings → Sports (mockup T6). Every value is the active profile's `SportsConfig`, so it travels in
+ * Settings → Sports. Every value is the active profile's `SportsConfig`, so it travels in
  * backups and local sync with no extra work; "Show Sports in the menu" is the Navigation setting's own
  * hidden set.
  */

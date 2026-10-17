@@ -98,7 +98,7 @@ private fun tmdbLangName(code: String): String = stringResource(
  * access tiers (own TMDB key / self-host URL), plus a manual "look up title" test that proves the
  * configured tier reaches TMDB end-to-end. Enrichment of actual detail screens arrives in later phases.
  *
- * Precedence (plan §4): self-host URL > own key > the default caching Worker (zero setup).
+ * Precedence: self-host URL > own key > the default caching Worker (zero setup).
  */
 private fun metadataModeLabelRes(mode: tv.own.owntv.core.metadata.MetadataMode): Int = when (mode) {
     tv.own.owntv.core.metadata.MetadataMode.PROVIDER -> R.string.settings_metadata_provider_only
@@ -170,7 +170,7 @@ fun MetadataSettingsScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val firstFocus = remember { FocusRequester() }
     LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
 
-    // P10B-04: LIBRARY DETAILS and CONNECTION as rows; the active source on top of the panel.
+    // LIBRARY DETAILS and CONNECTION as rows; the active source on top of the panel.
     val back = stringResource(R.string.common_back)
     val content = stringResource(R.string.settings_group_content_metadata)
     val modeLabels = tv.own.owntv.core.metadata.MetadataMode.entries.map { stringResource(metadataModeLabelRes(it)) }

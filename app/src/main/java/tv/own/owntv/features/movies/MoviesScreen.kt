@@ -181,14 +181,14 @@ fun MoviesScreen(
     var moveOriginKey by remember { mutableStateOf<String?>(null) }
     var moveOriginName by remember { mutableStateOf<String?>(null) }
     var creatingCategory by remember { mutableStateOf(false) }
-    // Fullscreen TMDB details window (§11.1); null = closed.
+    // Fullscreen TMDB details window; null = closed.
     var detailsMovie by remember { mutableStateOf<MovieEntity?>(null) }
-    // "Set TMDB name" dialog target (§11.2 U5b); null = closed.
+    // "Set TMDB name" dialog target; null = closed.
     var setTmdbNameMovie by remember { mutableStateOf<MovieEntity?>(null) }
-    // In-app trailer playback (§7.3 U4); non-null = fullscreen player open with this YouTube key.
+    // In-app trailer playback; non-null = fullscreen player open with this YouTube key.
     var trailerVideoKey by remember { mutableStateOf<String?>(null) }
     var trailerTitle by remember { mutableStateOf<String?>(null) }
-    // Downloaded subtitles for the movie whose context menu is open (subtitle plan §11); drives the
+    // Downloaded subtitles for the movie whose context menu is open; drives the
     // "Delete subtitles" action + its popup. Reloaded on menu open and after each delete.
     var contextMovieSubs by remember { mutableStateOf<List<tv.own.owntv.core.database.dao.LinkedSubtitle>>(emptyList()) }
     var showDeleteSubs by remember { mutableStateOf(false) }
@@ -559,7 +559,7 @@ fun MoviesScreen(
             .fillMaxSize()
             .onFocusChanged { if (it.hasFocus) onChildFocused() },
     ) {
-        // Horizontal geometry is a fraction of the mockup's 1920 width, so every zoom reflows.
+        // Horizontal geometry is a fraction of the 1920 design width, so every zoom reflows.
         val screenW = maxWidth
         fun fx(px: Int) = screenW * (px / 1920f)
         if (cinematic) {
@@ -596,7 +596,7 @@ fun MoviesScreen(
                         Text(emptyText, style = stageText(20, 500), color = StageColors.Muted, modifier = Modifier.padding(start = fx(84), top = 60.mpx))
                     } else {
                         // The 196 × 294 posters, 26 apart, as many across as fit; the grid grows downwards
-                        // (owner, 2026-10-01: the mockup's single row became a grid). Glow room on every side.
+                        // (owner, 2026-10-01: a grid, not a single row). Glow room on every side.
                         val glowRoom = 24.mpx
                         val rowW = screenW - fx(84) - fx(64)
                         val columns = ((rowW + 26.mpx) / 222.mpx).toInt().coerceAtLeast(1)
@@ -649,7 +649,7 @@ fun MoviesScreen(
                 }
             }
         } else {
-            // Separate panels (P5-05 … P5-07): the category column, the titles, the details card.
+            // Separate panels: the category column, the titles, the details card.
             val locked = lockedKey != null
             val margin = if (locked) 0.dp else fx(64)
             val rightEdge = if (locked) screenW else fx(1880)
@@ -767,7 +767,7 @@ fun MoviesScreen(
                         }
                     }
                 } else {
-                    // 156 × 234 posters 20 apart (5 across in the mockup's 860); a wider panel gains columns.
+                    // 156 × 234 posters 20 apart (5 across in an 860 panel); a wider panel gains columns.
                     val columns = ((listW + 20.mpx) / 176.mpx).toInt().coerceAtLeast(1)
                     val posterW = (listW - 20.mpx * (columns - 1)) / columns
                     // A fixed gap under the toolbar that scrolled posters never enter (as Cinematic).
@@ -870,12 +870,12 @@ fun MoviesScreen(
         )
     }
 
-    // Load the opened movie's downloaded subtitles so the menu can show "Delete subtitles" (§11).
+    // Load the opened movie's downloaded subtitles so the menu can show "Delete subtitles".
     LaunchedEffect(contextMovie?.id) {
         contextMovieSubs = contextMovie?.let { runCatching { vm.downloadedSubtitles(it) }.getOrDefault(emptyList()) } ?: emptyList()
     }
 
-    // Long-press (or the remote's Menu key) on a movie → ☰ Title options (P5-03).
+    // Long-press (or the remote's Menu key) on a movie → ☰ Title options.
     contextMovie?.let { m ->
         val alreadyDownloaded = downloadStates[m.id] != null
         // Movie details only when enrichment is on AND a confident match resolved for THIS movie.
@@ -901,7 +901,7 @@ fun MoviesScreen(
             })
             add(MenuAction("download", stringResource(R.string.content_download), OwnTVIcon.DOWNLOADS, group = VodGroupLibrary) {
                 contextMovie = null
-                // Idempotent (§11.1): don't re-queue an existing download — nudge to the Downloads menu.
+                // Idempotent: don't re-queue an existing download — nudge to the Downloads menu.
                 if (alreadyDownloaded) toast.show(alreadyDownloadedMessage) else vm.download(m)
             })
             add(MenuAction("remove_history", stringResource(R.string.content_remove_history), OwnTVIcon.HISTORY, group = VodGroupLibrary) {
@@ -928,7 +928,7 @@ fun MoviesScreen(
             add(MenuAction("tmdb_details", stringResource(R.string.content_movie_details), OwnTVIcon.INFO, group = VodGroupDetails) {
                 if (cacheForM != null) { contextMovie = null; detailsMovie = m }
             })
-            // Update details (§11.2 U5a) and Set TMDB name (U5b): only while enrichment is on.
+            // Update details and Set TMDB name: only while enrichment is on.
             if (metadataMode.enrich) {
                 add(MenuAction("refetch_tmdb", stringResource(R.string.content_refetch_tmdb), OwnTVIcon.REFRESH, group = VodGroupDetails) {
                     contextMovie = null
@@ -992,7 +992,7 @@ fun MoviesScreen(
         }
     }
 
-    // Per-item "Delete subtitles" popup (§11) — individual deletion; closes when none remain.
+    // Per-item "Delete subtitles" popup — individual deletion; closes when none remain.
     if (showDeleteSubs) {
         val m = contextMovie
         if (m == null || contextMovieSubs.isEmpty()) {
@@ -1022,7 +1022,7 @@ fun MoviesScreen(
         }
     }
 
-    // Windowed TMDB details popup (§11.1) — read-only, Back exits.
+    // Windowed TMDB details popup — read-only, Back exits.
     detailsMovie?.let { m ->
         val cache = selectedMovieMeta?.takeIf { it.movieId == m.id }?.cache
         MediaDetailsScreen(
@@ -1031,7 +1031,7 @@ fun MoviesScreen(
         )
     }
 
-    // "Set TMDB name" override dialog (§11.2 U5b). Prefill once per target (saved override, else cleaned title).
+    // "Set TMDB name" override dialog. Prefill once per target (saved override, else cleaned title).
     LaunchedEffect(setTmdbNameMovie) {
         if (setTmdbNameMovie == null && contextMovieId != null) {
             withFrameNanos { }
@@ -1061,7 +1061,7 @@ fun MoviesScreen(
         }
     }
 
-    // In-app trailer player (§7.3 U4) — fullscreen over everything; Back/Exit closes and refocuses the movie.
+    // In-app trailer player — fullscreen over everything; Back/Exit closes and refocuses the movie.
     LaunchedEffect(trailerVideoKey) {
         if (trailerVideoKey == null && contextMovieId != null) {
             withFrameNanos { }
@@ -1148,7 +1148,7 @@ fun MoviesScreen(
 @Composable
 private fun metaLine(movie: MovieEntity, meta: tv.own.owntv.core.database.entity.MetadataCacheEntity? = null, tmdbWins: Boolean = false): String {
     val parts = mutableListOf<String>()
-    // §7.1 / §4.1: precedence flips with the source mode.
+    // Precedence flips with the source mode.
     val year = if (tmdbWins) meta?.year ?: movie.year else movie.year ?: meta?.year
     val rating = if (tmdbWins) meta?.rating?.takeIf { it > 0 } ?: movie.rating?.takeIf { it > 0 }
         else movie.rating?.takeIf { it > 0 } ?: meta?.rating?.takeIf { it > 0 }
@@ -1162,7 +1162,7 @@ private fun metaLine(movie: MovieEntity, meta: tv.own.owntv.core.database.entity
     return parts.joinToString(stringResource(R.string.content_metadata_separator))
 }
 
-/** Build the fullscreen TMDB-details payload for a movie, applying the §7.1/§4.1 merge precedence. */
+/** Build the fullscreen TMDB-details payload for a movie, applying the source mode's merge precedence. */
 @Composable
 private fun buildMovieDetails(
     movie: MovieEntity,
@@ -1198,7 +1198,7 @@ private fun jsonList(json: String?): List<String> {
 }
 
 /**
- * What the hero and the details card show for [movie], with the §7.1 / §4.1 precedence: provider first,
+ * What the hero and the details card show for [movie], with the source mode's precedence: provider first,
  * TMDB filling the gaps — flipped when the source mode is TMDB-only. Genres, cast and title art are TMDB's.
  */
 internal fun movieTitleInfo(

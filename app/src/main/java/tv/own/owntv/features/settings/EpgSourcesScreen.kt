@@ -120,7 +120,7 @@ fun EpgSourcesScreen(onBack: () -> Unit, modifier: Modifier = Modifier, startOnA
         return
     }
 
-    // P10B-11: the guides as rows; the focused one's Re-sync / Edit / Delete in the panel.
+    // The guides as rows; the focused one's Re-sync / Edit / Delete in the panel.
     val actionsFocus = remember { FocusRequester() }
     StageFullPage(
         parents = listOf(stringResource(R.string.settings_group_sources)),
@@ -343,7 +343,7 @@ internal fun EpgSourceForm(
     val fillFocus = remember { FocusRequester() }
     val submitFocus = remember { FocusRequester() }
 
-    // P10B-12: the fields as rows, Add & sync in the panel (▶ from any row).
+    // The fields as rows, Add & sync in the panel (▶ from any row).
     val parent = stringResource(R.string.settings_epg_sources_title)
     val ok = stringResource(R.string.common_ok)
     val back = stringResource(R.string.common_back)
@@ -479,7 +479,7 @@ private fun PlaylistEpgPicker(
     onDismiss: () -> Unit,
 ) {
     val options by produceState<List<EpgSourcesViewModel.PlaylistEpg>?>(initialValue = null) { value = runCatching { load() }.getOrDefault(emptyList()) }
-    // A list picked from: in the page's panel (owner, P12), a Stage popup elsewhere.
+    // A list picked from: in the page's panel, a Stage popup elsewhere.
     val list: @Composable () -> Unit = {
         val firstFocus = remember { FocusRequester() }
         LaunchedEffect(options) { if (!options.isNullOrEmpty()) { kotlinx.coroutines.delay(60); runCatching { firstFocus.requestFocus() } } }

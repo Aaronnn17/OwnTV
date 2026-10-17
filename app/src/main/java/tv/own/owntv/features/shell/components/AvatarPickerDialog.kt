@@ -49,7 +49,7 @@ fun AvatarPickerDialog(
         modifier = Modifier.longPressMenuGuard(),
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(16.mpx)) {
-            // Phase 7 — "no avatar" option showing the Rank 1 ProfileIcon (ID -1)
+            // The "no avatar" option showing the Rank 1 ProfileIcon (ID -1)
             AvatarTile(selected = selectedId == -1, onClick = { onSelect(-1); onDismiss() }, focus = selectedFocus.takeIf { selectedId == -1 }) {
                 ProfileIcon(color = stageAccent.accent, modifier = Modifier.size(56.mpx))
             }

@@ -266,12 +266,12 @@ private fun SeriesGrid(
     var moveOriginKey by remember { mutableStateOf<String?>(null) }
     var moveOriginName by remember { mutableStateOf<String?>(null) }
     var creatingCategory by remember { mutableStateOf(false) }
-    // "Set TMDB name" dialog target (§11.2 U5b); null = closed.
+    // "Set TMDB name" dialog target; null = closed.
     var setTmdbNameSeries by remember { mutableStateOf<tv.own.owntv.core.database.entity.SeriesEntity?>(null) }
-    // In-app trailer playback (§7.3 U4); non-null = fullscreen player open with this YouTube key.
+    // In-app trailer playback; non-null = fullscreen player open with this YouTube key.
     var trailerVideoKey by remember { mutableStateOf<String?>(null) }
     var trailerTitle by remember { mutableStateOf<String?>(null) }
-    // Fullscreen TMDB details window (§11.1); null = closed.
+    // Fullscreen TMDB details window; null = closed.
     var detailsSeries by remember { mutableStateOf<tv.own.owntv.core.database.entity.SeriesEntity?>(null) }
     // Id + list position of the series the context menu was opened on. The id re-focuses the same item
     // when it survives (Favourite/Download/Cancel); when the item is REMOVED (Remove from history, or
@@ -620,7 +620,7 @@ private fun SeriesGrid(
             .fillMaxSize()
             .onFocusChanged { if (it.hasFocus) onChildFocused() },
     ) {
-        // Horizontal geometry is a fraction of the mockup's 1920 width, so every zoom reflows.
+        // Horizontal geometry is a fraction of the 1920 design width, so every zoom reflows.
         val screenW = maxWidth
         fun fx(px: Int) = screenW * (px / 1920f)
         if (cinematic) {
@@ -657,7 +657,7 @@ private fun SeriesGrid(
                         Text(emptyText, style = stageText(20, 500), color = StageColors.Muted, modifier = Modifier.padding(start = fx(84), top = 60.mpx))
                     } else {
                         // The 196 × 294 posters, 26 apart, as many across as fit; the grid grows downwards
-                        // (owner, 2026-10-01: the mockup's single row became a grid). Glow room on every side.
+                        // (owner, 2026-10-01: a grid, not a single row). Glow room on every side.
                         val glowRoom = 24.mpx
                         val rowW = screenW - fx(84) - fx(64)
                         val columns = ((rowW + 26.mpx) / 222.mpx).toInt().coerceAtLeast(1)
@@ -707,7 +707,7 @@ private fun SeriesGrid(
                 }
             }
         } else {
-            // Separate panels (P5-05 … P5-07): the category column, the titles, the details card.
+            // Separate panels: the category column, the titles, the details card.
             val locked = lockedKey != null
             val margin = if (locked) 0.dp else fx(64)
             val rightEdge = if (locked) screenW else fx(1880)
@@ -823,7 +823,7 @@ private fun SeriesGrid(
                         }
                     }
                 } else {
-                    // 156 × 234 posters 20 apart (5 across in the mockup's 860); a wider panel gains columns.
+                    // 156 × 234 posters 20 apart (5 across in an 860 panel); a wider panel gains columns.
                     val columns = ((listW + 20.mpx) / 176.mpx).toInt().coerceAtLeast(1)
                     val posterW = (listW - 20.mpx * (columns - 1)) / columns
                     // A fixed gap under the toolbar that scrolled posters never enter (as Cinematic).
@@ -914,7 +914,7 @@ private fun SeriesGrid(
         )
     }
 
-    // Long-press (or the remote's Menu key) on a series → ☰ Title options (P5-12).
+    // Long-press (or the remote's Menu key) on a series → ☰ Title options.
     contextSeries?.let { s ->
         val cacheForS = selectedSeriesMeta?.takeIf { it.seriesId == s.id }?.cache
         val trailerKey = if (metadataMode.enrich) cacheForS?.trailerKey else null
@@ -954,7 +954,7 @@ private fun SeriesGrid(
             add(MenuAction("tmdb_details", stringResource(R.string.content_series_details), OwnTVIcon.INFO, group = VodGroupDetails) {
                 if (cacheForS != null) { contextSeries = null; detailsSeries = s }
             })
-            // Update details (§11.2 U5a) and Set TMDB name (U5b): only while enrichment is on.
+            // Update details and Set TMDB name: only while enrichment is on.
             if (metadataMode.enrich) {
                 add(MenuAction("refetch_tmdb", stringResource(R.string.content_refetch_tmdb), OwnTVIcon.REFRESH, group = VodGroupDetails) {
                     contextSeries = null
@@ -1014,7 +1014,7 @@ private fun SeriesGrid(
         }
     }
 
-    // Fullscreen TMDB details window (§11.1) — read-only, Back exits; refocus the series on close.
+    // Fullscreen TMDB details window — read-only, Back exits; refocus the series on close.
     LaunchedEffect(detailsSeries) {
         if (detailsSeries == null && contextSeriesId != null) {
             withFrameNanos { }
@@ -1029,7 +1029,7 @@ private fun SeriesGrid(
         )
     }
 
-    // "Set TMDB name" override dialog (§11.2 U5b). Prefill once per target (saved override, else cleaned title).
+    // "Set TMDB name" override dialog. Prefill once per target (saved override, else cleaned title).
     LaunchedEffect(setTmdbNameSeries) {
         if (setTmdbNameSeries == null && contextSeriesId != null) {
             withFrameNanos { }
@@ -1059,7 +1059,7 @@ private fun SeriesGrid(
         }
     }
 
-    // In-app trailer player (§7.3 U4) — fullscreen over everything; Back/Exit closes and refocuses the series.
+    // In-app trailer player — fullscreen over everything; Back/Exit closes and refocuses the series.
     LaunchedEffect(trailerVideoKey) {
         if (trailerVideoKey == null && contextSeriesId != null) {
             withFrameNanos { }
@@ -1152,7 +1152,7 @@ private fun jsonStringList(json: String?): List<String> {
     }.getOrDefault(emptyList())
 }
 
-/** Build the fullscreen TMDB-details payload for a series, applying the §7.1/§4.1 merge precedence. */
+/** Build the fullscreen TMDB-details payload for a series, applying the source mode's merge precedence. */
 @Composable
 private fun buildSeriesDetails(
     s: SeriesEntity,
@@ -1211,7 +1211,7 @@ private fun buildEpisodeDetails(
 }
 
 /**
- * The series page (P6-01 … P6-04): the show's backdrop at the top right, the crumb "‹ Series ·
+ * The series page: the show's backdrop at the top right, the crumb "‹ Series ·
  * **Crunchyroll**", the title 92/800, the meta line, a two-line synopsis, the Resume / Favourite /
  * Download season / ⋯ buttons, the season tabs with the Grid | List switch and the episode order tool,
  * then the episodes as 16:9 tiles or as list rows. The header stays put; only the episodes scroll.
@@ -1260,7 +1260,7 @@ private fun EpisodeView(
     var initialFocused by remember { mutableStateOf(false) }
     var contextEpisode by remember { mutableStateOf<EpisodeEntity?>(null) }
     var detailsEpisode by remember { mutableStateOf<EpisodeEntity?>(null) }
-    // Downloaded subtitles for the episode whose options menu is open (subtitle plan §11).
+    // Downloaded subtitles for the episode whose options menu is open.
     var contextEpisodeSubs by remember { mutableStateOf<List<tv.own.owntv.core.database.dao.LinkedSubtitle>>(emptyList()) }
     var showEpisodeDeleteSubs by remember { mutableStateOf(false) }
     var showSorting by remember { mutableStateOf(false) }
@@ -1404,7 +1404,7 @@ private fun EpisodeView(
     BoxWithConstraints(
         modifier = modifier.fillMaxSize().onFocusChanged { if (it.hasFocus) onChildFocused() },
     ) {
-        // Horizontal geometry is a fraction of the mockup's 1920 width, so every zoom reflows.
+        // Horizontal geometry is a fraction of the 1920 design width, so every zoom reflows.
         val screenW = maxWidth
         fun fx(px: Int) = screenW * (px / 1920f)
         EpisodesBackdrop(info.backdropUrl ?: info.posterUrl, Modifier.align(Alignment.TopEnd))
@@ -1673,12 +1673,12 @@ private fun EpisodeView(
         }
     }
 
-    // Load the opened episode's downloaded subtitles so the menu can enable "Delete subtitles" (§11).
+    // Load the opened episode's downloaded subtitles so the menu can enable "Delete subtitles".
     LaunchedEffect(contextEpisode?.id) {
         contextEpisodeSubs = contextEpisode?.let { runCatching { vm.downloadedSubtitles(it) }.getOrDefault(emptyList()) } ?: emptyList()
     }
 
-    // ☰ Episode options (P6-04): WATCH, LIBRARY, DETAILS, in the order of Settings › Long-press menus.
+    // ☰ Episode options: WATCH, LIBRARY, DETAILS, in the order of Settings › Long-press menus.
     contextEpisode?.takeIf { !showEpisodeDeleteSubs }?.let { ep ->
         val cacheForEp = selectedEpisodeMeta?.takeIf { it.episodeId == ep.id }?.cache
         val watched = ep.id in completedIds
@@ -1701,7 +1701,7 @@ private fun EpisodeView(
             add(MenuAction("tmdb_details", stringResource(R.string.content_episode_details), OwnTVIcon.INFO, group = VodGroupDetails) {
                 if (metadataMode.enrich && cacheForEp != null) { contextEpisode = null; detailsEpisode = ep }
             })
-            // Update details (§11.2 U5a) clears this episode's cache AND its show's match, then re-searches.
+            // Update details clears this episode's cache AND its show's match, then re-searches.
             if (metadataMode.enrich) {
                 add(MenuAction("refetch_tmdb", stringResource(R.string.content_refetch_tmdb), OwnTVIcon.REFRESH, group = VodGroupDetails) {
                     contextEpisode = null
@@ -1730,7 +1730,7 @@ private fun EpisodeView(
         )
     }
 
-    // Episode order (P6-03): seasons and episodes each oldest or newest first, remembered for this
+    // Episode order: seasons and episodes each oldest or newest first, remembered for this
     // series, and Hide watched episodes. Applies at once; stays open so all three can be set in one visit.
     if (showSorting) {
         val focus = remember { FocusRequester() }
@@ -1755,7 +1755,7 @@ private fun EpisodeView(
         }
     }
 
-    // ⋯ Series options (P5-12, without ORGANISE: this page has no category to move or hide within).
+    // ⋯ Series options (without ORGANISE: this page has no category to move or hide within).
     if (seriesMenuOpen) {
         val trailerKey = if (metadataMode.enrich) seriesMeta?.trailerKey else null
         val inHistory by androidx.compose.runtime.produceState(false, series.id) { value = vm.isInHistory(series) }
@@ -1831,7 +1831,7 @@ private fun EpisodeView(
     }
     trailerVideoKey?.let { key -> TrailerPlayerScreen(videoKey = key, title = series.name, onExit = { trailerVideoKey = null }) }
 
-    // Per-episode "Delete subtitles" popup (§11) — individual deletion; closes when none remain.
+    // Per-episode "Delete subtitles" popup — individual deletion; closes when none remain.
     if (showEpisodeDeleteSubs) {
         val ep = contextEpisode
         if (ep == null || contextEpisodeSubs.isEmpty()) {
@@ -1851,7 +1851,7 @@ private fun EpisodeView(
         }
     }
 
-    // Fullscreen TMDB details window for the episode (§11.1) — read-only, Back exits.
+    // Fullscreen TMDB details window for the episode — read-only, Back exits.
     detailsEpisode?.let { ep ->
         val cache = selectedEpisodeMeta?.takeIf { it.episodeId == ep.id }?.cache
         tv.own.owntv.features.shell.components.MediaDetailsScreen(
@@ -1888,7 +1888,7 @@ private fun rememberAirDateLabel(
 }
 
 /**
- * What the hero and the details card show for [series], with the §7.1 / §4.1 precedence: provider first,
+ * What the hero and the details card show for [series], with the source mode's precedence: provider first,
  * TMDB filling the gaps — flipped when the source mode is TMDB-only. A show has no runtime of its own.
  */
 internal fun seriesTitleInfo(

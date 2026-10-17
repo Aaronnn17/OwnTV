@@ -93,11 +93,11 @@ internal sealed interface HubChip {
 /** Sports whose score is a line (sets, innings), not one number a side. */
 private val LINE_SCORE_SPORTS = setOf(Sport.TENNIS, Sport.CRICKET, Sport.GOLF, Sport.RACING)
 
-/** Chips shown before "+N" (mockup T1: eight sports). */
+/** Chips shown before "+N": eight sports. */
 private const val SPORT_CHIPS = 8
 
 /**
- * The Sports hub (mockup T1, Redesign R1): title and today's counts, sport chips ending in ⟳ (rebuild),
+ * The Sports hub: title and today's counts, sport chips ending in ⟳ (rebuild),
  * *Live now* with the featured first card, *Sport on your channels now* from the guide, *Starting soon*,
  * and the key hints. Focus enters on the featured card. OK and the Play key open a match (channels are
  * found there), Hold OK follows or reminds. With nothing followed, a note says where to choose.
@@ -331,7 +331,7 @@ fun SportsHubScreen(
     }
 }
 
-/** "**Today** · 6 live · 41 matches · Scores: ESPN" (R1: no channel count — channels are found per match). */
+/** "**Today** · 6 live · 41 matches · Scores: ESPN" (no channel count — channels are found per match). */
 @Composable
 private fun HubSubtitle(today: List<Match>) {
     val accent = stageAccent.accent
@@ -353,7 +353,7 @@ private fun HubSubtitle(today: List<Match>) {
     )
 }
 
-/** The hub with nothing followed (R1: new users follow nothing): what to do, where, and why to choose with care. */
+/** The hub with nothing followed (new users follow nothing): what to do, where, and why to choose with care. */
 @Composable
 private fun NothingFollowedNote(modifier: Modifier) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(12.mpx)) {
@@ -420,7 +420,7 @@ internal fun SportsChip(
 /**
  * `.mc`: a match card, 324 wide (the featured first card 648, with the big score). League line and
  * minute or kick-off on top, both sides with crest and score, then a Reminder tag or the followed star.
- * No channels (R1): they are found on the match page.
+ * No channels: they are found on the match page.
  */
 @Composable
 internal fun MatchCard(

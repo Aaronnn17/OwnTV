@@ -195,10 +195,10 @@ fun PlayerHud(
     // true = currently playing on ExoPlayer.
     vodOnExo: Boolean? = null,
     onToggleVodEngine: (() -> Unit)? = null,
-    // Movie/episode only: open the OpenSubtitles search from the Subtitles dialog (subtitle plan §4).
+    // Movie/episode only: open the OpenSubtitles search from the Subtitles dialog.
     // Null for Live TV and when there's no current-item context, which hides the ADD SUBTITLES row.
     onSearchSubtitles: (() -> Unit)? = null,
-    // Movie/episode only: pick a local subtitle file (plan §7) — no account needed, same gating.
+    // Movie/episode only: pick a local subtitle file — no account needed, same gating.
     onSelectLocalSubtitle: (() -> Unit)? = null,
     // Favorite toggle for the CURRENT item (live channel / movie / series). Null hides the button
     // (no item context). [favorite] = current state — fills the star teal when true.
@@ -219,7 +219,7 @@ fun PlayerHud(
     // N6 — Settings → "Left and right rewind live TV": with the controls hidden, Left/Right on a
     // catch-up channel scrub instead of opening the lists. Films always seek.
     liveLeftRightRewinds: Boolean = false,
-    // Sports Hub (T4) — only for a channel started from a match; all null means the plain Live player.
+    // Sports Hub — only for a channel started from a match; all null means the plain Live player.
     // The match's score line under the channel name, drawn only while the controls are up.
     matchLine: (@Composable () -> Unit)? = null,
     // The other channels showing the match, and their count for the tool's label.
@@ -605,7 +605,7 @@ fun PlayerHud(
         // Stream technical info — drawn over everything (and kept up even when the controls auto-hide), so
         // you can read live bitrate/buffer while watching. Toggled from the bottom bar's info button.
         if (showInfo) {
-            // Sits clear of the taller unified top strip (logo + guide) rather than under the old title row.
+            // Sits clear of the taller unified top strip (logo + guide) rather than under a title row.
             StreamInfoOverlay(player, modifier = Modifier.align(Alignment.TopEnd).padding(top = 112.dp, end = 20.dp))
         }
 
@@ -914,7 +914,7 @@ fun PlayerHud(
                 onDismiss = { dialog = HudDialog.NONE },
                 onSearchSubtitles = onSearchSubtitles?.let { open -> { dialog = HudDialog.NONE; open() } },
                 onSelectLocalSubtitle = onSelectLocalSubtitle?.let { open -> { dialog = HudDialog.NONE; open() } },
-                // Subtitle timing (plan §8): only when adjustment applies to the ACTIVE subtitle on the
+                // Subtitle timing: only when adjustment applies to the ACTIVE subtitle on the
                 // current engine (any mpv text sub; external side-loads on ExoPlayer).
                 subDelayMs = subDelay,
                 onAdjustSubDelay = if (player.subtitleTimingAvailable()) player::adjustSubtitleDelay else null,

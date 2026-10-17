@@ -40,7 +40,7 @@ import tv.own.owntv.features.settings.settingHelp
 import tv.own.owntv.ui.components.OwnTVIcon
 import tv.own.owntv.ui.theme.mpx
 
-/** The pages of Settings → Sports: the main page (T6) and the ones its rows open. */
+/** The pages of Settings → Sports: the main page and the ones its rows open. */
 private enum class SportsSettingsPage { MAIN, LEAGUES, TEAMS, ALERTS, LANGUAGES, COUNTRIES, PLAYLISTS, REMEMBERED, ABOUT }
 
 /** Commentary languages offered (ISO 639-1, upper case): the ones provider prefixes and names carry. */
@@ -50,7 +50,7 @@ private val LANGUAGES = listOf("DE", "EN", "FR", "ES", "IT", "TR", "AR", "PT", "
 private val COUNTRIES = listOf("DE", "AT", "CH", "UK", "US", "FR", "BE", "ES", "IT", "TR", "AR", "PT", "BR", "NL", "PL", "IN", "PK", "SA", "AE", "QA", "CA", "AU", "IE", "SE", "NO", "DK")
 
 /**
- * Settings → Sports (mockup T6, Redesign R1), drawn as every Settings page is, with its sub-pages: Sports
+ * Settings → Sports, drawn as every Settings page is, with its sub-pages: Sports
  * and leagues (two panes: sports, then the chosen sport's leagues), My teams (search + suggested), Goal
  * alerts (the TV's in-player toast only), languages, countries, playlists, Remembered channels and About
  * sports data. Every value is the profile's; backups carry it.
@@ -241,7 +241,7 @@ private fun rebuildLabel(mode: AutoRebuild): String = when (mode) {
 private class MoveList(val title: String, val keys: List<String>, val names: List<String>, val start: Int, val commit: (List<String>) -> Unit)
 
 /**
- * Sports and leagues, two panes (R1): the sports on the left, each with how many of its leagues are
+ * Sports and leagues, two panes: the sports on the left, each with how many of its leagues are
  * chosen; the focused sport's leagues on the right, each a switch, the chosen ones first in the user's
  * order. OK or ▶ on a sport moves into its leagues. Hold OK on a sport or a chosen league opens the
  * Move window ([MovePopup]).

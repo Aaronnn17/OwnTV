@@ -33,7 +33,7 @@ import java.util.Locale
 data class SportsSession(val match: Match, val options: List<WatchOption>)
 
 /**
- * What the player knows about Sports (mockup T4): which match the playing channel was started from, its
+ * What the player knows about Sports: which match the playing channel was started from, its
  * score while the info bar is open, and goals in *other* followed matches for the toast. Nothing here
  * touches playback; with no session, or ESPN unreachable, the player is exactly the plain Live player.
  */
@@ -91,7 +91,7 @@ class SportsPlayback(
 
     /**
      * [match]'s channels as "Watch live" lists them by default (the profile's filter) — only if Find
-     * channels already found them (R1); empty otherwise, and nothing is searched here.
+     * channels already found them; empty otherwise, and nothing is searched here.
      */
     suspend fun channelsFor(match: Match): List<WatchOption> {
         val config = settings.activeSportsConfig.first()
