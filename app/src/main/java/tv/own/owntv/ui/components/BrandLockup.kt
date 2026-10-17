@@ -29,7 +29,6 @@ import tv.own.owntv.core.brand.AppIcon
 import tv.own.owntv.core.brand.AppIconSwitcher
 import tv.own.owntv.core.brand.PixelMark as CorePixelMark
 import tv.own.owntv.core.settings.SettingsRepository
-import tv.own.owntv.ui.theme.OwnTVTheme
 import tv.own.owntv.ui.theme.stageAccent
 
 /**
@@ -127,11 +126,10 @@ fun BrandLockup(
     stacked: Boolean = false,
 ) {
     val icon = rememberAppliedIcon()
-    val colors = OwnTVTheme.colors
     val parts = @Composable {
         BrandMark(icon, markSize.dp)
         // On a light theme "own" takes the text colour; the cream is for dark surfaces.
-        Wordmark((markSize * 2.75f).dp, own = if (colors.isDark) WordmarkCream else colors.textPrimary)
+        Wordmark((markSize * 2.75f).dp, own = if (tv.own.owntv.ui.theme.LocalStagePalette.current.isLight) tv.own.owntv.ui.theme.StageColors.Text else WordmarkCream)
     }
     if (stacked) {
         Column(

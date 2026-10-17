@@ -24,11 +24,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -47,13 +45,9 @@ import tv.own.owntv.features.setup.Onboarding
 import tv.own.owntv.features.shell.OwnTVShell
 import tv.own.owntv.features.shell.ShellViewModel
 import tv.own.owntv.ui.theme.BlurredBackdrop
-import tv.own.owntv.ui.theme.BackdropLuminanceMap
-import tv.own.owntv.core.theme.GlassConfig
-import tv.own.owntv.ui.theme.GlassMotionState
 import tv.own.owntv.ui.theme.LocalBackground
 import tv.own.owntv.ui.theme.LocalBlurredBackdrop
 import tv.own.owntv.ui.theme.LocalGlass
-import tv.own.owntv.ui.theme.LocalGlassMotion
 import tv.own.owntv.ui.theme.LocalUiFontScaleFactor
 import tv.own.owntv.ui.theme.OwnTVTheme
 import tv.own.owntv.core.theme.UiFontScale
@@ -61,7 +55,6 @@ import tv.own.owntv.core.theme.UiZoom
 import tv.own.owntv.ui.theme.stackBlur
 import kotlin.math.abs
 import kotlin.math.max
-import kotlin.math.min
 
 /** Logcat tag for the background-image loader (top-level helper outside MainActivity). */
 private const val BG_TAG = "BgImage"
@@ -330,27 +323,10 @@ open class MainActivity : ComponentActivity() {
                 popupSizePercent = fontCustomization.popupSizePercent,
             ) {
                 val base = LocalDensity.current
-                // Glass is "always on" (Option B): panels go translucent whenever at least one surface is
-                // scoped, independent of a background image. With a photo the glass frosts it; without one,
-                // panels are translucent over the solid app background (a subtler layered look). The bg
-                // image is a separate, optional layer rendered below the shell only when a path is set.
-                val glassActive = glassConfig.enabled
-                val effectiveGlass = glassConfig.copy(
-                    scope = if (glassActive) glassConfig.scope else emptySet(),
-                    hasBackdrop = background.showsPicture,
-                )
                 // Root viewport size in px — the area the background image fills and that the blurred
                 // backdrop stands in for. Captured here (top of the tree) so glass panels can map their
                 // own on-screen rect into the blurred bitmap's coordinate space.
                 var rootSizePx by remember { mutableStateOf(Size.Zero) }
-                val glassMotionScope = rememberCoroutineScope()
-                val glassMotion = remember(glassMotionScope) { GlassMotionState(glassMotionScope) }
-                LaunchedEffect(glassActive, effectiveGlass.depthEffects, animationLevel) {
-                    glassMotion.setEnabled(
-                        glassActive && effectiveGlass.depthEffects &&
-                            animationLevel == tv.own.owntv.core.theme.AnimationLevel.FULL,
-                    )
-                }
                 // Phase 4 — real backdrop blur. Load+blur the background once (cached) when glass is on,
                 // a background image is set, blur strength > 0, and the device supports it (API 31+).
                 // Otherwise this stays null and panels fall back to Tier-1 translucency.
@@ -380,8 +356,7 @@ open class MainActivity : ComponentActivity() {
                         base.fontScale * UiFontScale.factor(fontCustomization.sizePercent),
                     ),
                     LocalUiFontScaleFactor provides UiFontScale.factor(fontCustomization.sizePercent),
-                    LocalGlass provides effectiveGlass,
-                    LocalGlassMotion provides glassMotion,
+                    LocalGlass provides glassConfig,
                     LocalBlurredBackdrop provides blurred,
                     LocalBackground provides background,
                 ) {
@@ -393,10 +368,9 @@ open class MainActivity : ComponentActivity() {
                     Box(
                         modifier = Modifier.fillMaxSize()
                             // Solid base color first (fallback if no image / image fails to load).
-                            .background(OwnTVTheme.colors.background)
+                            .background(tv.own.owntv.ui.theme.LocalStagePalette.current.page)
                             .onGloballyPositioned {
                                 rootSizePx = Size(it.size.width.toFloat(), it.size.height.toFloat())
-                                glassMotion.setRootSize(rootSizePx, base.density * UiZoom.factor(uiZoomPercent))
                             },
                     ) {
                         // Background image sits behind everything when a path is set; otherwise the solid
@@ -579,7 +553,6 @@ private suspend fun produceBlurredBackdrop(
                     drawBitmap(src, null, android.graphics.Rect(0, 0, targetW, targetH), paint)
                 }
                 src.recycle()
-                val luminance = buildBackdropLuminanceMap(scaled)
                 val levels = if (buildFrostPyramid) {
                     buildFrostMipPyramid(scaled)
                 } else {
@@ -588,7 +561,6 @@ private suspend fun produceBlurredBackdrop(
                 }
                 BlurredBackdrop(
                     frostLevels = levels,
-                    luminance = luminance,
                     rootSizePx = rootSizePx,
                 )
             } catch (t: Throwable) {
@@ -614,28 +586,4 @@ private fun buildFrostMipPyramid(base: Bitmap): List<androidx.compose.ui.graphic
         }
     }
     return result
-}
-
-/** 32×18 wallpaper luminance cache; each surface later mean-samples only 16 floats. */
-private fun buildBackdropLuminanceMap(bitmap: Bitmap): BackdropLuminanceMap {
-    val columns = 32
-    val rows = 18
-    val values = FloatArray(columns * rows)
-    fun linear(channel: Int): Float {
-        val value = channel / 255f
-        return if (value <= 0.04045f) value / 12.92f
-        else Math.pow(((value + 0.055f) / 1.055f).toDouble(), 2.4).toFloat()
-    }
-    repeat(rows) { y ->
-        val py = (((y + 0.5f) / rows) * bitmap.height).toInt().coerceIn(0, bitmap.height - 1)
-        repeat(columns) { x ->
-            val px = (((x + 0.5f) / columns) * bitmap.width).toInt().coerceIn(0, bitmap.width - 1)
-            val color = bitmap.getPixel(px, py)
-            values[y * columns + x] =
-                0.2126f * linear(android.graphics.Color.red(color)) +
-                0.7152f * linear(android.graphics.Color.green(color)) +
-                0.0722f * linear(android.graphics.Color.blue(color))
-        }
-    }
-    return BackdropLuminanceMap(columns, rows, values)
 }

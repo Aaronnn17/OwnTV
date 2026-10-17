@@ -15,7 +15,6 @@ import tv.own.owntv.features.settings.VideoPlayerGroupRows
 import tv.own.owntv.features.settings.settingHelp
 import tv.own.owntv.features.settings.videoGroupCount
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.border
@@ -24,73 +23,53 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.compose.koinViewModel
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import tv.own.owntv.R
 import tv.own.owntv.features.customize.CustomizeScreen
@@ -107,35 +86,18 @@ import tv.own.owntv.features.settings.BackupScreen
 import tv.own.owntv.features.settings.ManageSourcesScreen
 import tv.own.owntv.features.settings.SettingsViewModel
 import tv.own.owntv.core.nav.MainSection
-import tv.own.owntv.ui.components.BrandLockup
 import tv.own.owntv.ui.components.BrowseMode
-import tv.own.owntv.ui.components.FocusableSurface
-import tv.own.owntv.ui.components.OwnTVButton
-import tv.own.owntv.ui.components.dialogPanel
-import tv.own.owntv.ui.components.modalScrim
-import tv.own.owntv.ui.components.OwnTVButtonStyle
 import tv.own.owntv.ui.components.OwnTVIcon
-import tv.own.owntv.ui.components.displayText
-import tv.own.owntv.ui.components.ContentPanelFill
-import tv.own.owntv.ui.components.roundedPanel
 import tv.own.owntv.ui.components.StorageBrowser
 import tv.own.owntv.ui.components.BackgroundImageChooserDialog
 import tv.own.owntv.ui.components.ingestBackgroundImage
 import tv.own.owntv.ui.components.trapAllFocusExit
 import tv.own.owntv.ui.components.longPressMenuGuard
-import tv.own.owntv.ui.format.formatBestDateTime
 import tv.own.owntv.ui.theme.ALL_GLASS_SURFACES
 import tv.own.owntv.core.theme.GlassConfig
-import tv.own.owntv.ui.theme.GlassInteraction
-import tv.own.owntv.core.theme.GlassPreset
-import tv.own.owntv.core.theme.GlassSurface
-import tv.own.owntv.ui.theme.glass
 import tv.own.owntv.core.theme.AppFontFamily
 import tv.own.owntv.core.theme.FontCustomization
 import tv.own.owntv.core.theme.PopupSizeScale
-import tv.own.owntv.ui.theme.LocalGlass
-import tv.own.owntv.ui.theme.OwnTVTheme
-import tv.own.owntv.player.displayText
 import tv.own.owntv.core.theme.ThemeMode
 import tv.own.owntv.core.theme.UiZoom
 import kotlin.math.roundToInt
@@ -145,19 +107,6 @@ import tv.own.owntv.ui.theme.labelRes
 import tv.own.owntv.ui.theme.primary
 
 internal enum class TileTone { PRIMARY, SECONDARY, TERTIARY }
-
-/**
- * The icon-tile tone for the rows *inside* a settings sub-screen. A sub-screen is opened by exactly
- * one root row, so its rows take that row's tone — otherwise e.g. Weather is a grey tile on the root
- * list and an accent tile the moment you open it. Provided per sub-screen at the dispatch below;
- * anything not listed there stays PRIMARY.
- */
-internal val LocalSettingsRowTone = staticCompositionLocalOf { TileTone.PRIMARY }
-
-/** Wraps a sub-screen so its rows match the tone of the root row that opens it (see `rootItems`). */
-@Composable
-private fun Toned(tone: TileTone, content: @Composable () -> Unit) =
-    CompositionLocalProvider(LocalSettingsRowTone provides tone, content = content)
 
 private enum class SettingsTab { ROOT, LANGUAGE, SOURCES, EPG, BACKUP, LOCAL_SYNC, CUSTOMIZE, HOME, NETWORK, DNS, METADATA, OPEN_SUBTITLES, WEATHER, CH_NAV, PANEL_WIDTH, GUIDE_WIDTH, GLASS_EFFECT, CONTENT_MENUS, FONTS, BROWSING, SUBTITLE_STYLE, SPORTS }
 
@@ -463,8 +412,8 @@ fun SettingsScreen(
         SettingsTab.LANGUAGE -> { LanguageSettingsScreen(onBack = { tab = SettingsTab.ROOT }, modifier = modifier) }
         SettingsTab.SOURCES -> { ManageSourcesScreen(onBack = { tab = SettingsTab.ROOT }, modifier = modifier) }
         SettingsTab.EPG -> { tv.own.owntv.features.settings.EpgSourcesScreen(onBack = { tab = SettingsTab.ROOT; consumeEpgAdd = false }, modifier = modifier, startOnAdd = consumeEpgAdd) }
-        SettingsTab.BACKUP -> { Toned(TileTone.TERTIARY) { BackupScreen(onBack = { tab = SettingsTab.ROOT }, modifier = sub) } }
-        SettingsTab.LOCAL_SYNC -> { Toned(TileTone.TERTIARY) { LocalSyncScreen(onBack = { tab = SettingsTab.ROOT }, modifier = sub) } }
+        SettingsTab.BACKUP -> { BackupScreen(onBack = { tab = SettingsTab.ROOT }, modifier = sub) }
+        SettingsTab.LOCAL_SYNC -> { LocalSyncScreen(onBack = { tab = SettingsTab.ROOT }, modifier = sub) }
         SettingsTab.CUSTOMIZE -> { CustomizeScreen(onBack = { tab = SettingsTab.ROOT }, modifier = modifier) }
         SettingsTab.HOME -> { HomeSettingsScreen(onBack = { tab = SettingsTab.ROOT }, modifier = modifier) }
         SettingsTab.NETWORK -> { tv.own.owntv.features.settings.NetworkSettingsScreen(onBack = { tab = SettingsTab.ROOT }, modifier = modifier) }
@@ -494,7 +443,6 @@ fun SettingsScreen(
     // therefore wins while one is open.
     if (onBack != null) BackHandler { onBack() }
 
-    val colors = OwnTVTheme.colors
 
     // The root rows, as data (see [RootItem]). Building 40 small objects is a fraction of the cost of
     // composing 40 rows, and it is what lets the list below stay lazy while both focus restores can
@@ -1208,7 +1156,6 @@ fun SettingsScreen(
     // Shared with the dialogs below, so the simple ones open in the page's panel (owner, P12).
     val panel = remember { tv.own.owntv.features.settings.SettingsPanelState() }
     CompositionLocalProvider(
-        tv.own.owntv.features.settings.LocalStageRows provides true,
         // Subtitle appearance is a page of its own, opened from the Sound & subtitles rows (P12).
         tv.own.owntv.features.settings.LocalOpenSubtitleStyle provides { saveScroll(); open(SettingsTab.SUBTITLE_STYLE) },
         tv.own.owntv.features.settings.LocalSubtitleStyleRowFocus provides rowFocus.getValue(SettingsTab.SUBTITLE_STYLE),
@@ -1929,8 +1876,7 @@ private fun vodLayoutLabelRes(layout: tv.own.owntv.core.settings.SettingsReposit
  */
 @Composable
 private fun VodLayoutPreviewBars(layout: tv.own.owntv.core.settings.SettingsRepository.VodLayout) {
-    val colors = OwnTVTheme.colors
-    val bar = colors.onSurface.copy(alpha = 0.13f)
+    val bar = tv.own.owntv.ui.theme.StageColors.Text.copy(alpha = 0.13f)
     val shape = RoundedCornerShape(4.dp)
     Row(
         modifier = Modifier.fillMaxWidth().height(30.dp),
@@ -1945,7 +1891,7 @@ private fun VodLayoutPreviewBars(layout: tv.own.owntv.core.settings.SettingsRepo
                     .clip(shape)
                     .background(
                         androidx.compose.ui.graphics.Brush.horizontalGradient(
-                            listOf(colors.primary.copy(alpha = 0.45f), colors.tertiary.copy(alpha = 0.28f)),
+                            listOf(tv.own.owntv.ui.theme.stageAccent.accent.copy(alpha = 0.45f), tv.own.owntv.ui.theme.stageAccent.accent.copy(alpha = 0.28f)),
                         ),
                     ),
             )
@@ -2416,416 +2362,6 @@ private fun GlassEffectSettingsScreen(onBack: () -> Unit, modifier: Modifier = M
     }
 }
 
-@Composable
-private fun GlassEffectContentScreen(
-    glassOn: Boolean,
-    preset: GlassPreset,
-    alphaPercent: Int,
-    blurPercent: Int,
-    highlightPercent: Int,
-    allowFullTransparency: Boolean,
-    depthEffects: Boolean,
-    bgOn: Boolean,
-    scope: Set<GlassSurface>,
-    onToggleGlass: () -> Unit,
-    onSetPreset: (GlassPreset) -> Unit,
-    onSetAlpha: (Int) -> Unit,
-    onSetBlur: (Int) -> Unit,
-    onSetHighlight: (Int) -> Unit,
-    onSetAllowFullTransparency: (Boolean) -> Unit,
-    onSetDepthEffects: (Boolean) -> Unit,
-    onSetScope: (Int) -> Unit,
-    onOpenBackground: () -> Unit,
-    onBack: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val colors = OwnTVTheme.colors
-    val firstFocus = remember { FocusRequester() }
-    // Per-surface scope sub-dialog (advanced). While it is open the main panel is NOT composed at all:
-    // the main panel's trapAllFocusExit would otherwise keep D-pad focus locked inside itself, making
-    // the sub-dialog unreachable. Re-request focus here whenever the main panel comes (back) on screen.
-    var showSurfaces by remember { mutableStateOf(false) }
-    LaunchedEffect(showSurfaces) { if (!showSurfaces) runCatching { firstFocus.requestFocus() } }
-    val min = 20
-    val max = 100
-    val step = 5
-    fun clamp(v: Int) = v.coerceIn(min, max)
-    // Backdrop blur ("frost") stepper — 0..100 in 10% steps. 0 keeps the Tier-1 translucency-only look;
-    // only has an effect when a background image is set and the device supports it (API 31+).
-    val blurMin = 0
-    val blurMax = 100
-    val blurStep = 10
-    fun blurClamp(v: Int) = v.coerceIn(blurMin, blurMax)
-    val highlightStep = 5
-    fun highlightClamp(v: Int) = v.coerceIn(0, 100)
-    BackHandler { onBack() }
-    if (!showSurfaces) {
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .roundedPanel()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 40.dp, vertical = 28.dp),
-        ) {
-            tv.own.owntv.features.settings.Header(
-                title = stringResource(R.string.settings_glass_effect_title),
-                onBack = onBack,
-            )
-            Spacer(Modifier.height(6.dp))
-            Text(
-                stringResource(R.string.settings_glass_effect_description),
-                style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant,
-            )
-            Spacer(Modifier.height(14.dp))
-            Text(
-                stringResource(R.string.settings_glass_live_preview),
-                style = MaterialTheme.typography.labelLarge,
-                color = colors.onSurfaceVariant,
-            )
-            Spacer(Modifier.height(6.dp))
-            GlassEffectPreview()
-            Spacer(Modifier.height(14.dp))
-            // Master on/off for the glass (works with or without a background image).
-            tv.own.owntv.features.settings.Row2(
-                icon = OwnTVIcon.THEME,
-                title = stringResource(R.string.settings_glass_effect),
-                desc = stringResource(R.string.settings_glass_description),
-                chip = stringResource(if (glassOn) R.string.common_on else R.string.common_off),
-                primaryChip = glassOn,
-                onClick = onToggleGlass,
-                modifier = Modifier.fillMaxWidth().focusRequester(firstFocus),
-            )
-            if (glassOn) {
-                Spacer(Modifier.height(14.dp))
-                // Wallpaper belongs to Glass mode and stays hidden until Glass is enabled.
-                tv.own.owntv.features.settings.Row2(
-                    icon = OwnTVIcon.IMAGE,
-                    title = stringResource(if (bgOn) R.string.settings_background_on else R.string.settings_background_off),
-                    chevron = true,
-                    onClick = onOpenBackground,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Spacer(Modifier.height(22.dp))
-                Text(stringResource(R.string.settings_glass_preset_title), style = MaterialTheme.typography.titleMedium, color = colors.onSurface)
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    glassPresetDescription(preset),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = colors.onSurfaceVariant,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                )
-                Spacer(Modifier.height(12.dp))
-                GlassPreset.entries.chunked(2).forEach { rowPresets ->
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        rowPresets.forEach { choice ->
-                            OwnTVButton(
-                                label = glassPresetLabel(choice),
-                                onClick = { onSetPreset(choice) },
-                                style = OwnTVButtonStyle.SECONDARY,
-                                selected = preset == choice,
-                                compact = true,
-                                modifier = Modifier.weight(1f),
-                            )
-                        }
-                    }
-                    Spacer(Modifier.height(8.dp))
-                }
-                Spacer(Modifier.height(10.dp))
-                Text(stringResource(R.string.settings_transparency_title), style = MaterialTheme.typography.titleMedium, color = colors.onSurface)
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    stringResource(R.string.settings_transparency_description, min, max),
-                    style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                )
-                Spacer(Modifier.height(12.dp))
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-                    StepButton(stringResource(R.string.settings_decrease), dimmed = alphaPercent <= min) { onSetAlpha(clamp(alphaPercent - step)) }
-                    Text(
-                        stringResource(R.string.settings_surface_transparency, alphaPercent),
-                        style = MaterialTheme.typography.headlineLarge,
-                        color = colors.primary,
-                        modifier = Modifier.width(120.dp),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                    )
-                    StepButton(stringResource(R.string.settings_increase), dimmed = alphaPercent >= max) { onSetAlpha(clamp(alphaPercent + step)) }
-                }
-                // Backdrop blur — the real "frost" behind the panels (needs a background image; API 31+).
-                Spacer(Modifier.height(20.dp))
-                Text(stringResource(R.string.settings_blur_title), style = MaterialTheme.typography.titleMedium, color = colors.onSurface)
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    stringResource(if (bgOn) R.string.settings_blur_description_enabled else R.string.settings_blur_description_disabled, blurMin, blurMax),
-                    style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                )
-                Spacer(Modifier.height(12.dp))
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-                    StepButton(stringResource(R.string.settings_decrease), dimmed = blurPercent <= blurMin) { onSetBlur(blurClamp(blurPercent - blurStep)) }
-                    Text(
-                        stringResource(R.string.settings_surface_transparency, blurPercent),
-                        style = MaterialTheme.typography.headlineLarge,
-                        color = colors.primary,
-                        modifier = Modifier.width(120.dp),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                    )
-                    StepButton(stringResource(R.string.settings_increase), dimmed = blurPercent >= blurMax) { onSetBlur(blurClamp(blurPercent + blurStep)) }
-                }
-
-                Spacer(Modifier.height(20.dp))
-                Text(stringResource(R.string.settings_glass_highlight_title), style = MaterialTheme.typography.titleMedium, color = colors.onSurface)
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    stringResource(R.string.settings_glass_highlight_description),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = colors.onSurfaceVariant,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                )
-                Spacer(Modifier.height(12.dp))
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-                    StepButton(stringResource(R.string.settings_decrease), dimmed = highlightPercent <= 0) {
-                        onSetHighlight(highlightClamp(highlightPercent - highlightStep))
-                    }
-                    Text(
-                        stringResource(R.string.settings_surface_transparency, highlightPercent),
-                        style = MaterialTheme.typography.headlineLarge,
-                        color = colors.primary,
-                        modifier = Modifier.width(120.dp),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                    )
-                    StepButton(stringResource(R.string.settings_increase), dimmed = highlightPercent >= 100) {
-                        onSetHighlight(highlightClamp(highlightPercent + highlightStep))
-                    }
-                }
-
-                Spacer(Modifier.height(18.dp))
-                Text(
-                    stringResource(R.string.settings_glass_full_transparency_description),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = colors.onSurfaceVariant,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                )
-                Spacer(Modifier.height(8.dp))
-                OwnTVButton(
-                    label = "${stringResource(R.string.settings_glass_full_transparency_title)}: ${stringResource(if (allowFullTransparency) R.string.common_on else R.string.common_off)}",
-                    onClick = { onSetAllowFullTransparency(!allowFullTransparency) },
-                    style = OwnTVButtonStyle.SECONDARY,
-                    selected = allowFullTransparency,
-                    compact = true,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-
-                Spacer(Modifier.height(14.dp))
-                Text(
-                    stringResource(R.string.settings_glass_depth_description),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = colors.onSurfaceVariant,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                )
-                Spacer(Modifier.height(8.dp))
-                OwnTVButton(
-                    label = "${stringResource(R.string.settings_glass_depth_title)}: ${stringResource(if (depthEffects) R.string.common_on else R.string.common_off)}",
-                    onClick = { onSetDepthEffects(!depthEffects) },
-                    style = OwnTVButtonStyle.SECONDARY,
-                    selected = depthEffects,
-                    compact = true,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-
-                // Advanced: choose exactly which surfaces render as glass.
-                Spacer(Modifier.height(16.dp))
-                OwnTVButton(
-                    if (scope == ALL_GLASS_SURFACES) stringResource(R.string.settings_surface_count_all)
-                    else pluralStringResource(R.plurals.settings_surface_count, scope.size, scope.size, ALL_GLASS_SURFACES.size),
-                    onClick = { showSurfaces = true },
-                    style = OwnTVButtonStyle.SECONDARY,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-            if (glassOn) {
-                Spacer(Modifier.height(24.dp))
-                OwnTVButton(
-                    stringResource(R.string.settings_reset),
-                    onClick = {
-                        onSetPreset(GlassPreset.BALANCED)
-                        onSetHighlight((GlassConfig.DEFAULT_HIGHLIGHT_STRENGTH * 100).roundToInt())
-                        onSetAllowFullTransparency(false)
-                        onSetDepthEffects(true)
-                        onSetScope(GlassConfig(ALL_GLASS_SURFACES).toBitmask())
-                    },
-                    style = OwnTVButtonStyle.SECONDARY,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-        }
-    }
-    if (showSurfaces) {
-        GlassSurfacesDialog(scope = scope, onSetScope = onSetScope, onDismiss = { showSurfaces = false })
-    }
-}
-
-/** Compact always-visible sample of the same panel/card/top-bar surfaces controlled below. */
-@Composable
-private fun GlassEffectPreview() {
-    val colors = OwnTVTheme.colors
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(92.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(colors.secondaryContainer.copy(alpha = 0.42f))
-            .padding(horizontal = 24.dp, vertical = 18.dp),
-        contentAlignment = Alignment.Center,
-    ) {
-        Row(
-            Modifier.fillMaxSize(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Box(
-                Modifier.weight(1.5f).fillMaxHeight().clip(RoundedCornerShape(12.dp)).glass(
-                    surface = GlassSurface.PANELS,
-                    baseFill = colors.surfaceContainerHighest,
-                    shape = RoundedCornerShape(12.dp),
-                    interaction = GlassInteraction.SELECTED,
-                ),
-            )
-            Box(
-                Modifier.weight(0.9f).fillMaxHeight().clip(RoundedCornerShape(12.dp)).glass(
-                    surface = GlassSurface.CARDS,
-                    baseFill = colors.surfaceContainerHighest,
-                    shape = RoundedCornerShape(12.dp),
-                    interaction = GlassInteraction.FOCUSED,
-                ),
-            )
-            Box(
-                Modifier.weight(1f).height(34.dp).clip(RoundedCornerShape(17.dp)).glass(
-                    surface = GlassSurface.TOPBAR,
-                    baseFill = colors.surfaceContainerHighest,
-                    shape = RoundedCornerShape(17.dp),
-                    interaction = GlassInteraction.FOCUSED,
-                ),
-            )
-        }
-    }
-}
-
-/**
- * Browsing & lists — six per-section toggles, two for each of Live TV / Movies / Series:
- *
- *  - "Remember last category" (on by default): reopening the section lands on the category you left
- *    rather than All. Live TV has always behaved this way; Movies/Series gained it alongside the toggle.
- *  - "Remember last item" (off by default): each category keeps its own scroll position instead of
- *    resetting to the top. The Live TV one additionally gates the last-focused-channel restore.
- *
- * The separate "App startup -> Last channel" setting is independent of all six.
- */
-@Composable
-internal fun glassPresetLabel(preset: GlassPreset): String = stringResource(
-    when (preset) {
-        GlassPreset.ULTRA_CLEAR -> R.string.settings_glass_preset_ultra_clear
-        GlassPreset.CLEAR -> R.string.settings_glass_preset_clear
-        GlassPreset.BALANCED -> R.string.settings_glass_preset_balanced
-        GlassPreset.TINTED -> R.string.settings_glass_preset_tinted
-        GlassPreset.OPAQUE -> R.string.settings_glass_preset_opaque
-        GlassPreset.AURORA -> R.string.settings_glass_preset_aurora
-        GlassPreset.CUSTOM -> R.string.settings_glass_preset_custom
-    },
-)
-
-@Composable
-internal fun glassPresetDescription(preset: GlassPreset): String = stringResource(
-    when (preset) {
-        GlassPreset.ULTRA_CLEAR -> R.string.settings_glass_preset_ultra_clear_description
-        GlassPreset.CLEAR -> R.string.settings_glass_preset_clear_description
-        GlassPreset.BALANCED -> R.string.settings_glass_preset_balanced_description
-        GlassPreset.TINTED -> R.string.settings_glass_preset_tinted_description
-        GlassPreset.OPAQUE -> R.string.settings_glass_preset_opaque_description
-        GlassPreset.AURORA -> R.string.settings_glass_preset_aurora_description
-        GlassPreset.CUSTOM -> R.string.settings_glass_preset_custom_description
-    },
-)
-
-/** User-facing label for a glassable surface. */
-@Composable
-internal fun glassSurfaceLabel(s: GlassSurface): String = stringResource(
-    when (s) {
-        GlassSurface.PANELS -> R.string.settings_glass_surface_panels
-        GlassSurface.SIDEBAR -> R.string.settings_glass_surface_sidebar
-        GlassSurface.PREVIEW -> R.string.settings_glass_surface_preview
-        GlassSurface.DIALOGS -> R.string.settings_glass_surface_dialogs
-        GlassSurface.TOPBAR -> R.string.settings_glass_surface_topbar
-        GlassSurface.CARDS -> R.string.settings_glass_surface_cards
-        GlassSurface.MINI_PLAYER -> R.string.settings_glass_surface_miniplayer
-        GlassSurface.PLAYER_CONTROLS -> R.string.settings_glass_surface_player_controls
-        GlassSurface.TOASTS -> R.string.settings_glass_surface_toasts
-    },
-)
-
-/**
- * Advanced per-surface glass scope: one On/Off row per [GlassSurface] plus an "All" master.
- * Changes apply live (persisted via the scope bitmask). Unticking every surface is the same as
- * turning glass off — the helper text says so instead of blocking it.
- */
-@Composable
-internal fun GlassSurfacesDialog(
-    scope: Set<GlassSurface>,
-    onSetScope: (Int) -> Unit,
-    onDismiss: () -> Unit,
-) {
-    val colors = OwnTVTheme.colors
-    val firstFocus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { runCatching { firstFocus.requestFocus() } }
-    BackHandler { onDismiss() }
-    fun toggled(s: GlassSurface): Int = GlassConfig(if (s in scope) scope - s else scope + s).toBitmask()
-    tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss) {
-    Box(
-        modifier = Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(),
-        contentAlignment = Alignment.Center,
-    ) {
-        tv.own.owntv.ui.theme.PopupFontTheme {
-        Column(
-            modifier = Modifier.dialogPanel(width = 440.dp, padding = 28.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Text(stringResource(R.string.settings_glass_surfaces), style = MaterialTheme.typography.titleLarge, color = colors.onSurface)
-            Spacer(Modifier.height(6.dp))
-            Text(
-                stringResource(R.string.settings_glass_surfaces_description),
-                style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant,
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-            )
-            Spacer(Modifier.height(16.dp))
-            // All rows use the SECONDARY chrome: with the accent (PRIMARY) fill on every "On" row the
-            // focused row was indistinguishable on TV. State lives in the ": On/Off" text; focus in the
-            // button's own focus highlight.
-            OwnTVButton(
-                if (scope == ALL_GLASS_SURFACES) stringResource(R.string.settings_all_surfaces_on) else stringResource(R.string.settings_all_surfaces_off),
-                onClick = {
-                    onSetScope(if (scope == ALL_GLASS_SURFACES) 0 else GlassConfig(ALL_GLASS_SURFACES).toBitmask())
-                },
-                style = OwnTVButtonStyle.SECONDARY,
-                modifier = Modifier.fillMaxWidth().focusRequester(firstFocus),
-            )
-            Spacer(Modifier.height(12.dp))
-            ALL_GLASS_SURFACES.forEach { s ->
-                val on = s in scope
-                OwnTVButton(
-                    stringResource(R.string.settings_surface_toggle, glassSurfaceLabel(s), stringResource(if (on) R.string.common_on else R.string.common_off)),
-                    onClick = { onSetScope(toggled(s)) },
-                    style = OwnTVButtonStyle.SECONDARY,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Spacer(Modifier.height(8.dp))
-            }
-            Spacer(Modifier.height(12.dp))
-            OwnTVButton(stringResource(R.string.settings_done), onClick = onDismiss, modifier = Modifier.fillMaxWidth())
-        }
-        }
-    }
-    }
-}
-
 /** Per-playlist catch-up picker keys: follow the global setting, or a UTC offset in minutes. */
 private const val CATCHUP_FOLLOW = ""
 private const val CATCHUP_MANUAL_PREFIX = "MANUAL:"
@@ -2957,27 +2493,6 @@ private fun EpgOffsetSettingDialog(
         title = stringResource(R.string.content_epg_time_offset),
         body = stringResource(R.string.settings_epg_offset_dialog_description),
     ) { stepper() }
-}
-
-@Composable
-private fun StepButton(
-    label: String,
-    enabled: Boolean = true,
-    dimmed: Boolean = false,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    val colors = OwnTVTheme.colors
-    FocusableSurface(
-        onClick = onClick,
-        enabled = enabled,
-        modifier = modifier.size(64.dp),
-        shape = RoundedCornerShape(18.dp),
-        contentAlignment = Alignment.Center,
-        surface = GlassSurface.DIALOGS,
-    ) { _ ->
-        Text(label, style = MaterialTheme.typography.headlineMedium, color = if (enabled && !dimmed) colors.onSurface else colors.outline)
-    }
 }
 
 /**
@@ -3126,10 +2641,10 @@ internal fun SettingsRowMenu(
     // The Stage menu (playbook 11), as every other hold-OK menu.
     tv.own.owntv.ui.components.OwnTVPopup(onDismissRequest = onDismiss, stageLayout = true) {
         Box(
-            Modifier.fillMaxSize().longPressMenuGuard().modalScrim().trapAllFocusExit().focusGroup(),
+            Modifier.fillMaxSize().background(tv.own.owntv.ui.theme.StageColors.Scrim).longPressMenuGuard(),
             contentAlignment = Alignment.Center,
         ) {
-            tv.own.owntv.ui.stage.StageMenu(Modifier.width(520.mpx)) {
+            tv.own.owntv.ui.stage.StageMenu(Modifier.width(520.mpx).trapAllFocusExit().focusGroup()) {
                 tv.own.owntv.ui.stage.StageMenuHeader(title = title, subtitle = null)
                 tv.own.owntv.ui.stage.StageMenuItem(
                     stringResource(if (pinned) R.string.settings_row_menu_unpin else R.string.settings_row_menu_pin),
@@ -3168,16 +2683,6 @@ private class SettingsSearchEntry(
     val showChevron: Boolean = true,
     val onClick: () -> Unit,
 )
-
-@Composable
-internal fun TileTone.colors(): Pair<Color, Color> {
-    val c = OwnTVTheme.colors
-    return when (this) {
-        TileTone.PRIMARY -> c.primaryContainer to c.onPrimaryContainer
-        TileTone.SECONDARY -> c.secondaryContainer to c.onSecondaryContainer
-        TileTone.TERTIARY -> c.tertiaryContainer to c.onTertiaryContainer
-    }
-}
 
 /** What a root row shows and does on its Stage page beyond its chip (P9-03 … P9-13). */
 private class RowExtra(

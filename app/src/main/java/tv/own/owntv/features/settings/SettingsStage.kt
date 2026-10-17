@@ -70,7 +70,6 @@ import tv.own.owntv.ui.theme.StageRadii
 import tv.own.owntv.ui.theme.mpx
 import tv.own.owntv.ui.theme.stageAccent
 import tv.own.owntv.ui.theme.stageText
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 
@@ -150,9 +149,6 @@ class SettingsPanelState {
 }
 
 val LocalSettingsPanel = staticCompositionLocalOf<SettingsPanelState?> { null }
-
-/** True inside a Stage settings page: [Row2] then draws [StageSettingRow]. Other screens keep their rows. */
-val LocalStageRows = staticCompositionLocalOf { false }
 
 /**
  * The panel text for the row [key]: its long explanation from [SETTING_HELP] (falling back to the
@@ -383,7 +379,7 @@ private fun SettingPanelBody(help: SettingHelp) {
 @Composable
 fun panelEditor(onDismiss: () -> Unit, content: @Composable androidx.compose.foundation.layout.ColumnScope.(help: SettingHelp?) -> Unit): Boolean {
     val panel = LocalSettingsPanel.current
-    if (panel == null || tv.own.owntv.ui.components.LocalStagePopup.current) return false
+    if (panel == null) return false
     val token = remember { Any() }
     val editor = PanelEditor(token, onDismiss, content)
     androidx.compose.runtime.SideEffect { panel.editor = editor }
@@ -873,33 +869,31 @@ fun StageFullPage(
 ) {
     androidx.activity.compose.BackHandler(enabled = handleBack) { onBack() }
     val search = LocalSettingsSearch.current
-    CompositionLocalProvider(LocalStageRows provides true) {
-        StageSettingsPage(
-            group = title,
-            count = count,
-            searchQuery = "",
-            onSearchQuery = {},
-            scroll = scroll,
-            modifier = modifier,
-            rowsFocus = rowsFocus,
-            parents = parents,
-            tools = tools,
-            panelTop = panelTop,
-            onSearchActivate = { search?.invoke() },
-            toolbar = toolbar,
-            list = list,
-            settingsRoot = settingsRoot,
-            // A full page outside Settings (the setup wizard) has nowhere to hand its search to.
-            showSearch = search != null,
-            rows = rows,
-        )
-    }
+    StageSettingsPage(
+        group = title,
+        count = count,
+        searchQuery = "",
+        onSearchQuery = {},
+        scroll = scroll,
+        modifier = modifier,
+        rowsFocus = rowsFocus,
+        parents = parents,
+        tools = tools,
+        panelTop = panelTop,
+        onSearchActivate = { search?.invoke() },
+        toolbar = toolbar,
+        list = list,
+        settingsRoot = settingsRoot,
+        // A full page outside Settings (the setup wizard) has nowhere to hand its search to.
+        showSearch = search != null,
+        rows = rows,
+    )
 }
 
 /**
  * `fld` (P10B): a text field as a settings row — the label as the title, the value (or the dim
- * placeholder) as its line, "Edit" on the right while focused. TV behaviour as [OwnTVTextField]: D-pad
- * focus only highlights the row, OK opens the keyboard, Back or Done ends editing and calls [onDone].
+ * placeholder) as its line, "Edit" on the right while focused. D-pad focus only highlights the row, OK
+ * opens the keyboard, Back or Done ends editing and calls [onDone].
  * A password row shows dots; ▶ shows or hides it.
  */
 @Composable
@@ -908,7 +902,8 @@ fun StageFieldRow(
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
-    help: SettingHelp,
+    /** The panel text while focused; null in a popup, which has no panel. */
+    help: SettingHelp? = null,
     modifier: Modifier = Modifier,
     placeholder: String = "",
     password: Boolean = false,
@@ -970,7 +965,7 @@ fun StageFieldRow(
             if (password) "▶" to stringResource(if (shown) R.string.common_hide else R.string.common_show) else submitHint,
             stringResource(R.string.common_back) to (backLabel ?: stringResource(R.string.common_nav_settings)),
         )
-        if ((focused || editing) && panel != null) androidx.compose.runtime.SideEffect { panel.help = help.copy(hints = hints) }
+        if ((focused || editing) && panel != null && help != null) androidx.compose.runtime.SideEffect { panel.help = help.copy(hints = hints) }
         val lit = focused || editing
         Row(
             Modifier.fillMaxWidth().padding(horizontal = 22.mpx),
@@ -1015,7 +1010,7 @@ fun StageFieldRow(
                     )
                 }
             }
-            // Without a settings panel (the setup wizard) nothing else tells the user ▶ shows the password.
+            // Without a settings panel (the setup wizard, a popup) nothing else tells the user ▶ shows the password.
             if (password && lit && !editing && panel == null) {
                 Text("▶ " + stringResource(if (shown) R.string.common_hide else R.string.common_show), style = stageText(18, 700), color = StageColors.Muted, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }

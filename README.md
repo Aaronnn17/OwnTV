@@ -93,7 +93,8 @@ Questions, ideas, bug reports — **join the OwnTV Telegram group:**
 - Offline movies and episodes with pause, resume, retry and a storage bar
 
 ### 🎨 Look & robustness
-- Material 3 theming, your own accent and focus highlight, and an interaction-aware **Glass Effect**
+- Your own accent colour and focus highlight, frosted **Glass** with adjustable opacity, and a Stage,
+  Picture or Plain background
 - **Dark and Light themes** (or follow the TV) across the whole app, the player included
 - Font sizing for the interface and for popups, independently
 - **Remote Shortcuts** — map spare colour, number, channel and media keys to 26 actions

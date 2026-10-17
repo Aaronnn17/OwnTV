@@ -45,13 +45,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import coil3.compose.AsyncImage
 import tv.own.owntv.R
 import tv.own.owntv.core.player.PlayerControl
 import tv.own.owntv.core.player.ControlCluster
-import tv.own.owntv.ui.components.OwnTVButton
 import tv.own.owntv.ui.components.OwnTVIcon
 import tv.own.owntv.ui.theme.OwnTVTheme
 import tv.own.owntv.ui.theme.animationsOn
@@ -113,7 +111,7 @@ internal fun TopBar(
                     }
                     parts.forEachIndexed { i, label ->
                         if (i > 0) Box(Modifier.size(3.dp).clip(CircleShape).background(hudInk.copy(alpha = 0.3f)))
-                        Text(label, style = MaterialTheme.typography.labelMedium, color = hudInk.copy(alpha = 0.5f))
+                        Text(label, style = tv.own.owntv.ui.theme.stageText(22, 700), color = hudInk.copy(alpha = 0.5f))
                     }
                     // The LIVE badge has left the top bar: live status belongs beside the timeline that
                     // describes it, so it is now the stateful badge at the right end of the dock's band A.
@@ -130,7 +128,7 @@ internal fun TopBar(
                     meta.subtitle?.takeIf { it.isNotBlank() }?.let {
                         Text(
                             it,
-                            style = MaterialTheme.typography.titleMedium,
+                            style = tv.own.owntv.ui.theme.stageText(32, 600),
                             color = hudInk.copy(alpha = 0.45f),
                             fontWeight = FontWeight.SemiBold,
                             maxLines = 1,
@@ -138,14 +136,14 @@ internal fun TopBar(
                         )
                         Spacer(Modifier.width(10.dp))
                     }
-                    Text(displayTitle, style = MaterialTheme.typography.titleMedium, color = hudInk, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(displayTitle, style = tv.own.owntv.ui.theme.stageText(32, 600), color = hudInk, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
                 below?.invoke()
             } else {
                 vodSubtitle?.let {
-                    Text(it, style = MaterialTheme.typography.labelMedium, color = hudInk.copy(alpha = 0.45f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(it, style = tv.own.owntv.ui.theme.stageText(22, 700), color = hudInk.copy(alpha = 0.45f), maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
-                Text(displayTitle, style = MaterialTheme.typography.titleMedium, color = hudInk, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(displayTitle, style = tv.own.owntv.ui.theme.stageText(32, 600), color = hudInk, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Spacer(Modifier.height(2.dp))
                 chipRow()
             }
@@ -171,7 +169,7 @@ private fun ChannelLogo(logoUrl: String?, title: String?, size: Int, modifier: M
         contentAlignment = Alignment.Center,
     ) {
         if (!logoUrl.isNullOrBlank()) AsyncImage(model = logoUrl, contentDescription = null, modifier = Modifier.fillMaxSize())
-        else Text((title ?: "?").take(3).uppercase(), style = MaterialTheme.typography.labelMedium, color = Color(0xFF6FF8E4), fontWeight = FontWeight.Bold)
+        else Text((title ?: "?").take(3).uppercase(), style = tv.own.owntv.ui.theme.stageText(22, 700), color = Color(0xFF6FF8E4), fontWeight = FontWeight.Bold)
     }
 }
 
@@ -191,12 +189,12 @@ internal fun ChannelOsdCard(
     ) {
         Box(Modifier.size(44.dp).clip(RoundedCornerShape(10.dp)).background(Color(0xFF004F46)), contentAlignment = Alignment.Center) {
             if (!logoUrl.isNullOrBlank()) AsyncImage(model = logoUrl, contentDescription = null, modifier = Modifier.fillMaxSize())
-            else Text((title ?: "?").take(3).uppercase(), style = MaterialTheme.typography.labelMedium, color = Color(0xFF6FF8E4), fontWeight = FontWeight.Bold)
+            else Text((title ?: "?").take(3).uppercase(), style = tv.own.owntv.ui.theme.stageText(22, 700), color = Color(0xFF6FF8E4), fontWeight = FontWeight.Bold)
         }
         Column {
-            Text(title ?: "", style = MaterialTheme.typography.titleSmall, color = hudInk, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(title ?: "", style = tv.own.owntv.ui.theme.stageText(25, 500), color = hudInk, maxLines = 1, overflow = TextOverflow.Ellipsis)
             subtitle?.takeIf { it.isNotBlank() }?.let {
-                Text(it, style = MaterialTheme.typography.labelSmall, color = hudInk.copy(alpha = 0.5f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(it, style = tv.own.owntv.ui.theme.stageText(20, 500), color = hudInk.copy(alpha = 0.5f), maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
             guide?.invoke()
         }
@@ -253,13 +251,13 @@ internal fun ChannelNumberCard(digits: String, error: String? = null, modifier: 
         Column(Modifier.padding(start = 16.dp, end = 20.dp, top = 12.dp, bottom = 12.dp)) {
             Text(
                 stringResource(R.string.player_channel_label),
-                style = MaterialTheme.typography.labelSmall, color = accent, fontWeight = FontWeight.Bold,
+                style = tv.own.owntv.ui.theme.stageText(20, 500), color = accent, fontWeight = FontWeight.Bold,
                 letterSpacing = 2.sp,
             )
             Row(verticalAlignment = Alignment.Bottom) {
                 Text(
                     digits,
-                    style = MaterialTheme.typography.headlineSmall, color = hudInk, fontWeight = FontWeight.Bold,
+                    style = tv.own.owntv.ui.theme.stageText(43, 400), color = hudInk, fontWeight = FontWeight.Bold,
                     letterSpacing = 3.sp,
                 )
                 if (error == null) {
@@ -270,7 +268,7 @@ internal fun ChannelNumberCard(digits: String, error: String? = null, modifier: 
                 }
             }
             error?.let {
-                Text(it, style = MaterialTheme.typography.labelMedium, color = Color(0xFFFF8A80), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(it, style = tv.own.owntv.ui.theme.stageText(22, 700), color = Color(0xFFFF8A80), maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
         }
     }
@@ -294,7 +292,7 @@ internal fun CenterControls(
             // Counts down as the archive catches up to the live edge; grows if you pause.
             Text(
                 if (timeshiftOffsetSec <= 1) stringResource(R.string.player_at_live_edge) else stringResource(R.string.player_behind_live, mmss(timeshiftOffsetSec)),
-                style = MaterialTheme.typography.labelLarge,
+                style = tv.own.owntv.ui.theme.stageText(25, 600),
                 color = hudAccent,
             )
             Spacer(Modifier.height(12.dp))
@@ -565,7 +563,6 @@ internal fun NextEpisodeCard(
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val colors = OwnTVTheme.colors
     Column(
         modifier = modifier
             .widthIn(max = 360.dp)
@@ -575,31 +572,31 @@ internal fun NextEpisodeCard(
     ) {
         Text(
             stringResource(R.string.player_next_episode, seconds()),
-            style = MaterialTheme.typography.labelLarge,
+            style = tv.own.owntv.ui.theme.stageText(25, 600),
             color = hudAccent,
             fontWeight = FontWeight.Bold,
         )
         Spacer(Modifier.height(4.dp))
         Text(
             title,
-            style = MaterialTheme.typography.titleSmall,
+            style = tv.own.owntv.ui.theme.stageText(25, 500),
             color = hudInk,
             maxLines = 1,
             overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
         )
         Spacer(Modifier.height(12.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            OwnTVButton(
+            tv.own.owntv.ui.stage.StageButton(
                 stringResource(R.string.player_play_now),
                 onClick = onPlayNow,
-                icon = OwnTVIcon.PLAY,
                 modifier = Modifier.focusRequester(playFocus),
+                icon = OwnTVIcon.PLAY,
+                tinted = true,
             )
-            OwnTVButton(
+            tv.own.owntv.ui.stage.StageButton(
                 stringResource(R.string.common_cancel),
                 onClick = onCancel,
                 icon = OwnTVIcon.CLOSE,
-                style = tv.own.owntv.ui.components.OwnTVButtonStyle.SECONDARY,
             )
         }
     }

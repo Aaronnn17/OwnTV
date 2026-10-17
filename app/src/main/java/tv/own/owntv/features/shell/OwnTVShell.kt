@@ -1,5 +1,6 @@
 package tv.own.owntv.features.shell
 
+import tv.own.owntv.ui.stage.stageGlass
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusGroup
@@ -17,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
@@ -78,15 +78,10 @@ import tv.own.owntv.player.MpvVideoSurface
 import tv.own.owntv.player.OwnTVPlayer
 import tv.own.owntv.player.PlayerHud
 import tv.own.owntv.features.shell.components.AvatarPickerDialog
-import tv.own.owntv.features.shell.components.CategoryRail
-import tv.own.owntv.features.shell.components.ContentPane
 import tv.own.owntv.features.shell.components.ExitDialog
 import tv.own.owntv.features.shell.components.IncompleteRestoreDialog
-import tv.own.owntv.features.shell.components.PreviewPane
-import tv.own.owntv.features.shell.components.RailCategory
 import tv.own.owntv.features.shell.components.SettingsScreen
 import tv.own.owntv.features.shell.components.SolidAmbientBackdrop
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import androidx.compose.ui.res.stringResource
 import tv.own.owntv.player.alignment
@@ -95,20 +90,14 @@ import tv.own.owntv.ui.stage.stageBackground
 import tv.own.owntv.ui.components.OwnTVIcon
 import tv.own.owntv.ui.components.LocalRemoteShortcuts
 import tv.own.owntv.ui.components.RemoteShortcutEnvironment
-import tv.own.owntv.ui.theme.Dimens
-import tv.own.owntv.core.theme.GlassSurface
-import tv.own.owntv.ui.theme.LocalContentScrolled
 import tv.own.owntv.ui.theme.LocalGlass
-import tv.own.owntv.ui.theme.OwnTVTheme
 import tv.own.owntv.core.theme.ThemeMode
 import tv.own.owntv.core.live.LiveKey
-import androidx.compose.foundation.border
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.style.TextOverflow
 
 /** Which layer currently holds focus (drives Back navigation). */
-private enum class ShellLayer { SIDEBAR, RAIL, CONTENT }
+private enum class ShellLayer { SIDEBAR, CONTENT }
 
 /** Player presentation: hidden, fullscreen, docked mini-player, or audio-only now-playing bar. */
 internal enum class PlayerMode { NONE, FULLSCREEN, MINI, AUDIO }
@@ -148,15 +137,8 @@ fun OwnTVShell(
     onSwitchProfile: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val colors = OwnTVTheme.colors
     val noSourceLabel = stringResource(R.string.shell_no_source)
     val subtitleLoadFailed = stringResource(R.string.content_subtitle_load_failed)
-    val railSelection = remember { mutableStateMapOf<MainSection, Int>() }
-    val selectedRail = railSelection[selectedSection] ?: 0
-    val categories = railCategoriesFor(selectedSection)
-    // Each destination reports whether content has passed the 8 dp threshold. Keying this state to
-    // the section prevents a scrolled screen from leaving the next destination's chrome condensed.
-    var contentScrolled by remember(selectedSection) { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
     val sidebarFocus = remember { FocusRequester() }
@@ -896,11 +878,9 @@ fun OwnTVShell(
         }
     }
 
-    // Glass effect: when a background image is active, the shell's own base paints must be transparent
-    // so the full-bleed image (rendered in MainActivity behind this shell) shows through the gaps
-    // between/around panels. Solid otherwise — the usual near-black base.
-    val glass = LocalGlass.current
-    val shellBase = if (glass.isGlassy(GlassSurface.PANELS) || glass.isGlassy(GlassSurface.SIDEBAR)) Color.Transparent else colors.background
+    // With Glass on, the shell's own base paints must be transparent so the background (rendered in
+    // MainActivity behind this shell) shows through the gaps between and around panels. Solid otherwise.
+    val shellBase = if (LocalGlass.current.enabled) Color.Transparent else tv.own.owntv.ui.theme.LocalStagePalette.current.page
 
     // Long-press Back (§8 tier 2). Deliberately timed from the FIRST KeyDown rather than counted from
     // key repeats: several TVs re-fire KeyDown while a key is held, so a repeat-counting version fires
@@ -923,7 +903,6 @@ fun OwnTVShell(
     }
 
     CompositionLocalProvider(
-        LocalContentScrolled provides contentScrolled,
         LocalRemoteShortcuts provides remoteShortcutEnvironment,
         tv.own.owntv.features.shell.components.LocalClockWeather provides (weatherInfo to weatherFahrenheit),
     ) {
@@ -1074,8 +1053,6 @@ fun OwnTVShell(
                   )
               }
           } else null
-          // Screens already redrawn for Stage own the whole canvas.
-          val stageScreen = selectedSection in StageSections
           Box(Modifier.weight(1f).fillMaxWidth()) {
           Row(modifier = Modifier.fillMaxSize()) {
             Column(
@@ -1087,13 +1064,9 @@ fun OwnTVShell(
                     // Glass effect: transparent here (shellBase) when a background image is active, so
                     // the image shows through the gaps between the content panels.
                     .background(shellBase)
-                    // A Stage screen's page, across the whole width — under a docked rail's reserve too.
+                    // The Stage page, across the whole width — under a docked rail's reserve too.
                     // Over a picture it draws only the Accent light; the picture shows through.
-                    .then(
-                        if (stageScreen) {
-                            Modifier.stageBackground(colors.primary)
-                        } else Modifier,
-                    ),
+                    .stageBackground(tv.own.owntv.ui.theme.stageAccent.accent),
             ) {
                 // Live TV's view (List / Guide, G14), and how a guide — the TV Guide or Live TV's Guide view —
                 // starts a channel or an archive programme: through LiveViewModel, the one live path.
@@ -1117,18 +1090,13 @@ fun OwnTVShell(
                 Box(
                     modifier = Modifier.weight(1f).fillMaxWidth()
                         .then(
-                            // Stage: the floating rail sits over the content, so the content starts at the
-                            // screen edge (or beside a docked rail), below the top-right cluster. Screens not
-                            // yet redrawn for Stage keep this top inset until their phase gives them the full canvas.
+                            // The floating rail sits over the content, so the content starts at the screen
+                            // edge (or beside a docked rail).
                             Modifier
                                 .padding(
-                                    start = when {
-                                        navStyle == tv.own.owntv.core.settings.SettingsRepository.NavStyle.DOCKED ->
-                                            tv.own.owntv.features.shell.components.railDockedReserve(navSize)
-                                        stageScreen -> 0.dp
-                                        else -> 6.dp
-                                    },
-                                    top = if (stageScreen) 0.dp else tv.own.owntv.features.shell.components.StageContentTop,
+                                    start = if (navStyle == tv.own.owntv.core.settings.SettingsRepository.NavStyle.DOCKED) {
+                                        tv.own.owntv.features.shell.components.railDockedReserve(navSize)
+                                    } else 0.dp,
                                 )
                                 // ◀ with nothing further left in the content goes back to the rail, however the
                                 // content was entered. The D-pad search alone missed it whenever the open rail
@@ -1144,8 +1112,7 @@ fun OwnTVShell(
                                 .focusRequester(contentAreaFocus)
                                 .focusRestorer()
                                 .focusGroup(),
-                        )
-                        .then(if (stageScreen) Modifier else Modifier.padding(end = 6.dp, bottom = 6.dp)),
+                        ),
                 ) {
                     when {
                         // Plan Z — the hub the rail's last item now opens. Settings is a row in it.
@@ -1244,7 +1211,6 @@ fun OwnTVShell(
                             },
                             previewEnabled = playerMode == PlayerMode.NONE,
                             firstRowFocusRequester = homeFirstRowFocus,
-                            onContentScrolled = { contentScrolled = it },
                             // Beside the resting capsule; a docked rail already reserves its own width.
                             onEntryHook = { homeEntry = it },
                             onOpenMatch = { m ->
@@ -1303,7 +1269,6 @@ fun OwnTVShell(
                             onListView = { liveVm.setLiveView(tv.own.owntv.core.settings.SettingsRepository.LiveView.LIST) },
                             restoreFocus = restoreFocus,
                             onRestored = { restoreFocus = false },
-                            onContentScrolled = { contentScrolled = it },
                             modifier = Modifier
                                 .fillMaxSize()
                                 .onFocusChanged { if (it.hasFocus) focusedLayer = ShellLayer.CONTENT }
@@ -1317,7 +1282,6 @@ fun OwnTVShell(
                             previewEnabled = playerMode == PlayerMode.NONE,
                             restoreFocus = restoreFocus,
                             onRestored = { restoreFocus = false },
-                            onContentScrolled = { contentScrolled = it },
                             modifier = Modifier.fillMaxSize(),
                         )
 
@@ -1326,7 +1290,6 @@ fun OwnTVShell(
                             onChildFocused = { focusedLayer = ShellLayer.CONTENT },
                             restoreFocus = restoreFocus,
                             onRestored = { restoreFocus = false },
-                            onContentScrolled = { contentScrolled = it },
                             onEntryHook = { vodEntry = it },
                             modifier = Modifier.fillMaxSize(),
                         )
@@ -1370,44 +1333,12 @@ fun OwnTVShell(
                             onAddEpg = { openEpgAdd = true; onSelectSection(MainSection.SETTINGS) },
                             restoreFocus = restoreFocus,
                             onRestored = { restoreFocus = false },
-                            onContentScrolled = { contentScrolled = it },
                             modifier = Modifier
                                 .fillMaxSize()
                                 .onFocusChanged { if (it.hasFocus) focusedLayer = ShellLayer.CONTENT }
                                 .focusGroup(),
                         )
 
-                        else -> Row(modifier = Modifier.fillMaxSize()) {
-                            CategoryRail(
-                                categories = categories,
-                                selectedIndex = selectedRail,
-                                onSelect = { railSelection[selectedSection] = it },
-                                onFocused = { focusedLayer = ShellLayer.RAIL },
-                            )
-
-                            ContentPane(
-                                sectionTitle = stringResource(selectedSection.labelRes),
-                                categoryName = categories.getOrNull(selectedRail)?.let { category -> category.labelRes?.let { stringResource(it) } ?: category.fullName }
-                                    ?: stringResource(R.string.content_category_all_channels),
-                                countLabel = placeholderCount(selectedSection),
-                                emptyIcon = selectedSection.emptyIcon,
-                                emptyMessage = stringResource(R.string.content_empty_section, stringResource(selectedSection.labelRes)),
-                                onAddSource = { onSelectSection(MainSection.SETTINGS) },
-                                modifier = Modifier
-                                    .weight(1.4f)
-                                    .onFocusChanged { if (it.hasFocus) focusedLayer = ShellLayer.CONTENT }
-                                    .focusGroup(),
-                            )
-
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxSize()
-                                    .padding(Dimens.GapLarge),
-                            ) {
-                                PreviewPane(hint = stringResource(R.string.content_preview_select_channel))
-                            }
-                        }
                     }
                 }
             }
@@ -2077,86 +2008,20 @@ private const val EPG_MATCH_TOAST_MS = 6_000L
 /** A thin bar shown above the browse UI when the device loses internet. */
 @Composable
 private fun OfflineBanner() {
-    val colors = OwnTVTheme.colors
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(colors.tertiaryContainer)
+            .stageGlass(0.dp, overContent = true)
             .padding(horizontal = 24.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
         Text(
             stringResource(R.string.content_offline_banner),
-            style = MaterialTheme.typography.labelLarge,
-            color = colors.onTertiaryContainer,
+            style = tv.own.owntv.ui.theme.stageText(25, 600),
+            color = tv.own.owntv.ui.theme.StageColors.Text,
         ) }
     }
-
-/** Sections already redrawn for Stage: they own the whole canvas and paint the Stage page. */
-private val StageSections = setOf(MainSection.SEARCH, MainSection.HOME, MainSection.LIVE_TV, MainSection.EPG, MainSection.MOVIES, MainSection.SERIES, MainSection.DOWNLOADS, MainSection.SPORTS, MainSection.MORE, MainSection.SETTINGS)
-
-private val MainSection.emptyIcon: OwnTVIcon
-    get() = when (this) {
-        MainSection.SEARCH -> OwnTVIcon.SEARCH
-        MainSection.HOME -> OwnTVIcon.HOME
-        MainSection.LIVE_TV -> OwnTVIcon.LIVE_TV
-        MainSection.SPORTS -> OwnTVIcon.SPORTS
-        MainSection.MOVIES -> OwnTVIcon.MOVIES
-        MainSection.SERIES -> OwnTVIcon.SERIES
-        MainSection.DOWNLOADS -> OwnTVIcon.DOWNLOADS
-        MainSection.EPG -> OwnTVIcon.EPG
-        MainSection.SETTINGS -> OwnTVIcon.SETTINGS
-        MainSection.MORE -> OwnTVIcon.MORE
-    }
-
-private fun railCategoriesFor(section: MainSection): List<RailCategory> = when (section) {
-    MainSection.SEARCH -> emptyList()
-    MainSection.HOME -> emptyList()
-    MainSection.EPG, MainSection.SPORTS -> emptyList()
-    MainSection.LIVE_TV -> listOf(
-        RailCategory("Favorites", OwnTVIcon.FAVORITE, tv.own.owntv.R.string.content_category_favorites),
-        RailCategory("History", OwnTVIcon.HISTORY, tv.own.owntv.R.string.content_category_history),
-        RailCategory("All Channels", labelRes = tv.own.owntv.R.string.content_category_all_channels, showGenreDot = false),
-        RailCategory("United Kingdom", labelRes = tv.own.owntv.R.string.content_category_united_kingdom),
-        RailCategory("United States", labelRes = tv.own.owntv.R.string.content_category_united_states),
-        RailCategory("Germany", labelRes = tv.own.owntv.R.string.content_category_germany),
-        RailCategory("Sports", labelRes = tv.own.owntv.R.string.content_category_sports),
-    )
-    MainSection.MOVIES -> listOf(
-        RailCategory("Favorites", OwnTVIcon.FAVORITE, tv.own.owntv.R.string.content_category_favorites),
-        RailCategory("History", OwnTVIcon.HISTORY, tv.own.owntv.R.string.content_category_history),
-        RailCategory("All Movies", labelRes = tv.own.owntv.R.string.content_category_all_movies, showGenreDot = false),
-        RailCategory("Action", labelRes = tv.own.owntv.R.string.content_category_action),
-        RailCategory("Drama", labelRes = tv.own.owntv.R.string.content_category_drama),
-        RailCategory("Comedy", labelRes = tv.own.owntv.R.string.content_category_comedy),
-        RailCategory("Horror", labelRes = tv.own.owntv.R.string.content_category_horror),
-    )
-    MainSection.SERIES -> listOf(
-        RailCategory("Favorites", OwnTVIcon.FAVORITE, tv.own.owntv.R.string.content_category_favorites),
-        RailCategory("History", OwnTVIcon.HISTORY, tv.own.owntv.R.string.content_category_history),
-        RailCategory("All Series", labelRes = tv.own.owntv.R.string.content_category_all_series, showGenreDot = false),
-        RailCategory("Drama", labelRes = tv.own.owntv.R.string.content_category_drama),
-        RailCategory("Action", labelRes = tv.own.owntv.R.string.content_category_action),
-        RailCategory("Animation", labelRes = tv.own.owntv.R.string.content_category_animation),
-        RailCategory("Documentary", labelRes = tv.own.owntv.R.string.content_category_documentary),
-    )
-    MainSection.DOWNLOADS -> listOf(
-        RailCategory("All Downloads", labelRes = tv.own.owntv.R.string.content_category_all_downloads, showGenreDot = false),
-        RailCategory("Movies", labelRes = tv.own.owntv.R.string.content_category_movies),
-        RailCategory("Series", labelRes = tv.own.owntv.R.string.content_category_series),
-    )
-    MainSection.SETTINGS, MainSection.MORE -> emptyList()
-}
-
-@Composable
-private fun placeholderCount(section: MainSection): String = when (section) {
-    MainSection.SEARCH, MainSection.HOME, MainSection.EPG, MainSection.SPORTS, MainSection.SETTINGS, MainSection.MORE -> ""
-    MainSection.LIVE_TV -> stringResource(R.string.content_zero_channels)
-    MainSection.MOVIES -> stringResource(R.string.content_zero_movies)
-    MainSection.SERIES -> stringResource(R.string.content_zero_series)
-    MainSection.DOWNLOADS -> stringResource(R.string.content_zero_downloads)
-}
 
 /** The line under a rail item at Size = Extra wide (P1-15); real data only, so most items can have none. */
 @Composable

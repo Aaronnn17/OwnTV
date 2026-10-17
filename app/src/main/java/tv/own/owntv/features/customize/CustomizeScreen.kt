@@ -2,12 +2,9 @@ package tv.own.owntv.features.customize
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -16,7 +13,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -25,10 +21,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.foundation.focusGroup
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
@@ -42,7 +36,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import tv.own.owntv.R
 import tv.own.owntv.ui.theme.mpx
@@ -64,18 +57,9 @@ import tv.own.owntv.features.settings.SettingsViewModel
 import tv.own.owntv.core.settings.SettingsRepository
 import tv.own.owntv.ui.components.chNavPaging
 import tv.own.owntv.ui.components.jumpLazyListTo
-import tv.own.owntv.ui.components.OwnTVButton
 import tv.own.owntv.ui.components.OwnTVIcon
-import tv.own.owntv.ui.components.dialogPanel
-import tv.own.owntv.ui.components.modalScrim
-import tv.own.owntv.ui.components.OwnTVButtonStyle
 import tv.own.owntv.ui.components.TextInputDialog
-import tv.own.owntv.ui.components.roundedPanel
-import tv.own.owntv.ui.components.trapAllFocusExit
 import tv.own.owntv.ui.components.trapVerticalFocusExit
-import tv.own.owntv.core.theme.GlassSurface
-import tv.own.owntv.ui.theme.LocalActionSurface
-import tv.own.owntv.ui.theme.OwnTVTheme
 import tv.own.owntv.core.customize.MoveKind
 import tv.own.owntv.core.customize.SpanSelector
 
@@ -100,7 +84,6 @@ fun CustomizeScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val rangeSelectedKeys by vm.rangeSelectedKeys.collectAsStateWithLifecycle()
     val pinLock by vm.pinLock.collectAsStateWithLifecycle()
     val selectedCategory by vm.selectedCategory.collectAsStateWithLifecycle()
-    val colors = OwnTVTheme.colors
     var renaming by remember { mutableStateOf<CustomizeCatRow?>(null) }
     var showNewCatPicker by remember { mutableStateOf(false) }
     var showSortPicker by remember { mutableStateOf(false) }
@@ -161,21 +144,20 @@ fun CustomizeScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val headerOffset = if (hiddenChannels.isNotEmpty()) hiddenChannels.size + 2 else 0
 
     // Wait for the stored lock state before showing anything (no unlocked flash).
-    val oldInset = Modifier.padding(start = 6.dp, end = 6.dp, bottom = 6.dp, top = tv.own.owntv.features.shell.components.StageContentTop)
-    if (!pinLock.loaded) {
-        Column(modifier.then(oldInset).fillMaxSize().roundedPanel()) {}
-        return
-    }
+    if (!pinLock.loaded) return
     if (pinLock.pin != null && !unlocked) {
         Column(
-            modifier = modifier.then(oldInset).fillMaxSize().roundedPanel().padding(horizontal = 40.dp, vertical = 28.dp),
+            modifier = modifier
+                .padding(start = 6.dp, end = 6.dp, bottom = 6.dp, top = tv.own.owntv.features.shell.components.StageContentTop)
+                .fillMaxSize()
+                .padding(horizontal = 40.dp, vertical = 28.dp),
         ) {
-            Text(stringResource(R.string.settings_customize_title), style = MaterialTheme.typography.headlineLarge, color = colors.onSurface)
-            Spacer(Modifier.height(4.dp))
+            Text(stringResource(R.string.settings_customize_title), style = tv.own.owntv.ui.theme.stageText(42, 800), color = tv.own.owntv.ui.theme.StageColors.Text)
             Text(
                 stringResource(R.string.settings_customize_pin_locked),
-                style = MaterialTheme.typography.bodyMedium,
-                color = colors.onSurfaceVariant,
+                style = tv.own.owntv.ui.theme.stageText(18, 500),
+                color = tv.own.owntv.ui.theme.StageColors.Muted,
+                modifier = Modifier.padding(top = 10.mpx),
             )
         }
         PinDialog(
@@ -227,9 +209,6 @@ fun CustomizeScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     if (selectedCategory != null) {
         CustomizeItemsScreen(onBack = { vm.closeItems() }, modifier = modifier)
     } else {
-    // Action pills on this panel frost with CARDS (the surface the panel rows use), not the DIALOGS
-    // default. Covers the chip/move/unhide buttons; trailing Popups don't inherit this anyway.
-    CompositionLocalProvider(LocalActionSurface provides GlassSurface.CARDS) {
     // P10B-02: the band, the tool row above the list (owner), categories as rows and the panel with
     // the focused category's actions and the span help.
     StageFullPage(
@@ -613,7 +592,6 @@ fun CustomizeScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
             }
         }
     }
-    } // CompositionLocalProvider
     } // else (selectedCategory == null)
 }
 
@@ -623,7 +601,6 @@ fun CustomizeScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
  */
 @Composable
 private fun RangeHideDialog(count: Int, onHide: () -> Unit, onShow: () -> Unit, onDismiss: () -> Unit) {
-    val colors = OwnTVTheme.colors
     val hideFocus = remember { FocusRequester() }
     LaunchedEffect(Unit) { runCatching { hideFocus.requestFocus() } }
     BackHandler { onDismiss() }
@@ -633,9 +610,9 @@ private fun RangeHideDialog(count: Int, onHide: () -> Unit, onShow: () -> Unit, 
         body = pluralStringResource(R.plurals.settings_customize_selected_categories, count, count),
         width = 864.mpx,
         buttons = {
-            OwnTVButton(stringResource(R.string.common_cancel), onClick = onDismiss, style = OwnTVButtonStyle.SECONDARY)
-            OwnTVButton(stringResource(R.string.settings_customize_show), onClick = onShow, style = OwnTVButtonStyle.SECONDARY)
-            OwnTVButton(stringResource(R.string.settings_customize_hide), onClick = onHide, modifier = Modifier.focusRequester(hideFocus))
+            tv.own.owntv.ui.stage.StagePopupButton(stringResource(R.string.common_cancel), onClick = onDismiss, primary = false)
+            tv.own.owntv.ui.stage.StagePopupButton(stringResource(R.string.settings_customize_show), onClick = onShow, primary = false)
+            tv.own.owntv.ui.stage.StagePopupButton(stringResource(R.string.settings_customize_hide), onClick = onHide, modifier = Modifier.focusRequester(hideFocus))
         },
     )
 }
@@ -727,7 +704,6 @@ private fun PinConfirmDialog(
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val colors = OwnTVTheme.colors
     val confirmFocus = remember { FocusRequester() }
     LaunchedEffect(Unit) { runCatching { confirmFocus.requestFocus() } }
     BackHandler { onDismiss() }
@@ -737,8 +713,8 @@ private fun PinConfirmDialog(
         body = message,
         width = 522.mpx,
         buttons = {
-            OwnTVButton(stringResource(R.string.common_cancel), onClick = onDismiss, style = OwnTVButtonStyle.SECONDARY)
-            OwnTVButton(confirmLabel, onClick = onConfirm, modifier = Modifier.focusRequester(confirmFocus))
+            tv.own.owntv.ui.stage.StagePopupButton(stringResource(R.string.common_cancel), onClick = onDismiss, primary = false)
+            tv.own.owntv.ui.stage.StagePopupButton(confirmLabel, onClick = onConfirm, modifier = Modifier.focusRequester(confirmFocus))
         },
     )
 }

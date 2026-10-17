@@ -42,7 +42,6 @@ import tv.own.owntv.core.menu.catalogue
 import tv.own.owntv.core.model.ContentMenu
 import tv.own.owntv.ui.components.OwnTVIcon
 import tv.own.owntv.ui.components.trapAllFocusExit
-import tv.own.owntv.ui.theme.OwnTVTheme
 
 @Composable
 private fun menuTitle(menu: ContentMenu) = stringResource(
@@ -149,7 +148,6 @@ private fun ArrangeMenuOverlay(
     onCancel: () -> Unit,
 ) {
     val vm: SettingsViewModel = koinViewModel()
-    val colors = OwnTVTheme.colors
     val refs = catalogue(menu)
     // Wait for DataStore's first real value before seeding. An eager empty placeholder would make
     // every reopened editor show the shipped order even when a custom order is already saved.
@@ -224,7 +222,7 @@ private fun ArrangeMenuRow(
     modifier: Modifier = Modifier,
 ) {
     // A held OK raises the long press first and the plain click when the key is finally released,
-    // which would pick the action up and immediately put it back down. Same guard as Row2.
+    // which would pick the action up and immediately put it back down.
     var longAt by remember { androidx.compose.runtime.mutableLongStateOf(0L) }
     val a = tv.own.owntv.ui.theme.stageAccent
     tv.own.owntv.ui.stage.StageSurface(

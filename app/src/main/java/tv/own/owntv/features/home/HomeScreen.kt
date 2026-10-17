@@ -36,7 +36,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -60,7 +59,6 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.LineHeightStyle
@@ -69,7 +67,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.launch
@@ -102,10 +99,8 @@ import tv.own.owntv.ui.stage.StagePoster
 import tv.own.owntv.ui.stage.StageStill
 import tv.own.owntv.ui.stage.StageSurface
 import tv.own.owntv.ui.stage.StageTag
-import tv.own.owntv.ui.theme.OwnTVTheme
 import tv.own.owntv.ui.theme.StageColors
 import tv.own.owntv.ui.theme.dissolveEdges
-import tv.own.owntv.ui.theme.gradientWash
 import tv.own.owntv.ui.theme.mpx
 import tv.own.owntv.ui.theme.mpxSp
 import tv.own.owntv.ui.theme.stageAccent
@@ -152,7 +147,6 @@ fun HomeScreen(
     onRestored: () -> Unit = {},
     previewEnabled: Boolean = true,
     firstRowFocusRequester: FocusRequester? = null,
-    onContentScrolled: (Boolean) -> Unit = {},
     /** The content's left edge: beside the resting capsule (150), or 64 inside a docked rail's reserve. */
     contentStart: Dp = 150.mpx,
     /**
@@ -178,14 +172,6 @@ fun HomeScreen(
     val favoriteMovies by vm.favoriteMovieIds.collectAsStateWithLifecycle()
     val favoriteSeries by vm.favoriteSeriesIds.collectAsStateWithLifecycle()
     val listState = androidx.compose.foundation.lazy.rememberLazyListState()
-    val chromeScrollThresholdPx = with(LocalDensity.current) { 8.dp.roundToPx() }
-    val contentScrolled by remember(listState, chromeScrollThresholdPx) {
-        derivedStateOf {
-            listState.firstVisibleItemIndex > 0 ||
-                listState.firstVisibleItemScrollOffset > chromeScrollThresholdPx
-        }
-    }
-    LaunchedEffect(contentScrolled) { onContentScrolled(contentScrolled) }
     val homeScope = rememberCoroutineScope()
     val heroFocus = remember { FocusRequester() }
     val fallbackFocus = remember { FocusRequester() }
@@ -1358,7 +1344,6 @@ private fun HeroFallbackPane(
     focusRequester: FocusRequester,
     onChildFocused: () -> Unit,
 ) {
-    val colors = OwnTVTheme.colors
     Box(
         modifier = modifier
             .aspectRatio(16f / 9f)
@@ -1366,7 +1351,7 @@ private fun HeroFallbackPane(
             .focusable()
             .onFocusChanged { if (it.hasFocus) onChildFocused() }
             .clip(RoundedCornerShape(20.dp))
-            .background(colors.panel)
+            .background(tv.own.owntv.ui.theme.StageColors.GlassOff)
             .padding(24.dp),
         contentAlignment = Alignment.Center,
     ) {
@@ -1375,16 +1360,16 @@ private fun HeroFallbackPane(
             Spacer(Modifier.height(14.dp))
             Text(
                 text = stringResource(R.string.home_no_preview),
-                style = MaterialTheme.typography.bodyLarge,
-                color = colors.onSurfaceVariant,
+                style = tv.own.owntv.ui.theme.stageText(29, 400),
+                color = tv.own.owntv.ui.theme.StageColors.Muted,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
             )
             Spacer(Modifier.height(8.dp))
             Text(
                 text = stringResource(R.string.home_continue_empty),
-                style = MaterialTheme.typography.bodyMedium,
-                color = colors.onSurfaceVariant,
+                style = tv.own.owntv.ui.theme.stageText(25, 400),
+                color = tv.own.owntv.ui.theme.StageColors.Muted,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -1396,11 +1381,10 @@ private fun HeroFallbackPane(
 private fun EmptyHomeState(
     modifier: Modifier = Modifier,
 ) {
-    val colors = OwnTVTheme.colors
     Box(
         modifier = modifier
             .focusProperties { canFocus = false }
-            .background(colors.surface),
+            .background(tv.own.owntv.ui.theme.StageColors.GlassOff),
         contentAlignment = Alignment.Center,
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -1408,16 +1392,16 @@ private fun EmptyHomeState(
             Spacer(Modifier.height(16.dp))
             Text(
                 text = stringResource(R.string.home_start_watching),
-                style = MaterialTheme.typography.titleLarge,
-                color = colors.onSurface,
+                style = tv.own.owntv.ui.theme.stageText(40, 600),
+                color = tv.own.owntv.ui.theme.StageColors.Text,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
             Spacer(Modifier.height(8.dp))
             Text(
                 text = stringResource(R.string.home_continue_empty),
-                style = MaterialTheme.typography.bodyLarge,
-                color = colors.onSurfaceVariant,
+                style = tv.own.owntv.ui.theme.stageText(29, 400),
+                color = tv.own.owntv.ui.theme.StageColors.Muted,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -1429,11 +1413,10 @@ private fun EmptyHomeState(
 private fun AllRowsHiddenState(
     modifier: Modifier = Modifier,
 ) {
-    val colors = OwnTVTheme.colors
     Box(
         modifier = modifier
             .focusProperties { canFocus = false }
-            .background(colors.surface),
+            .background(tv.own.owntv.ui.theme.StageColors.GlassOff),
         contentAlignment = Alignment.Center,
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -1441,16 +1424,16 @@ private fun AllRowsHiddenState(
             Spacer(Modifier.height(16.dp))
             Text(
                 text = stringResource(R.string.home_no_rows),
-                style = MaterialTheme.typography.titleLarge,
-                color = colors.onSurface,
+                style = tv.own.owntv.ui.theme.stageText(40, 600),
+                color = tv.own.owntv.ui.theme.StageColors.Text,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
             Spacer(Modifier.height(8.dp))
             Text(
                 text = stringResource(R.string.home_enable_rows),
-                style = MaterialTheme.typography.bodyLarge,
-                color = colors.onSurfaceVariant,
+                style = tv.own.owntv.ui.theme.stageText(29, 400),
+                color = tv.own.owntv.ui.theme.StageColors.Muted,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )

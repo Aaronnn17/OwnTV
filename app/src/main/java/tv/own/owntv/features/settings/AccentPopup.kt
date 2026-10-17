@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -52,9 +51,7 @@ import tv.own.owntv.R
 import tv.own.owntv.core.theme.AccentColor
 import tv.own.owntv.ui.components.OwnTVIcon
 import tv.own.owntv.ui.components.OwnTVPopup
-import tv.own.owntv.ui.components.OwnTVTextField
 import tv.own.owntv.ui.components.hsvToHex
-import tv.own.owntv.ui.components.modalScrim
 import tv.own.owntv.ui.components.trapAllFocusExit
 import tv.own.owntv.ui.stage.StageButton
 import tv.own.owntv.ui.stage.StageProgress
@@ -164,7 +161,7 @@ fun StageColorPopup(
     OwnTVPopup(onDismissRequest = cancel, stageLayout = true) {
         BackHandler { cancel() }
         Box(
-            Modifier.fillMaxSize().modalScrim().trapAllFocusExit().focusGroup(),
+            Modifier.fillMaxSize().background(StageColors.Scrim).trapAllFocusExit().focusGroup(),
             contentAlignment = Alignment.TopCenter,
         ) {
             Row(
@@ -204,8 +201,9 @@ fun StageColorPopup(
                         }
                         Swatch(current, stringResource(R.string.settings_accent_yours), chosen = true, onClick = {})
                     }
-                    SectionLabel(stringResource(R.string.settings_hex_code))
-                    OwnTVTextField(
+                    StageFieldRow(
+                        icon = OwnTVIcon.PENCIL,
+                        label = stringResource(R.string.settings_hex_code),
                         value = hexInput,
                         onValueChange = { s ->
                             hexInput = s.removePrefix("#").take(6)
@@ -216,10 +214,7 @@ fun StageColorPopup(
                                 hue = hsv[0]; sat = hsv[1]; value = hsv[2]
                             }
                         },
-                        // Captioned by HEX CODE above it, as drawn.
-                        label = "",
                         placeholder = "4E952A",
-                        modifier = Modifier.width(300.mpx),
                     )
                     SectionLabel(stringResource(R.string.settings_panel_width_preview), Modifier.padding(top = 26.mpx))
                     preview()

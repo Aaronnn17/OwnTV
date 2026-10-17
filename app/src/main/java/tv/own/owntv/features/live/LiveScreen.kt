@@ -9,11 +9,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,7 +20,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -39,9 +35,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
@@ -49,10 +43,8 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.graphics.graphicsLayer
@@ -77,43 +69,24 @@ import tv.own.owntv.core.database.entity.ChannelEntity
 import tv.own.owntv.core.database.entity.ContentOrderEntity
 import tv.own.owntv.features.customize.MoveToCategoryDialog
 import tv.own.owntv.features.settings.SettingsViewModel
-import tv.own.owntv.features.settings.data.BrowseColumnGap
-import tv.own.owntv.features.settings.data.BrowseColumnDividerSpace
-import tv.own.owntv.features.settings.data.BrowseContainerPadding
 import tv.own.owntv.core.settings.PanelSection
-import tv.own.owntv.features.settings.data.browsePanelGapTotal
 import tv.own.owntv.features.settings.data.computePanelWidths
 import tv.own.owntv.features.settings.rememberPanelShares
 import tv.own.owntv.features.shell.components.CategoryContextMenu
-import tv.own.owntv.features.shell.components.CategoryRail
 import tv.own.owntv.ui.components.MoveOrderOverlay
-import tv.own.owntv.features.shell.components.PreviewPane
-import tv.own.owntv.features.shell.components.RailCategory
 import tv.own.owntv.ui.components.chNavPaging
-import tv.own.owntv.ui.components.jumpLazyListTo
 import tv.own.owntv.ui.components.longPressMenuGuard
 import tv.own.owntv.ui.components.trapAllFocusExit
-import tv.own.owntv.ui.components.trapVerticalFocusExit
-import tv.own.owntv.ui.components.ChannelGenre
 import tv.own.owntv.core.model.ContentMenu
 import tv.own.owntv.ui.components.MenuAction
 import tv.own.owntv.ui.components.arranged
 import tv.own.owntv.ui.components.OwnTVIcon
-import tv.own.owntv.ui.components.ProviderChip
 import tv.own.owntv.ui.components.OwnTVSpinner
-import tv.own.owntv.ui.components.SearchBar
 import tv.own.owntv.ui.components.TextInputDialog
-import tv.own.owntv.ui.components.formatCount
-import tv.own.owntv.ui.components.ContentPanelFill
-import tv.own.owntv.ui.components.PreviewPanelFill
-import tv.own.owntv.ui.components.roundedPanel
 import tv.own.owntv.ui.components.gridFocusTarget
 import tv.own.owntv.ui.format.rememberBestDateFormatter
 import tv.own.owntv.ui.format.rememberSystemTimeFormatter
-import tv.own.owntv.ui.theme.Dimens
-import tv.own.owntv.ui.theme.LocalPopupFontFamily
 import tv.own.owntv.core.live.LiveKey
-import tv.own.owntv.core.live.EpgNowNext
 import tv.own.owntv.core.live.ProviderTags
 
 /** Live TV (Stage P4): the channel list, the stage beside it and the categories as a sheet or a column. */
@@ -125,7 +98,6 @@ fun LiveScreen(
     previewEnabled: Boolean = true,
     restoreFocus: Boolean = false,
     onRestored: () -> Unit = {},
-    onContentScrolled: (Boolean) -> Unit = {},
     modifier: Modifier = Modifier,
     /**
      * Pins the list to one folder and takes the category rail away — how More → Favourites and
@@ -237,16 +209,6 @@ fun LiveScreen(
     }
     val catListState = androidx.compose.foundation.lazy.rememberLazyListState()
     val categoryQuery by vm.categoryQuery.collectAsStateWithLifecycle()
-    val chromeScrollThresholdPx = with(LocalDensity.current) { 8.dp.roundToPx() }
-    val contentScrolled by remember(effectiveListState, catListState, chromeScrollThresholdPx) {
-        androidx.compose.runtime.derivedStateOf {
-            effectiveListState.firstVisibleItemIndex > 0 ||
-                effectiveListState.firstVisibleItemScrollOffset > chromeScrollThresholdPx ||
-                catListState.firstVisibleItemIndex > 0 ||
-                catListState.firstVisibleItemScrollOffset > chromeScrollThresholdPx
-        }
-    }
-    LaunchedEffect(contentScrolled) { onContentScrolled(contentScrolled) }
     val scope = rememberCoroutineScope()
     var channelPaneFocused by remember { mutableStateOf(false) }
     var railPaneFocused by remember { mutableStateOf(false) }
@@ -291,7 +253,7 @@ fun LiveScreen(
     var contextMenuOpen by remember { mutableStateOf(false) }
     // Id of the channel the context menu was opened on, plus a dedicated requester bound to that row.
     // The previous restore was racy (delay(60) + selFocus bound to the *previewed* channel): when the
-    // menu scrim disposed the focused menu button, Compose auto-restored focus and the CategoryRail's
+    // menu scrim disposed the focused menu button, Compose auto-restored focus and the category rail's
     // entry-redirect pinned it to the rail before selFocus.requestFocus() ran. Tracking the long-press
     // target by id and binding a dedicated requester makes the restore deterministic.
     var contextChannelId by remember { mutableStateOf<Long?>(null) }

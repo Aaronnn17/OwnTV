@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -45,7 +44,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
@@ -57,12 +55,9 @@ import tv.own.owntv.core.i18n.horizontalDirection
 import tv.own.owntv.core.settings.RemoteShortcutAction
 import tv.own.owntv.core.settings.RemoteShortcutPress
 import tv.own.owntv.ui.components.LocalRemoteShortcuts
-import tv.own.owntv.ui.components.OwnTVButton
-import tv.own.owntv.ui.components.OwnTVButtonStyle
 import tv.own.owntv.ui.components.OwnTVIcon
 import tv.own.owntv.ui.components.OwnTVSpinner
 import tv.own.owntv.ui.components.displayText // PlayerFailureReason.displayText, for the error overlay
-import tv.own.owntv.ui.theme.LocalActionSurface
 import tv.own.owntv.ui.theme.gradientWash
 
 /**
@@ -465,7 +460,6 @@ fun PlayerHud(
             else -> remoteShortcuts.dispatch(action)
         }
     }
-    CompositionLocalProvider(LocalActionSurface provides null) {
     Box(
         modifier = modifier.fillMaxSize()
             .onPreviewKeyEvent { e ->
@@ -762,7 +756,7 @@ fun PlayerHud(
             ) {
                 Text(
                     msg,
-                    style = MaterialTheme.typography.labelLarge,
+                    style = tv.own.owntv.ui.theme.stageText(25, 600),
                     color = hudInk,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier
@@ -776,25 +770,25 @@ fun PlayerHud(
         // Status overlay (always shown).
         when {
             error != null -> Column(Modifier.align(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(stringResource(R.string.player_playback_error), style = MaterialTheme.typography.titleLarge, color = Color.White)
+                Text(stringResource(R.string.player_playback_error), style = tv.own.owntv.ui.theme.stageText(40, 600), color = Color.White)
                 Spacer(Modifier.height(8.dp))
                 error?.let {
-                    Text(it.displayText(), style = MaterialTheme.typography.bodyMedium, color = Color.White.copy(alpha = 0.7f), textAlign = TextAlign.Center)
+                    Text(it.displayText(), style = tv.own.owntv.ui.theme.stageText(25, 400), color = Color.White.copy(alpha = 0.7f), textAlign = TextAlign.Center)
                 }
                 // Structured technical detail so a user can report the real cause without adb/logcat:
                 // plain reason → media spec (codec • resolution • decoder) → raw engine/codec line.
                 errorInfo?.let { info ->
                     info.reason?.let {
                         Spacer(Modifier.height(8.dp))
-                        Text(it.displayText(), style = MaterialTheme.typography.bodyMedium, color = Color.White.copy(alpha = 0.92f), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth(0.8f))
+                        Text(it.displayText(), style = tv.own.owntv.ui.theme.stageText(25, 400), color = Color.White.copy(alpha = 0.92f), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth(0.8f))
                     }
                     info.spec?.let {
                         Spacer(Modifier.height(4.dp))
-                        Text(it.displayText(), style = MaterialTheme.typography.labelMedium, color = Color.White.copy(alpha = 0.55f), textAlign = TextAlign.Center)
+                        Text(it.displayText(), style = tv.own.owntv.ui.theme.stageText(22, 700), color = Color.White.copy(alpha = 0.55f), textAlign = TextAlign.Center)
                     }
                     info.raw?.takeIf { it.isNotBlank() }?.let {
                         Spacer(Modifier.height(4.dp))
-                        Text(stringResource(R.string.player_raw_error, it), style = MaterialTheme.typography.bodySmall, color = Color.White.copy(alpha = 0.6f), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth(0.8f))
+                        Text(stringResource(R.string.player_raw_error, it), style = tv.own.owntv.ui.theme.stageText(22, 400), color = Color.White.copy(alpha = 0.6f), textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth(0.8f))
                     }
                 }
                 // D9 — while a recording is what took the picture away, this screen has TWO buttons
@@ -809,27 +803,27 @@ fun PlayerHud(
                 if (recordingConflict != null) {
                     Text(
                         stringResource(R.string.player_recording_conflict),
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = tv.own.owntv.ui.theme.stageText(25, 400),
                         color = Color.White.copy(alpha = 0.92f),
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth(0.8f),
                     )
                     Spacer(Modifier.height(14.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        OwnTVButton(
+                        tv.own.owntv.ui.stage.StageButton(
                             stringResource(R.string.player_keep_watching_stop_recording),
                             onClick = { recordingConflict.stopAndRetry() },
-                            icon = OwnTVIcon.PLAY,
                             modifier = Modifier.focusRequester(retryFocus),
+                            icon = OwnTVIcon.PLAY,
+                            tinted = true,
                         )
-                        OwnTVButton(
+                        tv.own.owntv.ui.stage.StageButton(
                             stringResource(R.string.settings_close),
                             onClick = onBack,
-                            style = OwnTVButtonStyle.SECONDARY,
                         )
                     }
                 } else {
-                    OwnTVButton(stringResource(R.string.common_retry), onClick = { player.retry() }, icon = OwnTVIcon.PLAY, modifier = Modifier.focusRequester(retryFocus))
+                    tv.own.owntv.ui.stage.StageButton(stringResource(R.string.common_retry), onClick = { player.retry() }, modifier = Modifier.focusRequester(retryFocus), icon = OwnTVIcon.PLAY, tinted = true)
                 }
             }
             // A provider wait looks like loading, because that is what it is: the channel is queued behind
@@ -847,7 +841,7 @@ fun PlayerHud(
                         Spacer(Modifier.height(14.dp))
                         Text(
                             stringResource(R.string.player_reconnecting),
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = tv.own.owntv.ui.theme.stageText(25, 400),
                             color = Color.White.copy(alpha = 0.85f),
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth(0.7f),
@@ -863,7 +857,7 @@ fun PlayerHud(
                             wait.message ?: stringResource(R.string.player_provider_busy),
                             wait.secondsLeft,
                         ),
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = tv.own.owntv.ui.theme.stageText(25, 400),
                         color = Color.White.copy(alpha = 0.85f),
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth(0.7f),
@@ -872,7 +866,6 @@ fun PlayerHud(
             }
         }
     }
-    } // CompositionLocalProvider
 
     when (dialog) {
         // Track lists are SNAPSHOT once when the dialog opens (re-polled only while still empty —

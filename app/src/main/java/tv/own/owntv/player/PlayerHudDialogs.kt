@@ -38,9 +38,7 @@ import tv.own.owntv.ui.theme.stageText
 import tv.own.owntv.ui.theme.stageAccent
 import tv.own.owntv.ui.theme.StageColors
 import tv.own.owntv.ui.components.OwnTVIcon
-import tv.own.owntv.ui.components.dialogPanel
 import tv.own.owntv.ui.components.displayLabel
-import tv.own.owntv.ui.components.modalScrim
 import tv.own.owntv.ui.format.localizedDecimal
 
 /**

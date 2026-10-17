@@ -36,7 +36,6 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -46,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import tv.own.owntv.R
 import tv.own.owntv.core.database.entity.ChannelEntity
@@ -56,7 +54,6 @@ import tv.own.owntv.player.PlaybackFailure
 import tv.own.owntv.player.describe
 import tv.own.owntv.player.LivePreviewEngine
 import tv.own.owntv.ui.components.OwnTVIcon
-import tv.own.owntv.ui.theme.OwnTVTheme
 
 /**
  * The Multiview grid: up to four live channels at once, grown from the one already playing.
@@ -150,7 +147,6 @@ private fun Tile(
     onMenu: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val colors = OwnTVTheme.colors
     val tile = state.tiles[index]
     val focused = state.focused == index
     // Long OK is a key-down held past the system's long-press threshold; Compose reports the repeat
@@ -160,10 +156,10 @@ private fun Tile(
     Box(
         modifier
             .clip(TileShape)
-            .background(colors.surfaceContainerLowest)
+            .background(tv.own.owntv.ui.theme.StageColors.Ink.copy(alpha = 0.04f))
             .border(
                 width = if (focused) 3.dp else 1.dp,
-                color = if (focused) colors.primary else colors.surfaceContainerHigh,
+                color = if (focused) tv.own.owntv.ui.theme.stageAccent.accent else tv.own.owntv.ui.theme.StageColors.Ink.copy(alpha = 0.08f),
                 shape = TileShape,
             )
             .focusRequester(focusRequester)
@@ -223,8 +219,8 @@ private fun Tile(
                 when {
                     index in state.soundOnly -> Text(
                         text = stringResource(R.string.multiview_sound_only_note),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = colors.onSurfaceVariant,
+                        style = tv.own.owntv.ui.theme.stageText(25, 400),
+                        color = tv.own.owntv.ui.theme.StageColors.Muted,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.align(Alignment.Center).padding(24.dp),
                     )
@@ -233,8 +229,8 @@ private fun Tile(
                     // explanation — indistinguishable, to the user, from the app being broken.
                     engineState == LivePreviewEngine.State.ERROR -> Text(
                         text = tileFailureText(failure = failure),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = colors.onSurfaceVariant,
+                        style = tv.own.owntv.ui.theme.stageText(25, 400),
+                        color = tv.own.owntv.ui.theme.StageColors.Muted,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.align(Alignment.Center).padding(24.dp),
                     )
@@ -254,8 +250,8 @@ private fun Tile(
             // The television, not the provider: it had already allowed this stream.
             tile.deviceLimit -> Text(
                 text = stringResource(R.string.multiview_decoder_exhausted),
-                style = MaterialTheme.typography.bodyMedium,
-                color = colors.onSurfaceVariant,
+                style = tv.own.owntv.ui.theme.stageText(25, 400),
+                color = tv.own.owntv.ui.theme.StageColors.Muted,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.align(Alignment.Center).padding(24.dp),
             )
@@ -264,8 +260,8 @@ private fun Tile(
                 val text = refusal.displayText(LocalContext.current.resources)
                 Text(
                     text = text,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = colors.onSurfaceVariant,
+                    style = tv.own.owntv.ui.theme.stageText(25, 400),
+                    color = tv.own.owntv.ui.theme.StageColors.Muted,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.align(Alignment.Center).padding(24.dp),
                 )
@@ -278,13 +274,13 @@ private fun Tile(
                 ) {
                     OwnTVIcon(
                         OwnTVIcon.ADD,
-                        tint = colors.onSurfaceVariant,
+                        tint = tv.own.owntv.ui.theme.StageColors.Muted,
                         modifier = Modifier.size(28.dp),
                     )
                     Text(
                         text = stringResource(R.string.multiview_add_channel),
-                        style = MaterialTheme.typography.titleSmall,
-                        color = colors.onSurfaceVariant,
+                        style = tv.own.owntv.ui.theme.stageText(25, 500),
+                        color = tv.own.owntv.ui.theme.StageColors.Muted,
                     )
                 }
             }
@@ -315,7 +311,6 @@ private fun tileFailureText(failure: PlaybackFailure?): String = when {
 /** The channel's name, and the speaker badge on whichever tile the sound is coming from. */
 @Composable
 private fun androidx.compose.foundation.layout.BoxScope.TileCaption(name: String, audible: Boolean) {
-    val colors = OwnTVTheme.colors
     val audioTileLabel = stringResource(R.string.multiview_audio_tile)
     Row(
         Modifier
@@ -330,7 +325,7 @@ private fun androidx.compose.foundation.layout.BoxScope.TileCaption(name: String
         if (audible) {
             OwnTVIcon(
                 OwnTVIcon.VOLUME_HIGH,
-                tint = colors.primary,
+                tint = tv.own.owntv.ui.theme.stageAccent.accent,
                 modifier = Modifier
                     .size(14.dp)
                     .semantics { contentDescription = audioTileLabel },
@@ -338,7 +333,7 @@ private fun androidx.compose.foundation.layout.BoxScope.TileCaption(name: String
         }
         Text(
             text = name,
-            style = MaterialTheme.typography.labelLarge,
+            style = tv.own.owntv.ui.theme.stageText(25, 600),
             color = hudInk,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,

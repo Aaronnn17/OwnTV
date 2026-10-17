@@ -1,5 +1,6 @@
 package tv.own.owntv.ui.components
 
+import tv.own.owntv.ui.stage.stageGlass
 import tv.own.owntv.ui.theme.stageTone
 import tv.own.owntv.ui.theme.StageColors
 import kotlinx.coroutines.delay
@@ -36,10 +37,8 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import tv.own.owntv.R
-import tv.own.owntv.ui.theme.OwnTVTheme
 
 /**
  * Full-screen overlay for manually reordering items via D-pad Up/Down.
@@ -56,7 +55,6 @@ fun MoveOrderOverlay(
     onCommit: () -> Unit,
     onCancel: () -> Unit,
 ) {
-    val colors = OwnTVTheme.colors
     val focus = remember { FocusRequester() }
     val listState = rememberLazyListState()
 
@@ -99,16 +97,15 @@ fun MoveOrderOverlay(
         Column(
             modifier = Modifier
                 .width(480.dp)
-                .clip(RoundedCornerShape(20.dp))
-                .background(colors.surfaceContainerHigh)
+                .stageGlass(20.dp, overContent = true)
                 .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Text(title, style = MaterialTheme.typography.titleMedium, color = colors.onSurface)
+            Text(title, style = tv.own.owntv.ui.theme.stageText(32, 600), color = tv.own.owntv.ui.theme.StageColors.Text)
             Text(
                 stringResource(R.string.common_move_instructions),
-                style = MaterialTheme.typography.bodySmall,
-                color = colors.onSurfaceVariant,
+                style = tv.own.owntv.ui.theme.stageText(22, 400),
+                color = tv.own.owntv.ui.theme.StageColors.Muted,
             )
             Spacer(Modifier.height(4.dp))
             LazyColumn(
@@ -122,17 +119,17 @@ fun MoveOrderOverlay(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(8.dp))
-                            .background(if (isActive) colors.primary else colors.surfaceContainerLowest)
+                            .background(if (isActive) tv.own.owntv.ui.theme.stageAccent.accent else tv.own.owntv.ui.theme.StageColors.Ink.copy(alpha = 0.04f))
                             .padding(horizontal = 14.dp, vertical = 10.dp),
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             if (isActive) {
-                                Text(stringResource(R.string.setup_move_indicator) + " ", style = MaterialTheme.typography.bodyMedium, color = colors.onPrimary)
+                                Text(stringResource(R.string.setup_move_indicator) + " ", style = tv.own.owntv.ui.theme.stageText(25, 400), color = tv.own.owntv.ui.theme.stageAccent.onAccent)
                             }
                             Text(
                                 name,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = if (isActive) colors.onPrimary else colors.onSurface,
+                                style = tv.own.owntv.ui.theme.stageText(25, 400),
+                                color = if (isActive) tv.own.owntv.ui.theme.stageAccent.onAccent else tv.own.owntv.ui.theme.StageColors.Text,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                             )
@@ -143,8 +140,8 @@ fun MoveOrderOverlay(
             Spacer(Modifier.height(4.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
                 // Save gets the focus: TV focus lands here on overlay open, so onKeyEvent fires.
-                OwnTVButton(stringResource(R.string.common_save), onClick = onCommit, modifier = Modifier.weight(1f).focusRequester(focus))
-                OwnTVButton(stringResource(R.string.common_cancel), onClick = onCancel, style = OwnTVButtonStyle.SECONDARY, modifier = Modifier.weight(1f))
+                tv.own.owntv.ui.stage.StageButton(stringResource(R.string.common_save), onClick = onCommit, modifier = Modifier.weight(1f).focusRequester(focus), tinted = true)
+                tv.own.owntv.ui.stage.StageButton(stringResource(R.string.common_cancel), onClick = onCancel, modifier = Modifier.weight(1f))
             }
         }
     }

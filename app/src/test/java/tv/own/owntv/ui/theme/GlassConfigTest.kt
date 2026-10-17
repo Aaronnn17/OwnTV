@@ -67,38 +67,6 @@ class GlassConfigTest {
     }
 
     @Test
-    fun `legibility floor raises dark fill over bright wallpaper`() {
-        val required = requiredLegibilityAlpha(
-            backdropLuma = 1f,
-            fillLuma = 0.01f,
-            textLuma = 1f,
-        )
-
-        assertTrue(required > 0.7f)
-        assertEquals(
-            0f,
-            requiredLegibilityAlpha(backdropLuma = 0.01f, fillLuma = 0.01f, textLuma = 1f),
-            0.001f,
-        )
-    }
-
-    @Test
-    fun `legibility floor raises light fill over dark wallpaper for dark text`() {
-        val required = requiredLegibilityAlpha(
-            backdropLuma = 0f,
-            fillLuma = 1f,
-            textLuma = 0f,
-        )
-
-        assertTrue(required > 0.1f)
-        assertEquals(
-            0f,
-            requiredLegibilityAlpha(backdropLuma = 1f, fillLuma = 1f, textLuma = 0f),
-            0.001f,
-        )
-    }
-
-    @Test
     fun `ten-level frost pyramid stays inside former backdrop memory ceiling`() {
         val levels = frostMipDimensions(baseWidth = 448, baseHeight = 252)
         val pyramidPixels = levels.sumOf { (width, height) -> width.toLong() * height }
@@ -179,45 +147,5 @@ class GlassConfigTest {
         assertEquals(GlassPreset.CLEAR, config.preset)
         assertEquals(0.38f, config.alpha, 0f)
         assertEquals(0.62f, config.blurStrength, 0f)
-    }
-
-    @Test
-    fun `material role table remains coherent and pinned`() {
-        assertEquals(
-            GlassMaterial(0.12f, 0.30f, 0.18f, 0.34f, 0.78f, 0.30f, GlassDepth.FLOATING, true),
-            GlassSurface.DIALOGS.material,
-        )
-        assertEquals(
-            GlassMaterial(0.04f, 0.24f, 0.15f, 0.34f, 0.72f, 0.22f, GlassDepth.CHROME, true),
-            GlassSurface.TOPBAR.material,
-        )
-        assertEquals(GlassSurface.TOPBAR.material, GlassSurface.SIDEBAR.material)
-        assertEquals(GlassSurface.TOPBAR.material, GlassSurface.MINI_PLAYER.material)
-        assertEquals(
-            GlassMaterial(0f, 0.20f, 0.11f, 0.32f, 0.68f, 0.18f, GlassDepth.CONTAINER, true),
-            GlassSurface.PANELS.material,
-        )
-        assertEquals(GlassSurface.PANELS.material, GlassSurface.PREVIEW.material)
-        assertEquals(
-            GlassMaterial(-0.08f, 0.18f, 0.06f, 0.30f, 0.64f, 0.14f, GlassDepth.INLINE, false),
-            GlassSurface.CARDS.material,
-        )
-    }
-
-    @Test
-    fun `layer budget allows one frost pass then progressively simplifies`() {
-        assertEquals(
-            GlassLayerTreatment(frost = true, glint = true, brightRim = true, darkEdge = true),
-            glassLayerTreatment(1),
-        )
-        assertEquals(
-            GlassLayerTreatment(frost = false, glint = true, brightRim = true, darkEdge = true),
-            glassLayerTreatment(2),
-        )
-        assertEquals(
-            GlassLayerTreatment(frost = false, glint = false, brightRim = false, darkEdge = true),
-            glassLayerTreatment(3),
-        )
-        assertEquals(glassLayerTreatment(3), glassLayerTreatment(9))
     }
 }

@@ -138,8 +138,8 @@ private fun Modifier.stageFocusDecor(style: StageFocus, radius: Dp, a: StageAcce
 }
 
 /**
- * The focusable base every Stage control is built on: D-pad focus and click wiring as in
- * FocusableSurface, the [focusStyle] treatment while focused, [idle] (a fill or [stageGlass]) otherwise.
+ * The focusable base every Stage control is built on: D-pad focus and click wiring (a held OK calls
+ * [onLongClick]), the [focusStyle] treatment while focused, [idle] (a fill or [stageGlass]) otherwise.
  * Nothing is clipped, so rings and glows reach past the bounds exactly as a `box-shadow` does.
  */
 @Composable
@@ -154,11 +154,12 @@ fun StageSurface(
     contentAlignment: Alignment = Alignment.CenterStart,
     /** Drawn as focused without holding focus: a pill whose menu is open over it. */
     highlighted: Boolean = false,
+    /** The focus colours; the player's chrome passes its on-video accent. */
+    accent: StageAccent = stageAccent,
     content: @Composable BoxScope.(focused: Boolean) -> Unit,
 ) {
     val interaction = remember { MutableInteractionSource() }
     val focused = interaction.collectIsFocusedAsState().value || highlighted
-    val accent = stageAccent
     val palette = LocalStagePalette.current
     Box(
         modifier = modifier
@@ -632,26 +633,6 @@ fun StageMenuItem(
             if (value != null) Text(value, style = stageText(15, 700), color = on ?: StageColors.Dim, maxLines = 1, overflow = TextOverflow.Ellipsis)
             if (checked) StageIcon(OwnTVIcon.CHECK, on ?: a.accent, 22.mpx)
         }
-    }
-}
-
-/** `.sheet`: a tier that slides over the content (categories, settings groups). */
-@Composable
-fun StageSheet(title: String, modifier: Modifier = Modifier, trailing: String? = null, content: @Composable ColumnScope.() -> Unit) {
-    Column(
-        modifier
-            .stageGlass(StageRadii.Sheet, overContent = true)
-            .padding(horizontal = 16.mpx, vertical = 26.mpx),
-    ) {
-        Row(
-            Modifier.fillMaxWidth().padding(start = 14.mpx, end = 14.mpx, bottom = 16.mpx),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(title, style = stageText(26, 800), color = StageColors.Text, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            if (trailing != null) Text(trailing, style = stageText(17, 400), color = StageColors.Muted, maxLines = 1, overflow = TextOverflow.Ellipsis)
-        }
-        content()
     }
 }
 

@@ -40,8 +40,6 @@ import androidx.compose.ui.res.stringResource
 import tv.own.owntv.ui.components.OwnTVSpinner
 import tv.own.owntv.ui.components.compactCount
 import tv.own.owntv.ui.components.displayText
-import tv.own.owntv.ui.theme.OwnTVTheme
-import tv.own.owntv.ui.theme.glass
 
 /**
  * Unobtrusive "sync running" pill (shell overlay, bottom middle). Reflects BOTH catalog syncs (a
@@ -86,7 +84,6 @@ fun SyncStatusPill(modifier: Modifier = Modifier) {
         }
     }
 
-    val colors = OwnTVTheme.colors
 
     val completedQueue = remember { mutableStateListOf<SyncActivityTracker.CompletedSync>() }
     var currentCompleted by remember { mutableStateOf<SyncActivityTracker.CompletedSync?>(null) }

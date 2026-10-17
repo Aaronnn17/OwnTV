@@ -59,9 +59,8 @@ import tv.own.owntv.ui.theme.stageText
 
 /**
  * `.srchf` (tool rows, 48 high, radius 15) and `.sheet .srch` (54, radius 16): a quiet white-6% field,
- * the search glyph and a dim placeholder. TV behaviour as [tv.own.owntv.ui.components.SearchBar]: the
- * field takes D-pad focus like a button, OK opens the keyboard, Back returns to the field. Focused =
- * the 2 px focus ring.
+ * the search glyph and a dim placeholder. The field takes D-pad focus like a button, OK opens the
+ * keyboard, Back returns to the field. Focused = the 2 px focus ring.
  */
 @Composable
 fun StageSearchField(

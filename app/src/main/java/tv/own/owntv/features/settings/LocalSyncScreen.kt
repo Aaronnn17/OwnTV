@@ -1,6 +1,5 @@
 package tv.own.owntv.features.settings
 
-import tv.own.owntv.ui.theme.stageTone
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -52,7 +51,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import org.koin.androidx.compose.koinViewModel
 import tv.own.owntv.R
@@ -61,28 +59,25 @@ import tv.own.owntv.core.companion.CompanionServerState
 import tv.own.owntv.core.sync.local.SyncDirection
 import tv.own.owntv.core.sync.local.SyncFailure
 import tv.own.owntv.core.sync.local.shortCodes
-import tv.own.owntv.ui.components.OwnTVButton
-import tv.own.owntv.ui.components.OwnTVButtonStyle
 import tv.own.owntv.ui.components.OwnTVIcon
-import tv.own.owntv.ui.components.OwnTVPopup
-import tv.own.owntv.ui.components.OwnTVTextField
-import tv.own.owntv.ui.components.dialogPanel
 import tv.own.owntv.ui.components.rememberDialogFocusRestore
 import tv.own.owntv.ui.components.restoreAfterDialogClose
-import tv.own.owntv.ui.components.trapAllFocusExit
 import tv.own.owntv.ui.components.trapVerticalFocusExit
-import tv.own.owntv.ui.theme.OwnTVTheme
 import tv.own.owntv.ui.theme.animationsOn
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.em
+import tv.own.owntv.ui.stage.StagePopupDivider
+import tv.own.owntv.ui.stage.StagePopupIcon
+import tv.own.owntv.ui.stage.StagePopupOption
 import tv.own.owntv.ui.stage.StageSwitch
 import tv.own.owntv.ui.stage.StageTile
 import tv.own.owntv.ui.theme.StageColors
 import tv.own.owntv.ui.theme.mpx
 import tv.own.owntv.ui.theme.mpxSp
+import tv.own.owntv.ui.theme.stageAccent
 import tv.own.owntv.ui.theme.stageText
 
 /**
@@ -189,7 +184,7 @@ fun LocalSyncScreen(
                 if (vm.busy) BusyRow()
                 vm.error?.let { failure ->
                     Text(stringResource(failure.messageRes()), style = stageText(17, 500), color = StageColors.Danger, modifier = Modifier.padding(top = 16.mpx))
-                    OwnTVButton(stringResource(R.string.settings_close), onClick = vm::dismissError, style = OwnTVButtonStyle.SECONDARY, modifier = Modifier.padding(top = 8.mpx))
+                    tv.own.owntv.ui.stage.StageButton(stringResource(R.string.settings_close), onClick = vm::dismissError, modifier = Modifier.padding(top = 8.mpx))
                 }
             }
             listening?.let { Box(Modifier.padding(top = 30.mpx)) { HostingCard(it, vm.deviceName) } }
@@ -250,7 +245,6 @@ private fun SyncTile(
  */
 @Composable
 fun SetupLocalSyncScreen(onRestored: () -> Unit, onBack: () -> Unit, modifier: Modifier = Modifier) {
-    val colors = OwnTVTheme.colors
     val vm: LocalSyncViewModel = koinViewModel()
 
     // Straight into discovery: arriving here IS the decision to look for the other device, so a
@@ -341,14 +335,14 @@ fun SetupLocalSyncScreen(onRestored: () -> Unit, onBack: () -> Unit, modifier: M
         vm.error?.let { failure ->
             Text(
                 text = stringResource(failure.messageRes()),
-                style = MaterialTheme.typography.bodyMedium,
+                style = tv.own.owntv.ui.theme.stageText(25, 400),
                 color = DestructiveRed,
                 modifier = Modifier.padding(top = 12.dp),
             )
-            OwnTVButton(stringResource(R.string.settings_close), onClick = vm::dismissError, style = OwnTVButtonStyle.SECONDARY)
+            tv.own.owntv.ui.stage.StageButton(stringResource(R.string.settings_close), onClick = vm::dismissError)
         }
         if (vm.busy) {
-            Text(stringResource(R.string.local_sync_working), style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant, modifier = Modifier.padding(top = 12.dp))
+            Text(stringResource(R.string.local_sync_working), style = tv.own.owntv.ui.theme.stageText(25, 400), color = tv.own.owntv.ui.theme.StageColors.Muted, modifier = Modifier.padding(top = 12.dp))
         }
     }
 }
@@ -356,14 +350,13 @@ fun SetupLocalSyncScreen(onRestored: () -> Unit, onBack: () -> Unit, modifier: M
 /** [ResultBlock] with the one difference setup needs: Done leaves the wizard instead of the step. */
 @Composable
 private fun SetupResultBlock(step: LocalSyncViewModel.Step.Result, onDone: () -> Unit) {
-    val colors = OwnTVTheme.colors
     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-        Text(stringResource(R.string.local_sync_done), style = MaterialTheme.typography.titleMedium, color = colors.onSurface)
+        Text(stringResource(R.string.local_sync_done), style = tv.own.owntv.ui.theme.stageText(32, 600), color = tv.own.owntv.ui.theme.StageColors.Text)
         step.received?.let {
-            Text(stringResource(R.string.local_sync_received_items, it.items), style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
+            Text(stringResource(R.string.local_sync_received_items, it.items), style = tv.own.owntv.ui.theme.stageText(25, 400), color = tv.own.owntv.ui.theme.StageColors.Muted)
         }
         Spacer(Modifier.height(10.dp))
-        OwnTVButton(stringResource(R.string.common_done), onClick = onDone)
+        tv.own.owntv.ui.stage.StageButton(stringResource(R.string.common_done), onClick = onDone, tinted = true)
     }
 }
 
@@ -375,33 +368,25 @@ private fun SetupResultBlock(step: LocalSyncViewModel.Step.Result, onDone: () ->
  */
 @Composable
 private fun SyncModePill(on: Boolean) {
-    val colors = OwnTVTheme.colors
     Text(
         // Off says only "Off": the alternative is a second "Sync mode …" string, and this slot
         // already reads "Off" in the More screen's preview pane for this very feature.
         text = stringResource(if (on) R.string.local_sync_mode_pill else R.string.common_off),
-        style = MaterialTheme.typography.labelMedium,
-        color = if (on) colors.onPrimaryContainer else colors.onSecondaryContainer,
+        style = tv.own.owntv.ui.theme.stageText(22, 700),
+        color = if (on) tv.own.owntv.ui.theme.stageAccent.accent else tv.own.owntv.ui.theme.StageColors.Text,
         fontWeight = FontWeight.SemiBold,
         modifier = Modifier
             .clip(RoundedCornerShape(999.dp))
-            .background(if (on) colors.primaryContainer else colors.secondaryContainer)
+            .background(if (on) tv.own.owntv.ui.theme.stageAccent.accent.copy(alpha = 0.2f) else tv.own.owntv.ui.theme.StageColors.Ink.copy(alpha = 0.08f))
             .padding(horizontal = 14.dp, vertical = 6.dp),
     )
 }
 
 /**
- * The one panel every Local sync step is drawn in.
- *
- * Built from the shared popup method rather than a hand-rolled overlay: [OwnTVPopup] owns the
- * focus-isolated window and the TV-keyboard geometry (two of these steps have a text field in them),
- * [dialogPanel] brings the Glass-aware fill and its own scroll, and [trapAllFocusExit] keeps the
- * D-pad from wandering back onto the list behind.
- *
- * Everything here is the house default on purpose. [OwnTVPopup]'s `fontScale` is deliberately NOT
- * passed: 65 of the app's 72 popups leave it alone, and the seven that lower it are dense forms of
- * text fields. These steps are menus, so a lowered scale just made them look unlike every other
- * popup in the app. Width and padding likewise use a combination the app already uses elsewhere.
+ * The one panel every Local sync step is drawn in: a [StagePopup][tv.own.owntv.ui.stage.StagePopup],
+ * which owns the focus-isolated window and the TV-keyboard geometry (two of these steps have a text
+ * field in them), the glass panel and its scroll, and keeps the D-pad from wandering back onto the
+ * list behind.
  */
 @Composable
 private fun StepPopup(onDismiss: () -> Unit, content: @Composable ColumnScope.() -> Unit) {
@@ -418,22 +403,21 @@ private fun StepPopup(onDismiss: () -> Unit, content: @Composable ColumnScope.()
 /** "Working…", with a spinner, in the shape of a row — not a bare grey line under the list. */
 @Composable
 private fun BusyRow() {
-    val colors = OwnTVTheme.colors
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 6.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(colors.surfaceContainerHigh)
+            .background(tv.own.owntv.ui.theme.StageColors.Ink.copy(alpha = 0.08f))
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        BusySpinner(Modifier.size(18.dp), colors.primary)
+        BusySpinner(Modifier.size(18.dp), tv.own.owntv.ui.theme.stageAccent.accent)
         Text(
             stringResource(R.string.local_sync_working),
-            style = MaterialTheme.typography.bodyMedium,
-            color = colors.onSurfaceVariant,
+            style = tv.own.owntv.ui.theme.stageText(25, 400),
+            color = tv.own.owntv.ui.theme.StageColors.Muted,
         )
     }
 }
@@ -495,7 +479,6 @@ private fun lastSyncedText(at: Long): String = if (at <= 0) {
  */
 @Composable
 private fun HostingCard(state: CompanionServerState.Listening, deviceName: String) {
-    val colors = OwnTVTheme.colors
     Column(
         modifier = Modifier
             .width(HOSTING_CARD_WIDTH)
@@ -504,20 +487,20 @@ private fun HostingCard(state: CompanionServerState.Listening, deviceName: Strin
             .padding(horizontal = 18.dp, vertical = 18.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(deviceName, style = MaterialTheme.typography.titleMedium, color = colors.onSurface)
+        Text(deviceName, style = tv.own.owntv.ui.theme.stageText(32, 600), color = tv.own.owntv.ui.theme.StageColors.Text)
         Spacer(Modifier.height(6.dp))
         Text(
             stringResource(R.string.local_sync_host_hint),
-            style = MaterialTheme.typography.bodyMedium,
-            color = colors.onSurfaceVariant,
+            style = tv.own.owntv.ui.theme.stageText(25, 400),
+            color = tv.own.owntv.ui.theme.StageColors.Muted,
             textAlign = TextAlign.Center,
         )
         Spacer(Modifier.height(10.dp))
         Text(
             state.pin,
-            style = MaterialTheme.typography.headlineLarge,
+            style = tv.own.owntv.ui.theme.stageText(54, 700),
             fontWeight = FontWeight.Bold,
-            color = colors.primary,
+            color = tv.own.owntv.ui.theme.stageAccent.accent,
             letterSpacing = 8.sp,
         )
         Spacer(Modifier.height(12.dp))
@@ -533,8 +516,8 @@ private fun HostingCard(state: CompanionServerState.Listening, deviceName: Strin
         state.urls.forEach { url ->
             Text(
                 url,
-                style = MaterialTheme.typography.bodyMedium,
-                color = colors.onSurfaceVariant,
+                style = tv.own.owntv.ui.theme.stageText(25, 400),
+                color = tv.own.owntv.ui.theme.StageColors.Muted,
                 textAlign = TextAlign.Center,
             )
         }
@@ -555,23 +538,24 @@ private fun FindDeviceBlock(vm: LocalSyncViewModel) {
                 // A device already paired says so instead of showing an address the user has no use
                 // for, and opens its actions rather than asking for a PIN it does not need.
                 val known = vm.pairedMatch(device)
-                Row2(
-                    icon = OwnTVIcon.PHONE,
+                StagePopupOption(
                     title = device.name,
-                    desc = if (known != null) stringResource(R.string.local_sync_already_paired) else device.address,
+                    subtitle = if (known != null) stringResource(R.string.local_sync_already_paired) else device.address,
                     onClick = { vm.choose(device) },
+                    leading = { StagePopupIcon(OwnTVIcon.PHONE) },
                 )
             }
         }
         Spacer(Modifier.height(14.mpx))
-        OwnTVTextField(
+        tv.own.owntv.features.settings.StageFieldRow(
+            icon = tv.own.owntv.ui.components.OwnTVIcon.PENCIL,
+            label = stringResource(R.string.local_sync_manual_address_label),
             value = manual,
             onValueChange = { manual = it },
-            label = stringResource(R.string.local_sync_manual_address_label),
         )
         Row(Modifier.fillMaxWidth().padding(top = 22.mpx), horizontalArrangement = Arrangement.spacedBy(14.mpx, Alignment.End)) {
-            OwnTVButton(stringResource(R.string.common_cancel), onClick = vm::cancel, style = OwnTVButtonStyle.SECONDARY)
-            OwnTVButton(
+            tv.own.owntv.ui.stage.StagePopupButton(stringResource(R.string.common_cancel), onClick = vm::cancel, primary = false)
+            tv.own.owntv.ui.stage.StagePopupButton(
                 stringResource(R.string.settings_backup_continue),
                 onClick = { if (manual.isNotBlank()) vm.chooseAddress(manual.trim(), portOf(manual)) },
             )
@@ -585,15 +569,16 @@ private fun PinBlock(vm: LocalSyncViewModel) {
     Column(verticalArrangement = Arrangement.spacedBy(4.mpx)) {
         Text(stringResource(R.string.local_sync_enter_pin_description), style = stageText(18, 400), color = StageColors.Muted)
         Spacer(Modifier.height(14.mpx))
-        OwnTVTextField(
+        tv.own.owntv.features.settings.StageFieldRow(
+            icon = tv.own.owntv.ui.components.OwnTVIcon.PENCIL,
+            label = stringResource(R.string.local_sync_pin_label),
             value = pin,
             onValueChange = { pin = it.filter(Char::isDigit).take(PIN_LENGTH) },
-            label = stringResource(R.string.local_sync_pin_label),
             keyboardType = KeyboardType.NumberPassword,
         )
         Row(Modifier.fillMaxWidth().padding(top = 22.mpx), horizontalArrangement = Arrangement.spacedBy(14.mpx, Alignment.End)) {
-            OwnTVButton(stringResource(R.string.common_cancel), onClick = vm::cancel, style = OwnTVButtonStyle.SECONDARY)
-            OwnTVButton(
+            tv.own.owntv.ui.stage.StagePopupButton(stringResource(R.string.common_cancel), onClick = vm::cancel, primary = false)
+            tv.own.owntv.ui.stage.StagePopupButton(
                 stringResource(R.string.local_sync_pair),
                 onClick = { if (pin.length == PIN_LENGTH) vm.submitPin(pin) },
             )
@@ -614,40 +599,38 @@ private fun DirectionBlock(vm: LocalSyncViewModel, step: LocalSyncViewModel.Step
             color = StageColors.Muted,
         )
         Spacer(Modifier.height(14.mpx))
-        Row2(
-            icon = OwnTVIcon.SEND,
+        StagePopupOption(
             title = stringResource(R.string.local_sync_send_to, name),
-            desc = stringResource(R.string.local_sync_send_description),
+            subtitle = stringResource(R.string.local_sync_send_description),
             onClick = { vm.chooseDirection(SyncDirection.SEND) },
+            leading = { StagePopupIcon(OwnTVIcon.SEND) },
         )
-        Row2(
-            icon = OwnTVIcon.DOWNLOADS,
+        StagePopupOption(
             title = stringResource(R.string.local_sync_receive_from, name),
-            desc = stringResource(R.string.local_sync_receive_description),
+            subtitle = stringResource(R.string.local_sync_receive_description),
             onClick = { vm.chooseDirection(SyncDirection.RECEIVE) },
+            leading = { StagePopupIcon(OwnTVIcon.DOWNLOADS) },
         )
-        Row2(
+        StagePopupOption(
+            title = stringResource(R.string.local_sync_merge_with, name),
+            subtitle = stringResource(R.string.local_sync_merge_description),
+            onClick = { vm.chooseDirection(SyncDirection.MERGE) },
             // Two arrows say "both ways" at a glance, and it stops REFRESH meaning both
             // "find a device" and "two-way sync" on the same screen.
-            icon = OwnTVIcon.SWAP,
-            title = stringResource(R.string.local_sync_merge_with, name),
-            desc = stringResource(R.string.local_sync_merge_description),
-            onClick = { vm.chooseDirection(SyncDirection.MERGE) },
+            leading = { StagePopupIcon(OwnTVIcon.SWAP) },
         )
         // The only destructive row here. The glyph is right; what it lacked was any sign that it is
         // not a fourth way of syncing, sitting one arrow-press under "Merge".
-        Divider()
-        Row2(
-            icon = OwnTVIcon.CLOSE,
+        StagePopupDivider()
+        StagePopupOption(
             title = stringResource(R.string.local_sync_unpair),
-            desc = stringResource(R.string.local_sync_unpair_description),
-            iconTint = DestructiveRed,
-            iconBackground = DestructiveTile,
-            titleTint = stageTone(DestructiveTitle, StageColors.Danger),
+            subtitle = stringResource(R.string.local_sync_unpair_description),
             onClick = { vm.unpair(step.device); vm.cancel() },
+            danger = true,
+            leading = { StagePopupIcon(OwnTVIcon.CLOSE, DestructiveRed) },
         )
         Row(Modifier.fillMaxWidth().padding(top = 22.mpx), horizontalArrangement = Arrangement.End) {
-            OwnTVButton(stringResource(R.string.common_cancel), onClick = vm::cancel, style = OwnTVButtonStyle.SECONDARY)
+            tv.own.owntv.ui.stage.StagePopupButton(stringResource(R.string.common_cancel), onClick = vm::cancel, primary = false)
         }
     }
 }
@@ -671,17 +654,16 @@ private fun SectionsBlock(vm: LocalSyncViewModel, step: LocalSyncViewModel.Step.
         Text(stringResource(R.string.local_sync_sections_hint), style = stageText(18, 400), color = StageColors.Muted)
         Spacer(Modifier.height(14.mpx))
         BackupManager.Section.entries.forEach { section ->
-            Row2(
-                icon = OwnTVIcon.BACKUP,
+            OnOffOption(
                 title = stringResource(section.labelRes()),
-                chip = stringResource(if (section in sections) R.string.common_on else R.string.common_off),
-                primaryChip = section in sections,
+                subtitle = null,
+                on = section in sections,
                 onClick = { sections = if (section in sections) sections - section else sections + section },
             )
         }
         Row(Modifier.fillMaxWidth().padding(top = 22.mpx), horizontalArrangement = Arrangement.spacedBy(14.mpx, Alignment.End)) {
-            OwnTVButton(stringResource(R.string.common_cancel), onClick = vm::cancel, style = OwnTVButtonStyle.SECONDARY)
-            OwnTVButton(
+            tv.own.owntv.ui.stage.StagePopupButton(stringResource(R.string.common_cancel), onClick = vm::cancel, primary = false)
+            tv.own.owntv.ui.stage.StagePopupButton(
                 stringResource(R.string.settings_backup_continue),
                 onClick = { if (sections.isNotEmpty()) vm.start(sections) },
             )
@@ -716,12 +698,10 @@ private fun ConfirmBlock(vm: LocalSyncViewModel, step: LocalSyncViewModel.Step.C
         }
         if (preview.hasDeviceSettings) {
             Spacer(Modifier.height(10.mpx))
-            Row2(
-                icon = OwnTVIcon.BACKUP,
+            OnOffOption(
                 title = stringResource(R.string.settings_backup_device_settings),
-                desc = stringResource(R.string.settings_backup_device_settings_desc),
-                chip = stringResource(if (deviceSettings) R.string.common_on else R.string.common_off),
-                primaryChip = deviceSettings,
+                subtitle = stringResource(R.string.settings_backup_device_settings_desc),
+                on = deviceSettings,
                 onClick = { deviceSettings = !deviceSettings },
             )
         }
@@ -729,8 +709,8 @@ private fun ConfirmBlock(vm: LocalSyncViewModel, step: LocalSyncViewModel.Step.C
             Text(stringResource(R.string.local_sync_merge_note), style = stageText(18, 400), color = StageColors.Muted)
         }
         Row(Modifier.fillMaxWidth().padding(top = 22.mpx), horizontalArrangement = Arrangement.spacedBy(14.mpx, Alignment.End)) {
-            OwnTVButton(stringResource(R.string.common_cancel), onClick = vm::cancel, style = OwnTVButtonStyle.SECONDARY)
-            OwnTVButton(
+            tv.own.owntv.ui.stage.StagePopupButton(stringResource(R.string.common_cancel), onClick = vm::cancel, primary = false)
+            tv.own.owntv.ui.stage.StagePopupButton(
                 stringResource(R.string.local_sync_apply),
                 onClick = { if (!preview.isEmpty) vm.confirm(deviceSettings) },
             )
@@ -749,9 +729,29 @@ private fun ResultBlock(vm: LocalSyncViewModel, step: LocalSyncViewModel.Step.Re
             Text(stringResource(R.string.local_sync_sent), style = stageText(18, 400), color = StageColors.Muted)
         }
         Row(Modifier.fillMaxWidth().padding(top = 22.mpx), horizontalArrangement = Arrangement.End) {
-            OwnTVButton(stringResource(R.string.common_done), onClick = vm::cancel, style = OwnTVButtonStyle.SECONDARY)
+            tv.own.owntv.ui.stage.StagePopupButton(stringResource(R.string.common_done), onClick = vm::cancel, primary = false)
         }
     }
+}
+
+/** A popup row ticked with OK: the backup glyph, then "On" in accent or "Off" muted on the right. */
+@Composable
+private fun OnOffOption(title: String, subtitle: String?, on: Boolean, onClick: () -> Unit) {
+    StagePopupOption(
+        title = title,
+        subtitle = subtitle,
+        onClick = onClick,
+        leading = { StagePopupIcon(OwnTVIcon.BACKUP) },
+        trailing = {
+            Text(
+                stringResource(if (on) R.string.common_on else R.string.common_off),
+                style = stageText(18, 700),
+                color = if (on) stageAccent.accent else StageColors.Muted,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        },
+    )
 }
 
 /** One counted change; a nought is left out rather than listed as nothing. */
@@ -787,10 +787,8 @@ private fun portOf(address: String): Int =
     address.removePrefix("http://").substringAfter(':', "").substringBefore('/')
         .toIntOrNull() ?: tv.own.owntv.core.companion.CompanionLink.DEFAULT_PORT
 
-/** The destructive tone: the mark, the tile behind it, and the label. Also the error text's colour. */
+/** The destructive tone: the Unpair mark, and the error text's colour. */
 private val DestructiveRed = Color(0xFFEF4444)
-private val DestructiveTile = DestructiveRed.copy(alpha = 0.14f)
-private val DestructiveTitle = Color(0xFFF0A3A3)
 
 /**
  * Wide enough for [QR_SIZE] plus the card's padding, and no wider — the list beside it is what the

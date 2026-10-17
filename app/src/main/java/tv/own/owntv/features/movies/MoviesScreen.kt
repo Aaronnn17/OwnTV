@@ -78,13 +78,10 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -104,18 +101,15 @@ import tv.own.owntv.core.customize.CategoryRestorePlan
 import androidx.compose.runtime.produceState
 import tv.own.owntv.core.customize.CustomizeKeys
 import tv.own.owntv.core.database.entity.ContentOrderEntity
-import tv.own.owntv.core.database.entity.DownloadEntity
 import tv.own.owntv.core.database.entity.MovieEntity
 import tv.own.owntv.features.customize.MoveToCategoryDialog
 import tv.own.owntv.ui.components.TextInputDialog
-import tv.own.owntv.core.model.DownloadStatus
 import tv.own.owntv.features.live.displayLabel
 import tv.own.owntv.core.settings.PanelSection
 import tv.own.owntv.features.settings.data.computePanelWidths
 import tv.own.owntv.core.settings.SettingsRepository
 import tv.own.owntv.features.settings.rememberPanelShares
 import tv.own.owntv.features.shell.components.CategoryContextMenu
-import tv.own.owntv.features.shell.components.CategoryRail
 import tv.own.owntv.features.shell.components.MediaDetailsScreen
 import tv.own.owntv.ui.components.MoveOrderOverlay
 import tv.own.owntv.ui.components.InAppToast
@@ -129,7 +123,6 @@ import tv.own.owntv.ui.components.TrailerPlayerScreen
 import tv.own.owntv.ui.components.chNavPaging
 import tv.own.owntv.ui.components.gridFocusTarget
 import androidx.compose.foundation.layout.width
-import tv.own.owntv.ui.components.formatCount
 import tv.own.owntv.ui.format.localizedInteger
 import tv.own.owntv.core.live.LiveKey
 
@@ -139,7 +132,6 @@ fun MoviesScreen(
     onChildFocused: () -> Unit,
     restoreFocus: Boolean = false,
     onRestored: () -> Unit = {},
-    onContentScrolled: (Boolean) -> Unit = {},
     modifier: Modifier = Modifier,
     /**
      * Pins the grid to one folder and takes the category rail away — how More → Favourites and
@@ -205,7 +197,7 @@ fun MoviesScreen(
     // Id + list position of the movie the context menu was opened on. The id re-focuses the same item
     // when it survives (Favourite/Download/Cancel); when the item is REMOVED (Remove from history, or
     // un-Favourite while on the Favorites category), it's gone from the paged list, so we re-focus the
-    // nearest surviving neighbour by position instead of escaping to the CategoryRail.
+    // nearest surviving neighbour by position instead of escaping to the category rail.
     var contextMovieId by remember { mutableStateOf<Long?>(null) }
     var contextMovieIndex by remember { mutableStateOf(-1) }
     val contextFocus = remember { FocusRequester() }
@@ -288,27 +280,6 @@ fun MoviesScreen(
     val railCounts by (if (categoriesVisible) vm.railCounts else remember { kotlinx.coroutines.flow.MutableStateFlow(emptyMap<LiveKey, Int>()) })
         .collectAsStateWithLifecycle()
     val catListState = rememberLazyListState()
-    val chromeScrollThresholdPx = with(LocalDensity.current) { 8.dp.roundToPx() }
-    val contentScrolled by remember(
-        effectiveGridState,
-        effectiveListState,
-        catListState,
-        viewMode,
-        chromeScrollThresholdPx,
-    ) {
-        androidx.compose.runtime.derivedStateOf {
-            val contentMoved = if (!usesList) {
-                effectiveGridState.firstVisibleItemIndex > 0 ||
-                    effectiveGridState.firstVisibleItemScrollOffset > chromeScrollThresholdPx
-            } else {
-                effectiveListState.firstVisibleItemIndex > 0 ||
-                    effectiveListState.firstVisibleItemScrollOffset > chromeScrollThresholdPx
-            }
-            contentMoved || catListState.firstVisibleItemIndex > 0 ||
-                catListState.firstVisibleItemScrollOffset > chromeScrollThresholdPx
-        }
-    }
-    LaunchedEffect(contentScrolled) { onContentScrolled(contentScrolled) }
     var gridPaneFocused by remember { mutableStateOf(false) }
     var railPaneFocused by remember { mutableStateOf(false) }
     // Tiles the provider gave no artwork for: ask for the TMDB poster already cached from an earlier
@@ -332,7 +303,7 @@ fun MoviesScreen(
         val idx = if (sel != null) movies.itemSnapshotList.items.indexOfFirst { it.id == sel.id } else -1
         if (idx >= 0) {
             // Scroll whichever layout is on screen: scrolling only the grid state left LIST view
-            // unscrolled, so a movie further down was never composed and focus fell to the CategoryRail
+            // unscrolled, so a movie further down was never composed and focus fell to the category rail
             // instead of the film just played. Same defect as the Series back-from-show restore.
             scrollToIndex(idx)
             delay(60)
@@ -365,7 +336,7 @@ fun MoviesScreen(
         if (!found) runCatching { firstItemFocus.requestFocus() }
         vm.revealDone()
     }
-    // Closing the long-press context menu must return focus inside this pane, never the CategoryRail.
+    // Closing the long-press context menu must return focus inside this pane, never the category rail.
     //   - Item still present (Favourite toggle / Download / Cancel): re-focus the same item by id.
     //   - Item removed (Remove from history, or un-Favourite on the Favorites category): the paged
     //     list no longer contains it, so focus the NEAREST surviving neighbour by position (the item

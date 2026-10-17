@@ -446,7 +446,7 @@ internal fun liveCategoryEntries(railItems: List<LiveRailItem>, railCounts: Map<
  * "GROUPS · DE" and the provider groups with their tags, counts and playlist marks. The selected
  * category is accent text plus the dot (sheet) or the 4 px bar (column).
  *
- * Focus rules kept from CategoryRail: entering lands on the open category, never a row only browsed;
+ * Focus rules: entering lands on the open category, never a row only browsed;
  * vertical exits are trapped; Right hands focus to the channel list ([onNavigateRight]).
  */
 @OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
@@ -486,7 +486,7 @@ internal fun LiveCategories(
     val rowFocusers = remember(visible.size) { List(visible.size) { FocusRequester() } }
     val searchFocus = remember { FocusRequester() }
     val scope = rememberCoroutineScope()
-    // CH+/− in the categories changes the selection; the highlight follows it there, as CategoryRail did.
+    // CH+/− in the categories changes the selection; the highlight follows it there.
     var hasFocus by remember { mutableStateOf(false) }
     LaunchedEffect(selectedIndex) {
         val pos = visible.indexOf(selectedIndex)

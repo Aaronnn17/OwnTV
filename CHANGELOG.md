@@ -40,6 +40,8 @@
 - **🗂️ Downloads and recordings whose file is gone say "File missing"**
 
 ### 🐛 Fixes
+- **🎨 Every popup, menu, form field and player control in the current design**
+- **📏 Multiview tile and category menus at the same size as every other menu**
 - **🖼️ Your own picture can be chosen while creating or editing any profile**
 - **📺 Series no longer show "No episodes" when one episode is oddly written by the provider**
 - **💬 A series the provider refused says why instead of "No episodes"**

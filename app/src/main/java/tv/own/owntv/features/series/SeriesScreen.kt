@@ -50,11 +50,9 @@ import tv.own.owntv.ui.stage.StageMenuItem
 import tv.own.owntv.ui.stage.StagePoster
 import tv.own.owntv.ui.stage.StageProgress
 import tv.own.owntv.ui.stage.StageRow
-import tv.own.owntv.ui.stage.drawBoxShadow
 import tv.own.owntv.ui.theme.dissolveEdges
 import tv.own.owntv.ui.theme.gradientWash
 import tv.own.owntv.ui.theme.mpxSp
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.foundation.layout.aspectRatio
 import tv.own.owntv.ui.stage.StageSearchField
 import tv.own.owntv.ui.stage.StageSegmented
@@ -109,7 +107,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -130,19 +127,16 @@ import tv.own.owntv.core.customize.CategoryRestorePlan
 import androidx.compose.runtime.produceState
 import tv.own.owntv.core.customize.CustomizeKeys
 import tv.own.owntv.core.database.entity.ContentOrderEntity
-import tv.own.owntv.core.database.entity.DownloadEntity
 import tv.own.owntv.core.database.entity.EpisodeEntity
 import tv.own.owntv.core.database.entity.SeriesEntity
 import tv.own.owntv.features.customize.MoveToCategoryDialog
 import tv.own.owntv.ui.components.TextInputDialog
-import tv.own.owntv.core.model.DownloadStatus
 import tv.own.owntv.features.live.displayLabel
 import tv.own.owntv.core.settings.PanelSection
 import tv.own.owntv.features.settings.data.computePanelWidths
 import tv.own.owntv.core.settings.SettingsRepository
 import tv.own.owntv.features.settings.rememberPanelShares
 import tv.own.owntv.features.shell.components.CategoryContextMenu
-import tv.own.owntv.features.shell.components.CategoryRail
 import tv.own.owntv.ui.components.MoveOrderOverlay
 import tv.own.owntv.ui.components.InAppToast
 import tv.own.owntv.ui.components.rememberInAppToast
@@ -150,14 +144,12 @@ import tv.own.owntv.core.model.ContentMenu
 import tv.own.owntv.ui.components.MenuAction
 import tv.own.owntv.ui.components.OwnTVIcon
 import tv.own.owntv.ui.components.OwnTVSpinner
-import tv.own.owntv.ui.components.ProgressRing
 import tv.own.owntv.ui.components.ResumeDialog
 import tv.own.owntv.ui.components.SetTmdbNameDialog
 import tv.own.owntv.ui.components.TrailerPlayerScreen
 import tv.own.owntv.ui.components.chNavPaging
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import tv.own.owntv.ui.components.formatCount
 import tv.own.owntv.ui.components.gridFocusTarget
 import tv.own.owntv.ui.format.localizedInteger
 import tv.own.owntv.ui.format.rememberAirDateFormatter
@@ -284,7 +276,7 @@ private fun SeriesGrid(
     // Id + list position of the series the context menu was opened on. The id re-focuses the same item
     // when it survives (Favourite/Download/Cancel); when the item is REMOVED (Remove from history, or
     // un-Favourite while on the Favorites category), it's gone from the paged list, so we re-focus the
-    // nearest surviving neighbour by position instead of escaping to the CategoryRail.
+    // nearest surviving neighbour by position instead of escaping to the category rail.
     var contextSeriesId by remember { mutableStateOf<Long?>(null) }
     var contextSeriesIndex by remember { mutableStateOf(-1) }
     val contextFocus = remember { androidx.compose.ui.focus.FocusRequester() }
@@ -381,7 +373,7 @@ private fun SeriesGrid(
         if (show != null) {
             // Scroll the layout that is actually on screen. Scrolling only the grid state left the
             // LIST view unscrolled, so a show further down was never composed, the focus request
-            // failed, and focus fell out to the CategoryRail instead of the show you came back from.
+            // failed, and focus fell out to the category rail instead of the show you came back from.
             scrollToIndex(idx)
             // The shell is switching the canvas back from the episodes page at the same time, and its
             // way in may already have put focus on the first poster and made that the selected show.
@@ -408,7 +400,7 @@ private fun SeriesGrid(
         }
         onRestoredSelected()
     }
-    // Closing the long-press context menu must return focus inside this pane, never the CategoryRail.
+    // Closing the long-press context menu must return focus inside this pane, never the category rail.
     //   - Item still present (Favourite toggle / Download / Cancel): re-focus the same item by id.
     //   - Item removed (Remove from history, or un-Favourite on the Favorites category): the paged
     //     list no longer contains it, so focus the NEAREST surviving neighbour by position (the item

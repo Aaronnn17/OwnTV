@@ -57,7 +57,6 @@ import tv.own.owntv.core.settings.SubtitleStyle
 import tv.own.owntv.core.theme.AccentColor
 import tv.own.owntv.core.theme.ThemeMode
 import tv.own.owntv.core.theme.UiZoom
-import tv.own.owntv.core.settings.EpgAutoRefresh
 
 /** Phase 13 — manage IPTV sources (list / add / re-sync / delete) for the active profile. */
 class SettingsViewModel(
@@ -820,7 +819,7 @@ class SettingsViewModel(
     fun setFocusHighlight(hex: String) { viewModelScope.launch { settings.setFocusHighlight(hex) } }
     fun setFocusHighlightWidth(dp: Int) { viewModelScope.launch { settings.setFocusHighlightWidth(dp) } }
 
-    // --- Glass effect: background image + per-surface translucency ---
+    // --- Glass: the background image and the Glass on/off and opacity ---
     val bgImagePath: StateFlow<String> = settings.bgImagePath.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), "")
     val glassConfig: StateFlow<tv.own.owntv.core.theme.GlassConfig> = settings.glassConfig.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), tv.own.owntv.core.theme.GlassConfig())
     fun setBgImagePath(path: String) { viewModelScope.launch { settings.setBgImagePath(path) } }
@@ -837,19 +836,8 @@ class SettingsViewModel(
     fun setBackgroundAccentLight(on: Boolean) { viewModelScope.launch { settings.setBackgroundAccentLight(on) } }
     fun resetGlassAndBackground(allSurfacesBits: Int) { viewModelScope.launch { settings.resetGlassAndBackground(allSurfacesBits) } }
     fun setGlassScopeBitmask(bits: Int) { viewModelScope.launch { settings.setGlassScopeBitmask(bits) } }
-    fun setGlassPreset(preset: tv.own.owntv.core.theme.GlassPreset) { viewModelScope.launch { settings.setGlassPreset(preset) } }
     fun setGlassAlphaPercent(pct: Int, currentBlurPct: Int) {
         viewModelScope.launch { settings.setGlassAlphaPercent(pct, currentBlurPct) }
-    }
-    fun setGlassBlurPercent(pct: Int, currentAlphaPct: Int) {
-        viewModelScope.launch { settings.setGlassBlurPercent(pct, currentAlphaPct) }
-    }
-    fun setGlassHighlightPercent(pct: Int) { viewModelScope.launch { settings.setGlassHighlightPercent(pct) } }
-    fun setGlassAllowFullTransparency(enabled: Boolean) {
-        viewModelScope.launch { settings.setGlassAllowFullTransparency(enabled) }
-    }
-    fun setGlassDepthEffects(enabled: Boolean) {
-        viewModelScope.launch { settings.setGlassDepthEffects(enabled) }
     }
 
     // --- Nav menu customization (v4.3.0) ---

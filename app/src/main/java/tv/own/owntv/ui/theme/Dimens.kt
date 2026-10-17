@@ -18,14 +18,9 @@ object Dimens {
     val RailWidth = 92.dp
     val RailWidthExpanded = 325.dp // expanded (focused overlay) width — fits long category names
     val RailWidthFixed = 272.dp    // Phase 2: fixed full-label category column (names wrap to 2 lines)
-    val RailPillSize = 56.dp
     val ChannelListWidth = 460.dp  // Phase 2: fixed channel-list column (Live); preview/detail fills the rest.
     // Widened from 400dp so each row can also show the current programme (EPG) on a second line — the
     // preview pane (Modifier.weight(1f)) narrows in step, so no other layout value needs to change.
-
-    // MD3 settings tonal icon tile
-    val IconTileSize = 42.dp
-    val IconTileCorner = 12.dp
 
     val GapTiny = 4.dp
     val GapSmall = 8.dp
@@ -36,7 +31,6 @@ object Dimens {
     val CornerSmall = 12.dp
     val CornerMedium = 18.dp
     val CornerLarge = 24.dp
-    val CardCorner = 20.dp
 
     val FocusBorderWidth = 2.dp
 
