@@ -7,7 +7,7 @@
 > Issue numbers that are part of a title are fine; explanatory parentheticals are not. The detail —
 > what, why, files and verification — belongs in the commit message, never here.
 
-## v5.1.1 — 2026-10-17
+## v5.2.0 — 2026-10-17
 
 ### ✨ New features
 - **🏆 Sports: a new section with live scores, today's and tomorrow's matches, and match pages**
