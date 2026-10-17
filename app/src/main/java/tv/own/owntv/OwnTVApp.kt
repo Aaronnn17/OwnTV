@@ -131,9 +131,7 @@ class OwnTVApp : Application(), SingletonImageLoader.Factory, androidx.work.Conf
         // on at 50%, the Stage background; Movies & Series keep an update's layout.
         appScope.launch {
             runCatching {
-                GlobalContext.get().get<tv.own.owntv.core.settings.SettingsRepository>().applyStageDefaults(
-                    tv.own.owntv.core.theme.GlassConfig(tv.own.owntv.ui.theme.ALL_GLASS_SURFACES).toBitmask(),
-                )
+                GlobalContext.get().get<tv.own.owntv.core.settings.SettingsRepository>().applyStageDefaults()
             }
         }
         // Sports: core decides from Auto rebuild whether the stored board is due ("on every app start",

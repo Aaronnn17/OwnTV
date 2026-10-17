@@ -93,7 +93,6 @@ import tv.own.owntv.ui.components.BackgroundImageChooserDialog
 import tv.own.owntv.ui.components.ingestBackgroundImage
 import tv.own.owntv.ui.components.trapAllFocusExit
 import tv.own.owntv.ui.components.longPressMenuGuard
-import tv.own.owntv.ui.theme.ALL_GLASS_SURFACES
 import tv.own.owntv.core.theme.GlassConfig
 import tv.own.owntv.core.theme.AppFontFamily
 import tv.own.owntv.core.theme.FontCustomization
@@ -2301,11 +2300,11 @@ private fun GlassEffectSettingsScreen(onBack: () -> Unit, modifier: Modifier = M
         onSetAccentLight = settingsVm::setBackgroundAccentLight,
         onToggleGlass = {
             settingsVm.setGlassScopeBitmask(
-                if (glassConfig.enabled) 0 else GlassConfig(ALL_GLASS_SURFACES).toBitmask(),
+                if (glassConfig.enabled) 0 else GlassConfig.ON_BITS,
             )
         },
-        onSetAlpha = { settingsVm.setGlassAlphaPercent(it, (glassConfig.blurStrength * 100).roundToInt()) },
-        onReset = { settingsVm.resetGlassAndBackground(GlassConfig(ALL_GLASS_SURFACES).toBitmask()) },
+        onSetAlpha = settingsVm::setGlassAlphaPercent,
+        onReset = settingsVm::resetGlassAndBackground,
         onBack = onBack,
         modifier = modifier,
     )

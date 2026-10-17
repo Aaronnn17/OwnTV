@@ -19,21 +19,12 @@ import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.node.invalidateDraw
 import androidx.compose.ui.platform.InspectorInfo
 import tv.own.owntv.core.theme.GlassConfig
-import tv.own.owntv.core.theme.GlassSurface
 
 /*
  * What Glass needs besides [stageGlass][tv.own.owntv.ui.stage.stageGlass]: the user's Glass settings,
  * the blurred copy of the background picture that glass panels frost, and each panel's on-screen
  * position so it can draw the part of that picture behind it.
  */
-
-/**
- * The bits Glass "on" stores. Glass is all-or-nothing, but the setting is still the scope bitmask over
- * [GlassSurface] ordinals, so "on" means these surfaces. `PLAYER_CONTROLS` and `TOASTS` were added to
- * core for the phone's player chrome and are left out here.
- */
-val ALL_GLASS_SURFACES: Set<GlassSurface> =
-    GlassSurface.entries.toSet() - setOf(GlassSurface.PLAYER_CONTROLS, GlassSurface.TOASTS)
 
 /** The user's Glass settings, provided by MainActivity. Default is "off". */
 val LocalGlass = compositionLocalOf { GlassConfig() }

@@ -834,11 +834,9 @@ class SettingsViewModel(
     fun setBackgroundDim(pct: Int) { viewModelScope.launch { settings.setBackgroundDim(pct) } }
     fun setBackgroundBlur(pct: Int) { viewModelScope.launch { settings.setBackgroundBlur(pct) } }
     fun setBackgroundAccentLight(on: Boolean) { viewModelScope.launch { settings.setBackgroundAccentLight(on) } }
-    fun resetGlassAndBackground(allSurfacesBits: Int) { viewModelScope.launch { settings.resetGlassAndBackground(allSurfacesBits) } }
+    fun resetGlassAndBackground() { viewModelScope.launch { settings.resetGlassAndBackground() } }
     fun setGlassScopeBitmask(bits: Int) { viewModelScope.launch { settings.setGlassScopeBitmask(bits) } }
-    fun setGlassAlphaPercent(pct: Int, currentBlurPct: Int) {
-        viewModelScope.launch { settings.setGlassAlphaPercent(pct, currentBlurPct) }
-    }
+    fun setGlassAlphaPercent(pct: Int) { viewModelScope.launch { settings.setGlassAlphaPercent(pct) } }
 
     // --- Nav menu customization (v4.3.0) ---
     /** STATIC (default): user picks which icons to hide. DYNAMIC: icons adapt to the active playlist. */
