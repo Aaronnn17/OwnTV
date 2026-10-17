@@ -361,28 +361,6 @@ private fun SetupResultBlock(step: LocalSyncViewModel.Step.Result, onDone: () ->
 }
 
 /**
- * The badge that says this television is reachable right now.
- *
- * Sync mode is the one piece of state here with a consequence off the screen — a listening port and
- * an announcement on the network — so it is said plainly rather than left to be inferred from a row.
- */
-@Composable
-private fun SyncModePill(on: Boolean) {
-    Text(
-        // Off says only "Off": the alternative is a second "Sync mode …" string, and this slot
-        // already reads "Off" in the More screen's preview pane for this very feature.
-        text = stringResource(if (on) R.string.local_sync_mode_pill else R.string.common_off),
-        style = tv.own.owntv.ui.theme.stageText(22, 700),
-        color = if (on) tv.own.owntv.ui.theme.stageAccent.accent else tv.own.owntv.ui.theme.StageColors.Text,
-        fontWeight = FontWeight.SemiBold,
-        modifier = Modifier
-            .clip(RoundedCornerShape(999.dp))
-            .background(if (on) tv.own.owntv.ui.theme.stageAccent.accent.copy(alpha = 0.2f) else tv.own.owntv.ui.theme.StageColors.Ink.copy(alpha = 0.08f))
-            .padding(horizontal = 14.dp, vertical = 6.dp),
-    )
-}
-
-/**
  * The one panel every Local sync step is drawn in: a [StagePopup][tv.own.owntv.ui.stage.StagePopup],
  * which owns the focus-isolated window and the TV-keyboard geometry (two of these steps have a text
  * field in them), the glass panel and its scroll, and keeps the D-pad from wandering back onto the
@@ -796,8 +774,5 @@ private val DestructiveRed = Color(0xFFEF4444)
  */
 private val HOSTING_CARD_WIDTH = 250.dp
 private val QR_SIZE = 188.dp
-
-/** `520.dp` + `28.dp` padding is one of the app's commonest panel sizes; these steps are not special. */
-private val STEP_PANEL_WIDTH = 520.dp
 
 private const val PIN_LENGTH = 6

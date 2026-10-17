@@ -117,12 +117,6 @@ private fun PageHead(title: String, trailing: @Composable RowScope.() -> Unit = 
     }
 }
 
-/** A dim caps heading inside a page ("WHAT'S INCLUDED"). */
-@Composable
-internal fun PageLabel(text: String, modifier: Modifier = Modifier) {
-    Text(text.uppercase(androidx.compose.ui.platform.LocalConfiguration.current.locales[0]), style = stageText(13, 800, 0.13.em), color = StageColors.Dim, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = modifier)
-}
-
 /** `.tool.box` on a focused row ("▶ Resume", "✕ Remove"): 44 high, 16/700. */
 data class RowAction(val text: String, val icon: OwnTVIcon, val onClick: () -> Unit)
 

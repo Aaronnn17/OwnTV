@@ -111,10 +111,7 @@ fun CustomizeScreen(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val firstFocus = remember { FocusRequester() }
     val sortFocus = remember { FocusRequester() }
     val filterFocus = remember { FocusRequester() }
-    val newCategoriesFocus = remember { FocusRequester() }
     val newCatPillFocus = remember { FocusRequester() } // "＋ New category" pill — restore target after its name prompt
-    val pinFocus = remember { FocusRequester() }
-    val removePinFocus = remember { FocusRequester() }
     var itemsReturnKey by remember { mutableStateOf<String?>(null) }
     // Opener row for whichever dialog (new-category picker, rename) is open — restored on close so
     // focus doesn't always jump back to the Live TV section chip.

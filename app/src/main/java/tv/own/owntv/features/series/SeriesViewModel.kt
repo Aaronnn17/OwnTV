@@ -906,12 +906,6 @@ class SeriesViewModel(
         }
     }
 
-    fun playFromHome(seriesId: Long, episodeId: Long, startPositionMs: Long = 0) {
-        viewModelScope.launch {
-            playFromHomeAsync(seriesId, episodeId, startPositionMs)
-        }
-    }
-
     suspend fun playFromHomeAsync(seriesId: Long, episodeId: Long, startPositionMs: Long = 0): Boolean {
         val episode = seriesDao.getEpisodeById(episodeId) ?: return false
         val showId = if (seriesId > 0) seriesId else episode.seriesId

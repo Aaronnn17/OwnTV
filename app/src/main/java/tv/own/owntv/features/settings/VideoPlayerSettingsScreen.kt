@@ -513,22 +513,10 @@ private fun languageOptions(withOriginal: Boolean): List<Pair<String, String>> {
 
 private fun nearestSubSize(scale: Float) = SUB_SIZES.minByOrNull { kotlin.math.abs(it.first - scale) } ?: SUB_SIZES[1]
 
-/** The next size in the four-step table, wrapping Extra large back to Small — the size rows cycle. */
-private fun nextSubSize(scale: Float): Float =
-    SUB_SIZES[(SUB_SIZES.indexOf(nearestSubSize(scale)) + 1) % SUB_SIZES.size].first
-
 @Composable
 private fun subSizeName(scale: Float): String = stringResource(
     SUB_SIZES.minByOrNull { kotlin.math.abs(it.first - scale) }?.second ?: R.string.settings_subtitle_normal,
 )
-
-/** Chip for the one "Subtitle size" row now that there are two values: "Normal · Large", ExoPlayer first. */
-@Composable
-private fun subSizePairName(scaleExo: Float, scaleMpv: Float): String {
-    val exo = subSizeName(scaleExo)
-    val mpv = subSizeName(scaleMpv)
-    return if (exo == mpv) exo else "$exo · $mpv"
-}
 
 private fun resumeModeLabelRes(mode: tv.own.owntv.core.settings.SettingsRepository.ResumeMode): Int = when (mode) {
     tv.own.owntv.core.settings.SettingsRepository.ResumeMode.AUTO -> R.string.settings_resume_always
@@ -591,12 +579,6 @@ internal fun VideoPlayerGroupRows(
     val zoom by vm.defaultZoom.collectAsStateWithLifecycle()
     val subStyleOn by vm.subtitleStyleEnabled.collectAsStateWithLifecycle()
     val openSubtitleStyle = LocalOpenSubtitleStyle.current
-    val subScaleExo by vm.subtitleScaleExo.collectAsStateWithLifecycle()
-    val subScaleMpv by vm.subtitleScaleMpv.collectAsStateWithLifecycle()
-    val subFont by vm.subtitleFont.collectAsStateWithLifecycle()
-    val subColor by vm.subtitleColor.collectAsStateWithLifecycle()
-    val subPosition by vm.subtitlePosition.collectAsStateWithLifecycle()
-    val subBgOpacity by vm.subtitleBgOpacity.collectAsStateWithLifecycle()
     val audioDelay by vm.audioDelayMs.collectAsStateWithLifecycle()
     val audioLang by vm.preferredAudioLang.collectAsStateWithLifecycle()
     val subLang by vm.preferredSubLang.collectAsStateWithLifecycle()

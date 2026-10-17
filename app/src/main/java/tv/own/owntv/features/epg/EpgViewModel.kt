@@ -52,8 +52,6 @@ import tv.own.owntv.core.model.MediaType
 import tv.own.owntv.core.network.ConnectivityObserver
 import tv.own.owntv.core.repository.EpgRepository
 import tv.own.owntv.core.repository.SourceRepository
-import tv.own.owntv.core.repository.ActiveProfileSources
-import tv.own.owntv.core.repository.activeProfileSources
 import tv.own.owntv.core.repository.activeSourceIds
 import tv.own.owntv.core.settings.SettingsRepository
 import tv.own.owntv.core.settings.GuideWidthShares
@@ -84,7 +82,6 @@ data class EpgUiState(
     val loading: Boolean = true,
     val refreshing: Boolean = false,
     val message: EpgMessage? = null,
-    val isError: Boolean = false,
     /** False when the user hasn't added any EPG source yet → the screen shows an "Add EPG" prompt. */
     val hasEpgSources: Boolean = true,
 )
@@ -236,22 +233,6 @@ class EpgViewModel(
         viewModelScope.launch { recordings.removeSeriesRule(rule) }
     }
 
-    /**
-     * The title of a recording this one would contend with, or null when there is no conflict.
-     *
-     * Shown **before** the user commits, because a live programme cannot wait its turn — "start when
-     * the other finishes" means "start half-way through" (D10). Only the playlist's own recordings
-     * count: two playlists with a connection each can record two things at once.
-     */
-    suspend fun clashFor(channel: ChannelEntity, programme: EpgProgrammeEntity): String? {
-        val window = recordings.windowFor(programme.startMs, programme.stopMs)
-        val existing = recordingFor(channel, programme)
-        return recordings
-            .clashesWith(channel.sourceId, window.first, window.last, existing?.id ?: 0)
-            .firstOrNull()
-            ?.title
-    }
-
     /** Every windowed guide read this screen makes. The caches around it stay here — what to keep
      *  depends on how the grid scrolls, which is the screen's business, not core's. */
     private val guideReader =
@@ -270,9 +251,6 @@ class EpgViewModel(
     /** Guide category filter, from the same list as Live TV: null = All channels. */
     private val _categoryFilter = MutableStateFlow<tv.own.owntv.core.live.LiveKey?>(null)
     val categoryFilter: StateFlow<tv.own.owntv.core.live.LiveKey?> = _categoryFilter.asStateFlow()
-
-    private val activeSources: StateFlow<ActiveProfileSources> = activeProfileSources(settings, sourceDao)
-        .stateIn(viewModelScope, SharingStarted.Eagerly, ActiveProfileSources(-1L, emptyList()))
 
     val guideWidthShares: StateFlow<GuideWidthShares?> = combine(
         settings.guideWidthEnabled,

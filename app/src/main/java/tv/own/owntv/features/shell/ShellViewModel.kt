@@ -231,16 +231,6 @@ class ShellViewModel(
         viewModelScope.launch { settings.setThemeMode(mode) }
     }
 
-    /** Cycles through the available themes — wired to a temporary button until the Theme screen exists. */
-    fun cycleTheme() {
-        val next = when (themeMode.value) {
-            ThemeMode.DARK -> ThemeMode.LIGHT
-            ThemeMode.LIGHT -> ThemeMode.SYSTEM
-            ThemeMode.SYSTEM -> ThemeMode.DARK
-        }
-        setThemeMode(next)
-    }
-
     fun setUiZoom(percent: Int) {
         viewModelScope.launch { settings.setUiZoomPercent(UiZoom.clamp(percent)) }
     }
@@ -287,13 +277,6 @@ class ShellViewModel(
             val pid = currentProfileId() ?: return@launch
             profileDao.getById(pid)?.let { profiles.clearCustomAvatar(it) }
         }
-    }
-
-    /** Cycles through the accent presets. */
-    fun cycleAccent() {
-        val values = AccentColor.entries
-        val next = values[(accent.value.ordinal + 1) % values.size]
-        setAccent(next)
     }
 
     private suspend fun currentProfileId(): Long? {

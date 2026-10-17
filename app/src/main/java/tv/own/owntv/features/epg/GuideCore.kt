@@ -44,7 +44,6 @@ import tv.own.owntv.core.settings.SettingsRepository
 import tv.own.owntv.ui.components.OwnTVIcon
 import tv.own.owntv.ui.components.longPressMenuGuard
 import tv.own.owntv.ui.format.rememberSystemTimeFormatter
-import tv.own.owntv.ui.theme.PopupFontTheme
 import tv.own.owntv.ui.theme.mpx
 import tv.own.owntv.ui.stage.drawBoxShadow
 import tv.own.owntv.ui.components.drawStageGlyph
@@ -376,11 +375,4 @@ internal fun CatchupPlayerChooser(
             leading = { tv.own.owntv.ui.stage.StagePopupIcon(OwnTVIcon.EXTERNAL) },
         )
     }
-}
-
-/** Applies the shared popup type ramp at a reduced scale only when [compact]; otherwise leaves the
- *  caller's typography untouched, so the Guide's own dialog keeps its existing look. */
-@Composable
-private fun CompactPopupFont(compact: Boolean, content: @Composable () -> Unit) {
-    if (compact) PopupFontTheme(fontScale = 0.7f, content = content) else content()
 }

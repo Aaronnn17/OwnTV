@@ -745,13 +745,6 @@ class MovieViewModel(
         }
     }
 
-    fun playById(movieId: Long, startPositionMs: Long = 0) {
-        viewModelScope.launch {
-            val movie = movieDao.getById(movieId) ?: return@launch
-            play(movie, startPositionMs)
-        }
-    }
-
     suspend fun playByIdAsync(movieId: Long, startPositionMs: Long = 0): Boolean {
         val movie = movieDao.getById(movieId) ?: return false
         play(movie, startPositionMs)

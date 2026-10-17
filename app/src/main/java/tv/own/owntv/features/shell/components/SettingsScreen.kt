@@ -327,9 +327,6 @@ fun SettingsScreen(
     val rememberLastLive by settingsVm.rememberLastLive.collectAsStateWithLifecycle()
     val rememberLastMovies by settingsVm.rememberLastMovies.collectAsStateWithLifecycle()
     val rememberLastSeries by settingsVm.rememberLastSeries.collectAsStateWithLifecycle()
-    val rememberCatLive by settingsVm.rememberCategoryLive.collectAsStateWithLifecycle()
-    val rememberCatMovies by settingsVm.rememberCategoryMovies.collectAsStateWithLifecycle()
-    val rememberCatSeries by settingsVm.rememberCategorySeries.collectAsStateWithLifecycle()
     // "Custom" on the Panel Width row as soon as any one of the three sections is switched on.
     val panelWidthLive by settingsVm.panelWidthEnabled.getValue(tv.own.owntv.core.settings.PanelSection.LIVE).collectAsStateWithLifecycle()
     val panelWidthMovies by settingsVm.panelWidthEnabled.getValue(tv.own.owntv.core.settings.PanelSection.MOVIES).collectAsStateWithLifecycle()

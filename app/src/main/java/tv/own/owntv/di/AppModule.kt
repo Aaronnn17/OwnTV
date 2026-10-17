@@ -121,7 +121,6 @@ val appModule = module {
             sourceDao = get(),
             sourceRepository = get(),
             settings = get(),
-            epgDao = get(),
             importFinalizer = get(),
             channelDao = get(),
             categoryDao = get(),

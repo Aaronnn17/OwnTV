@@ -97,10 +97,6 @@ class ProfilesViewModel(
         viewModelScope.launch { profileDao.update(profile.copy(name = name.ifBlank { profile.name })) }
     }
 
-    fun setKids(profile: ProfileEntity, isKids: Boolean) {
-        viewModelScope.launch { profileDao.update(profile.copy(isKids = isKids)) }
-    }
-
     fun setPin(profile: ProfileEntity, pin: String?) {
         viewModelScope.launch { profileDao.setPin(profile.id, pin?.takeIf { it.isNotBlank() }?.let { Pin.hash(it) }) }
     }

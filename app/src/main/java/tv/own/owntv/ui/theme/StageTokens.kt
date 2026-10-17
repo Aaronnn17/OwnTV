@@ -158,7 +158,6 @@ object StageColors {
     val MenuItemText: Color @Composable @ReadOnlyComposable get() = LocalStagePalette.current.menuItemText
     val TagText: Color @Composable @ReadOnlyComposable get() = LocalStagePalette.current.tagText
     val ControlFill: Color @Composable @ReadOnlyComposable get() = LocalStagePalette.current.controlFill
-    val GlassTint: Color @Composable @ReadOnlyComposable get() = LocalStagePalette.current.glassTint
     val GlassOff: Color @Composable @ReadOnlyComposable get() = LocalStagePalette.current.glassOff
     /** Rating chips are unchanged in light. */
     val RatingStar = Color(0xFFFFCC4D)

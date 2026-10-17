@@ -1579,14 +1579,6 @@ class LiveViewModel(
         }
     }
 
-    fun ensurePlayingById(channelId: Long) {
-        viewModelScope.launch {
-            val channel = channelDao.getById(channelId) ?: return@launch
-            zapList.armFor(channel)
-            ensurePlaying(channel)
-        }
-    }
-
     /** Open a channel from a caller-owned rail (for example Home favorites), preserving that rail as the
      *  playback browse/zap context instead of replacing it with provider-category metadata. */
     suspend fun ensurePlayingByIdAsync(channelId: Long, zapChannels: List<ChannelEntity> = emptyList()): Boolean {

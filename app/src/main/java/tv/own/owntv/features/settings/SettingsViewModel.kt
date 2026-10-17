@@ -43,7 +43,6 @@ import tv.own.owntv.core.util.FriendlySyncFailure
 import tv.own.owntv.core.util.classifySyncFailure
 import tv.own.owntv.core.sync.work.CatalogSyncState
 import tv.own.owntv.core.sync.work.CatalogSyncScheduler
-import tv.own.owntv.core.util.throttleLatest
 import tv.own.owntv.core.database.dao.resolveExistingProfileId
 import tv.own.owntv.core.launcher.LauncherIntegrationRepository
 import tv.own.owntv.core.settings.ChNavLimits
@@ -64,7 +63,6 @@ class SettingsViewModel(
     private val sourceDao: SourceDao,
     private val sourceRepository: SourceRepository,
     private val settings: SettingsRepository,
-    private val epgDao: tv.own.owntv.core.database.dao.EpgDao,
     private val importFinalizer: tv.own.owntv.core.sync.ImportFinalizer,
     private val channelDao: tv.own.owntv.core.database.dao.ChannelDao,
     private val categoryDao: tv.own.owntv.core.database.dao.CategoryDao,
@@ -122,12 +120,10 @@ class SettingsViewModel(
 
     fun startRemoteImageListener(port: Int) = companion.startForImageUpload(port)
 
-    /** TMDB API keys handed over from another device, so a 32-character key never has to be typed with the remote. */
-    val remoteTmdbKeys get() = companion.tmdbKeys
+    /** TMDB settings handed over from another device, so a 32-character key never has to be typed with the remote. */
     val remoteTmdbConfigs get() = companion.tmdbConfigs
     val remoteOpenSubtitlesConfigs get() = companion.openSubtitlesConfigs
 
-    fun startRemoteTmdbKeyListener(port: Int) = companion.startForTmdbKey(port)
     fun startRemoteTmdbConfigListener(port: Int) = companion.startForTmdbConfig(port)
     fun startRemoteOpenSubtitlesConfigListener(port: Int) = companion.startForOpenSubtitlesConfig(port)
 
@@ -160,12 +156,6 @@ class SettingsViewModel(
             runCatching { launcherIntegrationRepository.refreshProfile(pid) }
         }
     }
-
-    /** Stored EPG programme count for a source — the row shows it as the EPG status.
-     *  Throttled (C2): an EPG sync commits in batches; each batch would otherwise re-run a
-     *  COUNT(*) over the largest table mid-write. */
-    fun epgCount(sourceId: Long): kotlinx.coroutines.flow.Flow<Int> =
-        epgDao.countForSource(sourceId).throttleLatest()
 
     /** Content counts (channels/movies/series) for a source — shown on each Playlists row. */
     fun contentCounts(sourceId: Long): kotlinx.coroutines.flow.Flow<SyncCounts> =
@@ -1149,12 +1139,6 @@ class SettingsViewModel(
             }
             // Hidden sections must drop from the Android TV launcher immediately.
             runCatching { refreshActiveTvHome(allowBrowsableRequest = true) }
-        }
-    }
-
-    fun togglePreferHls(sourceId: Long, preferHls: Boolean) {
-        viewModelScope.launch {
-            sourceDao.updatePreferHls(sourceId, preferHls)
         }
     }
 
