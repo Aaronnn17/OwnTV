@@ -226,6 +226,13 @@ its own category or page, and Back returns to Search with the query kept. Empty,
 recent searches and Continue watching. A **TV Shows** group lists stored-guide programmes whose title
 matches, on now or in the next 12 hours, and OK goes to the channel.
 
+**Sports** — live scores, today's and tomorrow's matches and match pages from ESPN, for the
+sports and leagues the profile follows (none at first; Settings → App → Sports). A match page has the
+score, venue, timeline, stats, line-ups, table, form and Broadcasts, and **Find channels** ranks the
+channels in the user's own guide that show it (from 30 minutes before kick-off), with a filter by
+language, country, picture and playlist. Matching runs on the device; no playlist data leaves it.
+A Home **Sports** row shows followed matches that are live or about to start.
+
 **More** — a glass section list with the profile row: Settings, Favourites, History, Backup &
 Restore, Local sync, Error log and About, each an enterable page beside the list.
 
@@ -252,7 +259,7 @@ The **Stage** interface (v5.1.0, designed in #227) replaced the old docked sideb
 screens entirely — there is no "classic" mode. Every screen sits on a full-width Stage page in the
 **Plus Jakarta Sans** font, with one line-icon set, CSS-exact focus glows and a shared Stage popup kit.
 
-- **Navigation rail** — Search, Home, Live TV, TV Guide, Movies, Series, Downloads and More, the
+- **Navigation rail** — Search, Home, Live TV, Sports, TV Guide, Movies, Series, Downloads and More, the
   wordmark at the top and the profile's avatar (or own picture) at the bottom; a **Now playing** item
   appears while something is docked or in Audio mode. Settings → Layout → **Navigation**: **Floating**
   (a capsule over the content that opens on ◀ and hides after 2 / 4 / 8 s) or **Docked** (always

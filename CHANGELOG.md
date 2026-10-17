@@ -40,6 +40,9 @@
 - **🗂️ Downloads and recordings whose file is gone say "File missing"**
 
 ### 🐛 Fixes
+- **🌍 Channels named "UK: …" or "IT: …" get their country and language, like "UK| …"**
+- **🧹 Find channels leaves out playlist divider rows and other matches' event channels**
+- **📺 Broadcasts lists one channel per row, by country**
 - **🎨 Every popup, menu, form field and player control in the current design**
 - **📏 Multiview tile and category menus at the same size as every other menu**
 - **🖼️ Your own picture can be chosen while creating or editing any profile**

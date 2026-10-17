@@ -403,7 +403,7 @@ the channels that show a match — nothing is streamed from ESPN.
 
 ### 🏁 First time
 **Where:** rail → **Sports**
-Nothing is followed at first. Open **Settings → Sports → Sports and leagues**, choose a sport on the
+Nothing is followed at first. Open **Settings → App → Sports → Sports and leagues**, choose a sport on the
 left and switch on its leagues on the right. The more you choose, the longer loading takes.
 **Sport buttons → All sports** fetches every league instead.
 
@@ -425,15 +425,16 @@ right, best first, with a preview. **OK** plays one full screen; **Back** return
 on hides the others; off lists them below. **Remember** keeps the filter for every match.
 
 ### 📺 Broadcasts
-**In your guide** lists the channels Find channels found, by country. **From ESPN** is ESPN's own
-list, which covers the United States only.
+**In your guide** lists the channels Find channels found, one per row under their country, in order;
+**▲ ▼** scroll a long list. **From ESPN** is ESPN's own list, which covers the United States only.
+A channel's country comes from its name: "UK| …" and "UK: …" both count.
 
 ### ↕️ Your own order
-**Where:** Settings → Sports → Sports and leagues → **hold OK** on a sport, or on a league you
+**Where:** Settings → App → Sports → Sports and leagues → **hold OK** on a sport, or on a league you
 switched on. In the Move window, **▲ ▼** choose a row, **OK** picks it up and puts it down, and
 **Save** keeps the new order. The Sports page and the Home row follow it.
 
-### ⚙️ Settings → Sports
+### ⚙️ Settings → App → Sports
 **Auto rebuild** every 1, 2, 4 or 8 hours, on every app start, or by hand. **Live refresh** updates
 live scores every 30–120 seconds while something sports is on screen. **Refresh sports data now**
 shows when it last updated. Also here: My teams, goal alerts, playlist and channel filters.

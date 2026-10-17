@@ -289,37 +289,46 @@ private val MatchTab.label: Int get() = when (this) {
 }
 
 /**
- * Who shows the match (owner's choice C): the channels Find channels found in the user's own guide,
- * by country, then the broadcasters ESPN lists — United States services only.
+ * Who shows the match (owner's choice C): the channels Find channels found in the user's own guide —
+ * one per row, under their country, countries and names in order, any without a country last — then
+ * the broadcasters ESPN lists, United States services only. The page's list scrolls, so this does too.
  */
 @Composable
 private fun Broadcasts(m: Match, found: List<WatchOption>?) {
-    val sep = stringResource(R.string.content_epg_bits_separator)
     Column(Modifier.fillMaxWidth().padding(18.mpx), verticalArrangement = Arrangement.spacedBy(9.mpx)) {
         Text(stringResource(R.string.sports_broadcasts_guide), style = stageText(20, 800), color = StageColors.Text, maxLines = 1, overflow = TextOverflow.Ellipsis)
         val guide = found?.filter { it.tier == WatchTier.GUIDE || it.tier == WatchTier.EVENT }
         when {
             guide == null -> Text(stringResource(R.string.sports_broadcasts_find_first), style = stageText(18, 400), color = StageColors.Muted, maxLines = 2, overflow = TextOverflow.Ellipsis)
             guide.isEmpty() -> Text(stringResource(R.string.sports_broadcasts_none), style = stageText(18, 400), color = StageColors.Muted, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            else -> guide.groupBy { it.facets.country.orEmpty() }.toSortedMap().forEach { (country, list) ->
-                BroadcastLine(country, list.map { it.facets.name }.distinct().joinToString(sep))
-            }
+            else -> byCountry(guide.map { it.facets.country.orEmpty() to it.facets.name }).forEach { (country, names) -> BroadcastGroup(country, names) }
         }
         Spacer(Modifier.height(12.mpx))
         Text(stringResource(R.string.sports_broadcasts_espn), style = stageText(20, 800), color = StageColors.Text, maxLines = 1, overflow = TextOverflow.Ellipsis)
         if (m.broadcasts.isEmpty()) Text(stringResource(R.string.sports_broadcasts_none), style = stageText(18, 400), color = StageColors.Muted, maxLines = 1, overflow = TextOverflow.Ellipsis)
-        m.broadcasts.groupBy { it.market?.takeIf { c -> c.length == 2 }.orEmpty() }.forEach { (country, list) ->
-            BroadcastLine(country, list.joinToString(sep) { it.name })
-        }
+        byCountry(m.broadcasts.map { it.market?.takeIf { c -> c.length == 2 }.orEmpty() to it.name }).forEach { (country, names) -> BroadcastGroup(country, names) }
     }
 }
 
-/** "UK  Sky Sports Main Event · TNT Sports 1": the country tag, then the channels. */
+/** (country, name) pairs grouped by country — countries in order, none last — each group's names sorted, once each. */
+private fun byCountry(pairs: List<Pair<String, String>>): List<Pair<String, List<String>>> =
+    pairs.groupBy({ it.first }, { it.second }).entries
+        .sortedWith(compareBy({ it.key.isEmpty() }, { it.key }))
+        .map { (country, names) -> country to names.distinct().sortedBy { it.lowercase() } }
+
+/**
+ * A country's tag, then one channel per row. Each row takes focus, so ▲ ▼ walk a long list and the page
+ * scrolls with them — plain text cannot be reached with the remote. OK does nothing: it is a list to read.
+ */
 @Composable
-private fun BroadcastLine(country: String, names: String) {
-    Row(horizontalArrangement = Arrangement.spacedBy(12.mpx), verticalAlignment = Alignment.CenterVertically) {
-        Box(Modifier.width(48.mpx)) { if (country.isNotEmpty()) StageTag(country) }
-        Text(names, style = stageText(18, 600), color = StageColors.Body, maxLines = 2, overflow = TextOverflow.Ellipsis)
+private fun BroadcastGroup(country: String, names: List<String>) {
+    Column(Modifier.padding(top = 6.mpx), verticalArrangement = Arrangement.spacedBy(3.mpx)) {
+        if (country.isNotEmpty()) StageTag(country)
+        names.forEach { name ->
+            StageRow(onClick = {}, height = 51.mpx, modifier = Modifier.fillMaxWidth(), horizontalPadding = 12.mpx) { focused ->
+                Text(name, style = stageText(18, 600), color = if (focused) StageColors.Text else StageColors.Body, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            }
+        }
     }
 }
 
