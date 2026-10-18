@@ -69,7 +69,7 @@ fun MpvVideoSurface(
     player: OwnTVPlayer,
     modifier: Modifier = Modifier,
     autoFrameRate: Boolean = true,
-    // Auto frame rate's two film extras (Settings → Video player). Ignored on live.
+    // Auto frame rate's two film extras (Settings › Picture › Frame rate). Ignored on live.
     afrMatchResolution: Boolean = false,
     afrHoldSecs: Int = 0,
 ) {

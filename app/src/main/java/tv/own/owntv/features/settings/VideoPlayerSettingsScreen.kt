@@ -211,9 +211,9 @@ internal val VIDEO_QUICK_ROWS: List<VideoQuickRef> = listOf(
  * What a Video player row pinned to Quick shows and does over there.
  *
  * A pin is meant to be a copy of the row, not a link to it: the chip carries the same value the real
- * row shows, and a row that is a plain toggle flips in place on the Settings root. Rows whose value
- * comes from a dialog — and the two toggles that must ask before turning ON — leave [onToggle] null,
- * so pressing them still opens Video player settings on the row, with that row's dialog already up.
+ * row shows, and a row that is a plain toggle flips in place in Quick. Rows whose value comes from a
+ * dialog — and the two toggles that must ask before turning ON — leave [onToggle] null, so pressing
+ * them still opens the row's own group on the row, with that row's dialog already up.
  */
 internal class VideoQuickBinding(
     val chip: String?,
@@ -587,8 +587,8 @@ internal fun VideoPlayerGroupRows(
     val liveCustomSecs by vm.liveLatencyCustomSecs.collectAsStateWithLifecycle()
     val livePreroll by vm.livePrerollSecs.collectAsStateWithLifecycle()
     val liveTuneTimeout by vm.liveTuneTimeoutSecs.collectAsStateWithLifecycle()
-    // The playback settings that also appear on the Settings root. They live here too so that Video
-    // player is the one complete list; the root rows are shortcuts to the same values (item 14).
+    // The playback settings that Quick and Settings search also offer. Their rows live here, so these
+    // groups are the one complete list; a pin or a search result is a shortcut to the same value.
     val hdr by vm.hdrEnabled.collectAsStateWithLifecycle()
     val autoFrameRate by vm.autoFrameRate.collectAsStateWithLifecycle()
     val multiviewEnabled by vm.multiviewEnabled.collectAsStateWithLifecycle()

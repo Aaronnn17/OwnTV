@@ -203,7 +203,7 @@ fun SettingsScreen(
     // Background-image ingest copies a multi-megabyte file; it runs here, off the main thread.
     val ingestScope = rememberCoroutineScope()
 
-    // Batch 4 · Settings search + quick toggles. Empty query = normal grouped list; a non-blank
+    // Settings search + quick toggles. Empty query = normal grouped list; a non-blank
     // query swaps the list for flat results that carry their group context ("Playback › HDR").
     var searchQuery by remember { mutableStateOf("") }
     // Search opened (from More, or a full page's search): the plain search page, even while the query
@@ -805,9 +805,10 @@ fun SettingsScreen(
     // Quick is the one group whose contents are not positional: it is whatever the user pinned, in the
     // order they pinned it. Its rows are still defined above like every other row, so a pinned row and
     // its home-group twin are the same object and stay in step automatically.
-    // Rows that live inside Video player settings can be pinned too, and they have no twin on the root
-    // to borrow from — Playback must not list them a second time. Quick materialises those from the
-    // catalogue next to the real rows, and each one reopens that screen on the row it came from.
+    // Rows of the player groups (Player, Picture, Sound & subtitles, Live TV, Watching & recording, and
+    // App's Diagnostics) can be pinned too, and they are not root rows, so there is no twin to borrow
+    // from. Quick materialises those from the catalogue next to the real rows, and each one reopens its
+    // group on the row it came from.
     val videoDeepRows: Map<String, RootRow> = tv.own.owntv.features.settings.VIDEO_QUICK_ROWS
         .filter { it.key in quickPinned }
         .associate { ref ->
@@ -936,16 +937,14 @@ fun SettingsScreen(
         }
     }
 
-        // Batch 4 · search results — flat, group-context-prefixed rows ("Playback › HDR").
+        // Search results — flat, group-context-prefixed rows ("Appearance › Theme").
         // Dialog-opening entries return focus to the search field on close (their normal row
         // isn't composed while searching). Toggle entries keep the results visible so the chip
         // updates live.
         //
-        // Settings that live one level deeper name that screen too ("Playback › Video player ›
-        // HDR"), because the group alone would send the user to a list the setting is no longer
-        // on. Built from the same format string the row itself uses, so the separator and its
-        // spacing stay translated rather than hard-coded here. It also lands in the search
-        // haystack, so typing "video player" finds everything on that screen.
+        // Settings under a sub-heading name it too ("Sound & subtitles › Languages & subtitles"),
+        // built from the same format string the row itself uses, so the separator and its spacing
+        // stay translated rather than hard-coded here.
     val searchResults: List<SettingsSearchEntry> = if (searchQuery.isBlank()) emptyList() else {
         val entries = listOfNotNull(
             SettingsSearchEntry(stringResource(R.string.settings_app_group), stringResource(R.string.settings_language), stringResource(R.string.settings_search_keywords_language), OwnTVIcon.LANGUAGE, TileTone.PRIMARY,
@@ -1067,7 +1066,7 @@ fun SettingsScreen(
             "vp_live_preview", "vp_preview_audio", "vp_channel_numbers", "vp_mini", "vp_hdr", "vp_afr",
             "vp_surround", "vp_autoplay", "vp_sub_style", "vp_live_latency", "vp_preroll", "vp_logging",
         )
-        // …and every OTHER Video player row, taken straight from the catalogue that screen already draws
+        // …and every OTHER player-group row, taken straight from the catalogue those groups already draw
         // from. Twenty-four settings had no entry of any kind — Multiview, the engine pickers, the seek
         // and volume steps, the language preferences, the per-playlist overrides — so searching for them
         // by name found nothing, on a screen whose own header offers to search "every setting". Deriving
@@ -2531,7 +2530,7 @@ private data class RootRow(
      * Honest chevrons: the arrow promises another screen, so only the rows that open one carry it.
      * Derived from the key rather than declared per row — [tabRowKey] is used by exactly the rows that
      * push a [SettingsTab], so a new sub-screen row gets its chevron with no extra flag to forget.
-     * Rows pinned to Quick from inside Video player settings are the exception and say so themselves
+     * Rows pinned to Quick from the player groups are the exception and say so themselves
      * in [chevron]: the ones that toggle in place must not promise a screen they never open.
      */
     val showChevron: Boolean get() = chevron ?: key.startsWith("tab_")
@@ -2662,7 +2661,7 @@ internal fun SettingsRowMenu(
     }
 }
 
-/** Batch 4 · one searchable settings row: its group breadcrumb, title, extra keywords, and action. */
+/** One searchable settings row: its group breadcrumb, title, extra keywords, and action. */
 private class SettingsSearchEntry(
     val group: String,
     val title: String,

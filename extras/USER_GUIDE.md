@@ -283,7 +283,7 @@ then the grid, opened at now with the now-line about a third of the way across.
 
 ### 🔔 Programme reminders
 **Where:** hold OK on an upcoming programme → **Remind me** · Settings → Sources & guide →
-**Programme reminders** / **Reminder time**
+**Program reminders** / **Reminder time**
 When it is due (5 minutes before by default) OwnTV **asks to switch** — over any screen, the player
 included — or **switches** by itself, or only **notifies**.
 
@@ -350,7 +350,8 @@ dropped; playback jumps over it. If your internet drops, saving waits and carrie
     **Settings → Live TV → Resume a saved channel** turns the question into **Always resume** or
     **Never resume**.
   - Watch another channel for **2 minutes** and the copy you left is deleted at once — you have moved on.
-  - After 5 minutes it is deleted anyway, and every copy is deleted when OwnTV starts.
+  - After 5 minutes it is deleted anyway, and every copy is deleted when OwnTV starts. The 5 minutes
+    are real time, standby included: wake the TV later and the channel opens live.
 - Catch-up channels still rewind into the provider's archive. Protected (DRM) and encrypted channels
   play as before, without a copy.
 
@@ -447,7 +448,7 @@ live scores every 30–120 seconds while something sports is on screen. **Refres
 shows when it last updated. Also here: My teams, goal alerts, playlist and channel filters.
 
 ### 🏠 Sports on Home
-**Settings → Home** can show a **Sports** row: live and upcoming matches of your leagues and teams,
+**Settings → Layout → Home screen** can show a **Sports** row: live and upcoming matches of your leagues and teams,
 in your order. **OK** opens the match page.
 
 ## 🎬 Movies & Series
@@ -514,7 +515,7 @@ The built-in service is shared by everyone using OwnTV, so it has minute/hour/da
 the top of the page.
 
 ### 🔑 Use your own key instead — recommended
-**Where:** Settings → Content & metadata → Metadata (TMDB) → **Get advanced TMDB info via remote**
+**Where:** Settings → Content & metadata → Metadata (TMDB) → **Get advanced TMDB info**
 A free personal TMDB key removes the shared limit. It's 32 characters, so send it from your phone by
 QR + PIN rather than typing it. A self-hosted Cloudflare Worker also works (one is in the repo).
 
@@ -740,11 +741,11 @@ the rail, sheets, menus and popups; **Glass opacity** sets how much background s
 Live TV preview sits beside the rows; **Reset** goes back to Stage colours with glass on.
 
 ### ✨ Ambient Glow
-**Where:** Settings → Appearance → **Ambient Glow** — only shown with Theme **Dark** and Glass off
+**Where:** Settings → Appearance → **Ambient glow** — only shown with Theme **Dark** and Glass off
 A soft glow around the edges of the screen, with an optional slow pulse.
 
 ### 🔤 Font & size
-**Where:** Settings → Appearance → **Fonts & text size** · **Popup size** · **UI zoom**
+**Where:** Settings → Appearance → **Font customization** · **Popup size** · **UI zoom**
 One font family for the whole app and popups (Plus Jakarta Sans by default), main text 60–140% and
 popup text separately. **Popup size** and **UI zoom** step with ◀ ▶ right on their rows.
 > Below **85% zoom** OwnTV warns first — very small sizes draw many more items and can exhaust a
