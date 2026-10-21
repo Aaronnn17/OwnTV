@@ -280,6 +280,8 @@ then the grid, opened at now with the now-line about a third of the way across.
 - **Order:** Provider, A–Z, Catch-up first or Favourites first. **Category** uses Live TV's own list.
   Its **Show** group: **Channels without guide**, and **Video preview** — off, the top shows the
   channel's logo instead of playing it (also off whenever Live TV's preview is off).
+- **The preview stays put while you browse:** moving through the rows does not change it. The first
+  **OK** on a row brings that channel into the preview; **OK** again on it watches it full screen.
 
 ### 🔔 Programme reminders
 **Where:** hold OK on an upcoming programme → **Remind me** · Settings → Sources & guide →
@@ -687,6 +689,9 @@ you pick yourself is **remembered** for that channel, film or series (subtitles 
 subtitles → **Audio sync** for everything
 Nudge until lips match, then **Remember this delay** to keep it for that item. Works on both players,
 including sound sent as-is to a soundbar.
+**Delay for this output** (Settings → Sound & subtitles) adds a delay of its own for the output the
+sound is going to right now — HDMI, a soundbar on HDMI ARC, Bluetooth, the TV speakers or headphones.
+Each output keeps its own; set it while listening on that output.
 
 ### 🔊 Surround sound
 **Where:** Settings → Sound & subtitles → **Surround sound**
@@ -832,7 +837,7 @@ all settings** lists every setting whose name contains what you type, with its p
 | **Catch-up time zone** | Sources & guide | **Automatic** (default) uses the Xtream panel's own zone; Device or a fixed offset otherwise |
 | **Catch-up time zone per playlist** | Sources & guide | One provider's archive on a different clock (quarter-hour zones such as +05:30 included) |
 | **Hardware decoder** | Picture | On for smooth 4K; off only to diagnose |
-| **HDR (mpv only)** | Picture | Use HDR output when the video and TV support it. ExoPlayer always passes HDR through |
+| **Prefer SDR** | Picture | When a stream offers both SDR and HDR, play the SDR one. Off by default |
 | **Auto frame rate** | Picture | Match the TV's refresh rate to the content. Off by default |
 | **Pause during the display switch** · **Match resolution** | Picture | Films only: hold the film while the TV re-syncs (off–5 s); also switch to the film's resolution, never above the TV's own |
 | **Seek step / Live rewind step** | Watching & recording | How far the skip buttons jump |
@@ -841,7 +846,8 @@ all settings** lists every setting whose name contains what you type, with its p
 | **Default volume** | Sound & subtitles | 0–150%, where everything starts |
 | **Reset saved player choices / zoom / volume** | Player, Picture, Sound & subtitles | Forget everything the player remembered per item |
 | **Reset saved live TV player choices** | Player | Every channel follows the Live TV player setting again |
-| **Forget learned stream fixes** | Player | For a provider that has fixed its streams. Catch-up lessons also expire after 14 days |
+| **FFmpeg audio for ExoPlayer** | Sound & subtitles | Decode sound the TV has no decoder for (DTS, TrueHD on some TVs). Off by default; applies after a restart |
+| **Delay for this output** | Sound & subtitles | A delay for HDMI, ARC, Bluetooth, speakers or headphones, each kept on its own |
 | **Custom DNS** | App → DNS | System, Google, Cloudflare, Quad9, or DNS-over-HTTPS |
 | **External player** | Player | Separate switches for Live TV, Movies and Series; VLC and MX Player start where you left off |
 | **Resume a saved channel** | Live TV | Ask, always or never resume a channel saved by Pause and rewind |
