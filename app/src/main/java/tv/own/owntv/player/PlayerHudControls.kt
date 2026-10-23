@@ -136,6 +136,37 @@ internal fun TransportCapsule(modifier: Modifier = Modifier, content: @Composabl
     )
 }
 
+@Composable
+fun ChannelVariantsButton(
+    variantsCount: Int,
+    currentQuality: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    // Solo se muestra si hay más de una variante (ej. SD, HD, FHD)
+    if (variantsCount > 1) {
+        androidx.tv.material3.Button(
+            onClick = onClick,
+            modifier = modifier,
+            colors = androidx.tv.material3.ButtonDefaults.buttonColors(
+                containerColor = androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.6f),
+                contentColor = androidx.compose.ui.graphics.Color.White
+            )
+        ) {
+            androidx.compose.foundation.layout.Row(
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp)
+            ) {
+                // Icono o texto indicando la calidad actual y el total de opciones
+                androidx.compose.material3.Text(
+                    text = "📺 $currentQuality ($variantsCount)",
+                    style = androidx.compose.material3.MaterialTheme.typography.labelMedium
+                )
+            }
+        }
+    }
+}
+
 /**
  * The dock: one container holding band A (the instrument) over band B (the tools). Same fill and rim
  * as [TransportCapsule] at the dock's own 22 dp radius, so the two read as one material.
