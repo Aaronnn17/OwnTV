@@ -6,7 +6,7 @@ import tv.own.owntv.core.database.entity.ChannelEntity
 @Immutable
 data class ChannelVariant(
     val channel: ChannelEntity,
-    val qualityLabel: String,      // Ej: "FHD", "HD", "SD", "4K", "Estándar"
+    val qualityLabel: String,      // Ej: "FHD", "HD", "SD", "4K", "STD"
     val qualityRank: Int,          // Para ordenar de mayor a menor calidad (4K > FHD > HD > SD)
     val categoryName: String? = null,
     val sourceName: String? = null,
@@ -42,7 +42,7 @@ object ChannelVariantHelper {
     }
 
     /**
-     * Extrae una palabra clave limpia para buscar candidatos en la base de datos (SQL LIKE / FTS)
+     * Extrae una palabra clave limpia para buscar candidatos en ChannelDao.searchListDetailed(...)
      * Ej: "ES | DAZN LA LIGA FHD" -> "DAZN LA LIGA"
      */
     fun getSearchKeyword(rawName: String): String {
@@ -76,7 +76,7 @@ object ChannelVariantHelper {
             upper.contains("FHD") || upper.contains("1080") -> score += 300
             upper.contains("HD") || upper.contains("720") -> score += 200
             upper.contains("SD") || upper.contains("576") || upper.contains("480") -> score += 100
-            else -> score += 150 // Sin etiqueta explícita (entre SD y HD)
+            else -> score += 150
         }
         if (upper.contains("RAW") || upper.contains("50FPS") || upper.contains("60FPS")) score += 30
         if (upper.contains("HEVC") || upper.contains("265")) score += 20
