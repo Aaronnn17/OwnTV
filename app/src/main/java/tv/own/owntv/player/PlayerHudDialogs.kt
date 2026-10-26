@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -427,9 +428,9 @@ private fun DialogScaffold(
 
 /** `.opt` with a radio: one of a list, the current one ringed. */
 @Composable
-private fun OptionRow(label: String, selected: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) {
+private fun OptionRow(label: String, selected: Boolean, subtitle: String? = null, modifier: Modifier = Modifier, onClick: () -> Unit) {
     tv.own.owntv.ui.stage.StagePopupOption(
-        title = label, onClick = onClick, modifier = modifier, chosen = selected,
+        title = label, subtitle = subtitle, onClick = onClick, modifier = modifier, chosen = selected,
         leading = { f -> tv.own.owntv.ui.stage.StagePopupRadio(selected, f) },
     )
 }
@@ -445,100 +446,41 @@ fun ChannelVariantsDialog(
     variants: List<ChannelVariant>,
     currentChannelId: Long,
     onVariantSelected: (ChannelVariant) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
-    androidx.tv.material3.Surface(
-        onClick = onDismiss,
-        modifier = androidx.compose.ui.Modifier.fillMaxSize(),
-        colors = androidx.tv.material3.SurfaceDefaults.colors(
-            containerColor = androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.75f)
-        )
+    val listState = androidx.compose.foundation.lazy.rememberLazyListState()
+    val selectedIndex = remember(variants, currentChannelId) {
+        variants.indexOfFirst { it.channel.id == currentChannelId }
+    }
+    LaunchedEffect(selectedIndex) {
+        if (selectedIndex > 0) {
+            listState.scrollToItem(selectedIndex)
+        }
+    }
+
+    DialogScaffold(
+        title = "Fuentes",
+        onDismiss = onDismiss,
+        state = listState,
     ) {
-        androidx.compose.foundation.layout.Box(
-            modifier = androidx.compose.ui.Modifier.fillMaxSize(),
-            contentAlignment = androidx.compose.ui.Alignment.Center
-        ) {
-            androidx.tv.material3.Surface(
-                modifier = androidx.compose.ui.Modifier
-                    .width(480.dp)
-                    .heightIn(max = 500.dp),
-                shape = androidx.tv.material3.RoundedCornerShape(16.dp),
-                colors = androidx.tv.material3.SurfaceDefaults.colors(
-                    containerColor = androidx.compose.ui.graphics.Color(0xFF1E1E1E)
-                )
-            ) {
-                androidx.compose.foundation.layout.Column(
-                    modifier = androidx.compose.ui.Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp),
-                    verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(16.dp)
-                ) {
-                    androidx.compose.material3.Text(
-                        text = "Cambiar Calidad / Variante de Canal",
-                        style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
-                        color = androidx.compose.ui.graphics.Color.White
-                    )
-
-                    androidx.tv.foundation.lazy.list.TvLazyColumn(
-                        modifier = androidx.compose.ui.Modifier.fillMaxWidth(),
-                        verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(variants.size) { index ->
-                            val variant = variants[index]
-                            val isSelected = variant.channel.id == currentChannelId
-
-                            androidx.tv.material3.Surface(
-                                onClick = {
-                                    onVariantSelected(variant)
-                                    onDismiss()
-                                },
-                                modifier = androidx.compose.ui.Modifier.fillMaxWidth(),
-                                shape = androidx.tv.material3.RoundedCornerShape(8.dp),
-                                colors = androidx.tv.material3.SurfaceDefaults.colors(
-                                    containerColor = if (isSelected) 
-                                        androidx.compose.ui.graphics.Color(0xFF333333) 
-                                    else 
-                                        androidx.compose.ui.graphics.Color(0xFF2A2A2A),
-                                    focusedContainerColor = androidx.compose.ui.graphics.Color(0xFF0D6EFD)
-                                )
-                            ) {
-                                androidx.compose.foundation.layout.Row(
-                                    modifier = androidx.compose.ui.Modifier
-                                        .fillMaxWidth()
-                                        .padding(16.dp),
-                                    horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween,
-                                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-                                ) {
-                                    androidx.compose.foundation.layout.Column(
-                                        modifier = androidx.compose.ui.Modifier.weight(1f)
-                                    ) {
-                                        androidx.compose.material3.Text(
-                                            text = variant.channel.name,
-                                            style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
-                                            color = androidx.compose.ui.graphics.Color.White
-                                        )
-                                        if (!variant.sourceName.isNullOrEmpty()) {
-                                            androidx.compose.material3.Text(
-                                                text = variant.sourceName!!,
-                                                style = androidx.compose.material3.MaterialTheme.typography.labelSmall,
-                                                color = androidx.compose.ui.graphics.Color.Gray
-                                            )
-                                        }
-                                    }
-
-                                    androidx.compose.foundation.layout.Spacer(modifier = androidx.compose.ui.Modifier.width(8.dp))
-
-                                    androidx.compose.material3.Text(
-                                        text = if (isSelected) "✓ ${variant.qualityLabel}" else variant.qualityLabel,
-                                        style = androidx.compose.material3.MaterialTheme.typography.labelMedium,
-                                        color = if (isSelected) androidx.compose.ui.graphics.Color.Green else androidx.compose.ui.graphics.Color.LightGray
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
+        items(variants) { variant ->
+            val isSelected = variant.channel.id == currentChannelId
+            val label = if (variant.qualityLabel.isNotBlank() && variant.qualityLabel != "STD") {
+                "${variant.qualityLabel} — ${variant.channel.name}"
+            } else {
+                variant.channel.name
             }
+            val sub = listOfNotNull(variant.categoryName, variant.sourceName)
+                .distinct()
+                .filter { it.isNotBlank() }
+                .joinToString(" • ")
+
+            OptionRow(
+                label = label,
+                selected = isSelected,
+                subtitle = sub.ifBlank { null },
+                onClick = { onVariantSelected(variant) },
+            )
         }
     }
 }

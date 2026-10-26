@@ -2109,17 +2109,16 @@ class LiveViewModel(
                 candidates.addAll(channelDao.byEpgKeys(sourceIds, listOf(epgId)))
             }
 
-            // 2. Criterio por similitud de nombre base (ej. "DAZN LA LIGA")
+            // 2. Criterio por similitud de nombre base exacto (ej. "ANTENA 3")
             val baseName = tv.own.owntv.player.ChannelVariantHelper.getBaseName(currentChannel.name)
             val keyword = tv.own.owntv.player.ChannelVariantHelper.getSearchKeyword(currentChannel.name)
             
             if (baseName.length >= 3) {
-                // Buscamos con una consulta detallada en la base de datos (FTS / LIKE)
                 val searchResults = channelDao.searchListDetailed(keyword, sourceIds, 50)
                 for (res in searchResults) {
                     val candidateBase = tv.own.owntv.player.ChannelVariantHelper.getBaseName(res.channel.name)
-                    // Si el nombre base coincide, es una variante del mismo canal
-                    if (candidateBase == baseName || candidateBase.contains(baseName) || baseName.contains(candidateBase)) {
+                    // Solo si el nombre base coincide exactamente (evita canal ARG, MX, etc.)
+                    if (candidateBase == baseName) {
                         candidates.add(res.channel)
                     }
                 }
@@ -2128,14 +2127,15 @@ class LiveViewModel(
             // Asegurarnos de incluir siempre al canal actual por seguridad
             candidates.add(currentChannel)
 
-            // Mapear a nuestro modelo ChannelVariant y ordenar de mayor a menor calidad
+            // Mapear a nuestro modelo ChannelVariant con nombre de categoría y proveedor
             candidates.map { ch ->
                 val rawName = ch.name
+                val catName = ch.categoryId?.let { categoryDao.getById(it)?.name }
                 tv.own.owntv.player.ChannelVariant(
                     channel = ch,
                     qualityLabel = tv.own.owntv.player.ChannelVariantHelper.extractQualityBadge(rawName),
                     qualityRank = tv.own.owntv.player.ChannelVariantHelper.calculateQualityRank(rawName),
-                    categoryName = null, // Se puede rellenar si se requiere
+                    categoryName = catName,
                     sourceName = sourceById[ch.sourceId]?.name
                 )
             }.sortedByDescending { it.qualityRank }

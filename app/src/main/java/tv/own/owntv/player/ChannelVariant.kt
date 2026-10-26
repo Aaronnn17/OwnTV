@@ -14,15 +14,15 @@ data class ChannelVariant(
 
 object ChannelVariantHelper {
 
-    // Detecta etiquetas de calidad o variante habituales en listas IPTV
+    // Detecta etiquetas de calidad, variantes o servidores habituales en listas IPTV
     private val QUALITY_REGEX = Regex(
-        """\b(UHD|4K|2160p|FHD|1080p|1080i|HD|720p|SD|576p|480p|HEVC|H\.?265|50fps|60fps|RAW|VIP|BACKUP|MULTI)\b""",
+        """\b(UHD|4K|2160p|FHD|1080p|1080i|HD|720p|SD|576p|480p|HEVC|H\.?265|50fps|60fps|RAW|VIP|BACKUP|ALT|SERVER\s*\d*|SERV\s*\d*|OPT\s*\d*|MULTI|M3U|DIRECTO)\b""",
         RegexOption.IGNORE_CASE
     )
 
-    // Elimina prefijos típicos como "[ES]", "(ES)", "ES |", "ES:", "VIP -"
+    // Elimina prefijos de país/categoría típicos como "[ES]", "(ES)", "ES |", "SPAIN :", "M3U -", "IPTV •"
     private val PREFIX_REGEX = Regex(
-        """^(\s*(\[[^\]]*]|\([^)]*\)|[A-Z]{2,4}\s*[|:\-•]\s*))+""",
+        """^(\s*(\[[^\]]*]|\([^)]*\)|[A-Za-z0-9_\-]{2,10}\s*[|:\-•]\s*))+""",
         RegexOption.IGNORE_CASE
     )
 
@@ -30,7 +30,7 @@ object ChannelVariantHelper {
     private val NON_ALPHANUM_REGEX = Regex("""[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ]+""")
 
     /**
-     * Convierte "ES | DAZN LA LIGA FHD (1080p)" -> "daznlaliga"
+     * Convierte "SPAIN | DAZN LA LIGA FHD (1080p)" -> "daznlaliga"
      */
     fun getBaseName(rawName: String): String {
         return rawName
@@ -43,15 +43,17 @@ object ChannelVariantHelper {
 
     /**
      * Extrae una palabra clave limpia para buscar candidatos en ChannelDao.searchListDetailed(...)
-     * Ej: "ES | DAZN LA LIGA FHD" -> "DAZN LA LIGA"
+     * Extrae las palabras principales eliminando sufijos/prefijos de servidor/calidad.
      */
     fun getSearchKeyword(rawName: String): String {
-        return rawName
+        val clean = rawName
             .replace(PREFIX_REGEX, "")
             .replace(QUALITY_REGEX, "")
             .replace(Regex("""[|:\-\[\]()]"""), " ")
             .replace(Regex("""\s+"""), " ")
             .trim()
+        val words = clean.split(" ").filter { it.length >= 2 }
+        return if (words.isNotEmpty()) words.take(3).joinToString(" ") else clean
     }
 
     /**

@@ -586,24 +586,10 @@ fun PlayerHud(
                     },
                     favorite = favorite, onToggleFavorite = onToggleFavorite,
                     onOpenDialog = { dialog = it }, onPip = onPip, onAudioMode = onAudioMode,
-                    onMultiview = onMultiview, onRecordThis = onRecordThis, recordingThis = recordingThis, onBack = onBack,
+                    onMultiview = onMultiview, onRecordThis = onRecordThis, recordingThis = recordingThis,
+                    variantsCount = variants.size, onOpenVariants = { showVariantsDialog = true },
+                    onBack = onBack,
                     modifier = Modifier.align(Alignment.BottomStart),
-                )
-            }
-        }
-
-        // --- Botón de Variantes de Calidad integrado en el HUD ---
-        if (controlsVisible && error == null && variants.size > 1) {
-            val currentQuality = variants.find { it.channel.id == currentChannelId }?.qualityLabel ?: "STD"
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = 28.dp, bottom = 28.dp)
-            ) {
-                ChannelVariantsButton(
-                    variantsCount = variants.size,
-                    currentQuality = currentQuality,
-                    onClick = { showVariantsDialog = true }
                 )
             }
         }

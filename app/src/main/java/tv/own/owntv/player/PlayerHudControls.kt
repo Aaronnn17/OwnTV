@@ -64,6 +64,7 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 import androidx.tv.material3.Text
 import tv.own.owntv.R
+import tv.own.owntv.ui.stage.StageButton
 import tv.own.owntv.ui.stage.StageFocus
 import tv.own.owntv.ui.stage.StageSurface
 import tv.own.owntv.ui.components.OwnTVIcon
@@ -148,19 +149,19 @@ fun ChannelVariantsButton(
         androidx.tv.material3.Button(
             onClick = onClick,
             modifier = modifier,
-            colors = androidx.tv.material3.ButtonDefaults.buttonColors(
-                containerColor = androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.6f),
-                contentColor = androidx.compose.ui.graphics.Color.White
+            colors = androidx.tv.material3.ButtonDefaults.colors(
+                containerColor = Color.Black.copy(alpha = 0.6f),
+                contentColor = Color.White
             )
         ) {
-            androidx.compose.foundation.layout.Row(
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
-                horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 // Icono o texto indicando la calidad actual y el total de opciones
-                androidx.compose.material3.Text(
+                Text(
                     text = "📺 $currentQuality ($variantsCount)",
-                    style = androidx.compose.material3.MaterialTheme.typography.labelMedium
+                    style = androidx.tv.material3.MaterialTheme.typography.labelMedium
                 )
             }
         }
